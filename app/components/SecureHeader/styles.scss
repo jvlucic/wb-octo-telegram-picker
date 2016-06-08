@@ -33,11 +33,9 @@
       display: inline;
       float: left;
       max-height: $centered-navigation-height;
-      padding-left: $centered-navigation-padding;
 
       img {
         max-height: $centered-navigation-height;
-        opacity: 0.6;
         padding: 0.8em 0;
       }
     }
@@ -45,7 +43,7 @@
   // Nav menu
 
     &-wrapper {
-      @include outer-container;
+      @include outer-container(100%);
       @include clearfix;
       position: relative;
       z-index: 999;

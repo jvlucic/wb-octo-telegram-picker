@@ -1,12 +1,13 @@
 import React from 'react';
-import './styles.scss'
+import logo from './unidesq-logo.png';
+import './styles.scss';
 
 export default function SecureHeader() {
   return (
     <header className="SecureHeader">
       <div className="SecureHeader-wrapper">
         <aside className="SecureHeader-logo">
-          <img src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/placeholder_square.png" alt="Logo" />
+          <img src={logo} alt="Unidesq Logo" />
         </aside>
         <nav role="navigation" className="SecureHeader-nav">
           <ul className="SecureHeader-menu">

@@ -1,6 +1,4 @@
 @import 'bourbon';
 @import 'neat';
 
-$min-breakpoint: 1280px;
-$glutter: 27px;
-$min-width: $min-breakpoint - ( $glutter * 2 );
+@import 'variables';

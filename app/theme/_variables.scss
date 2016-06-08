@@ -1,0 +1,12 @@
+// layout
+$min-breakpoint: 1280px;
+$glutter: 24px;
+
+$min-width: $min-breakpoint - ( $glutter * 2 );
+
+// font
+$default-font:  'Lato', sans-serif;
+$default-font-size: 14px;
+
+$font-family: $default-font;
+$font-size: $default-font-size;
