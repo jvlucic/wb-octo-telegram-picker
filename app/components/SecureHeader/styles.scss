@@ -1,0 +1,132 @@
+@import 'main';
+:global {
+  .SecureHeader {
+    $base-border-radius: 3px !default;
+    $dark-gray: #333 !default;
+    $large-screen: 53.75em !default;
+    $base-font-color: #FFF !default;
+    $second-font-color: #888;
+    $centered-navigation-padding: 1em;
+    $centered-navigation-logo-height: 2em;
+    $centered-navigation-background: #000;
+    $centered-navigation-color: #FFF;
+    $centered-navigation-color-hover: $base-font-color;
+    $centered-navigation-height: 60px;
+    $centered-navigation-item-padding: 1em;
+    $centered-navigation-submenu-padding: 1em;
+    $centered-navigation-submenu-width: 12em;
+    $centered-navigation-item-nudge: 2.2em;
+    $horizontal-bar-mode: $large-screen;
+
+    background-color: $centered-navigation-background;
+    color: $centered-navigation-color;
+    min-height: $centered-navigation-height;
+    min-width: $min-width;
+    padding: 0px $glutter;
+    width: 100%;
+    z-index: 9999;
+
+
+  // Mobile view
+
+    &-logo {
+      display: inline;
+      float: left;
+      max-height: $centered-navigation-height;
+      padding-left: $centered-navigation-padding;
+
+      img {
+        max-height: $centered-navigation-height;
+        opacity: 0.6;
+        padding: 0.8em 0;
+      }
+    }
+
+  // Nav menu
+
+    &-wrapper {
+      @include outer-container;
+      @include clearfix;
+      position: relative;
+      z-index: 999;
+    }
+
+    &-nav {
+      display: inline-block;
+    }
+
+    &-menu {
+      clear: both;
+      display: inline-block;
+      margin: 0 auto;
+      overflow: visible;
+      padding: 0;
+      text-align: center;
+      -webkit-transform-style: preserve-3d;
+  // stop webkit flicker
+      width: 100%;
+      z-index: 99999;
+
+      &.show {
+        display: block;
+      }
+    }
+
+
+  // The nav items
+
+    &-navLink:first-child {
+      margin-left: $centered-navigation-item-nudge;
+    }
+
+    &-navLink {
+      background: transparent;
+      display: inline;
+      line-height: $centered-navigation-height;
+      overflow: hidden;
+      padding-right: $centered-navigation-submenu-padding;
+      text-align: right;
+      width: 100%;
+      z-index: 9999;
+
+      a {
+        color: $centered-navigation-color;
+        display: inline-block;
+        outline: none;
+        padding: 0 $centered-navigation-item-padding;
+        text-decoration: none;
+
+        &:focus,
+        &:hover {
+          color: $centered-navigation-color-hover;
+        }
+        &.is-active {
+          background-color: white;
+          color: black;
+        }
+      }
+
+    }
+
+    &-account {
+      display: inline-block;
+      float:right;
+      line-height: $centered-navigation-height;
+      &Welcome {
+        display: inline-block;
+        color: $second-font-color;
+      }
+
+      &Help {
+        display: inline-block;
+        color: $centered-navigation-color;
+        padding-left: 10px;
+      }
+
+      &Menu {
+        padding-left: 30px;
+        display: inline-block;
+      }
+    }
+  }
+}
