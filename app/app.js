@@ -19,6 +19,8 @@ import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import useScroll from 'react-router-scroll';
 import configureStore from './store';
+import { loadPolyfillAndData } from 'intl/intUtils';
+import ReduxIntl from 'intl/ReduxIntl';
 
 // Import the CSS reset, which HtmlWebpackPlugin transfers to the build folder
 import 'sanitize.css/lib/sanitize.css';
@@ -47,31 +49,36 @@ const rootRoute = {
   childRoutes: createRoutes(store),
 };
 
-ReactDOM.render(
-  <Provider store={store}>
-    <Router
-      history={history}
-      routes={rootRoute}
-      render={
-        // Scroll to top when going to a new page, imitating default browser
-        // behaviour
-        applyRouterMiddleware(
-          useScroll(
-            (prevProps, props) => {
-              if (!prevProps || !props) {
-                return true;
-              }
+loadPolyfillAndData('en')
+  .then(() => {
+    ReactDOM.render(
+      <Provider store={store}>
+        <ReduxIntl>
+          <Router
+            history={history}
+            routes={rootRoute}
+            render={
+              // Scroll to top when going to a new page, imitating default browser
+              // behaviour
+              applyRouterMiddleware(
+                useScroll(
+                  (prevProps, props) => {
+                    if (!prevProps || !props) {
+                      return true;
+                    }
 
-              if (prevProps.location.pathname !== props.location.pathname) {
-                return [0, 0];
-              }
+                    if (prevProps.location.pathname !== props.location.pathname) {
+                      return [0, 0];
+                    }
 
-              return true;
+                    return true;
+                  }
+                )
+              )
             }
-          )
-        )
-      }
-    />
-  </Provider>,
-  document.getElementById('app')
-);
+          />
+        </ReduxIntl>
+      </Provider>,
+      document.getElementById('app')
+    );
+  });

@@ -4,7 +4,7 @@
   .SecureApp {
     &-content {
       min-width: $min-width;
-      padding: 0 $glutter;
+      padding: $padding-horizontal-base $glutter;
     }
   }
 }

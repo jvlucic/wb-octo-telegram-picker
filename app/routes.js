@@ -59,6 +59,74 @@ export default function createRoutes(store) {
             importModules.catch(errorLoading);
           },
         },
+        {
+          path: '/account',
+          name: 'account',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/AccountPage'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/creatives',
+          name: 'creatives',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/CreativesPage'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/reporting',
+          name: 'reporting',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/ReportingPage'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/tools',
+          name: 'tools',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/ToolsPage'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
       ],
     },
     {
