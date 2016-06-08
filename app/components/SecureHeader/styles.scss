@@ -17,6 +17,22 @@
     $centered-navigation-submenu-width: 12em;
     $centered-navigation-item-nudge: 2.2em;
     $horizontal-bar-mode: $large-screen;
+    @mixin link() {
+      color: $centered-navigation-color;
+      display: inline-block;
+      outline: none;
+      padding: 0 $centered-navigation-item-padding;
+      text-decoration: none;
+
+      &:focus,
+      &:hover {
+        color: $centered-navigation-color-hover;
+      }
+      &.is-active {
+        background-color: white;
+        color: black;
+      }
+    }
 
     background-color: $centered-navigation-background;
     color: $centered-navigation-color;
@@ -88,20 +104,7 @@
       z-index: 9999;
 
       a {
-        color: $centered-navigation-color;
-        display: inline-block;
-        outline: none;
-        padding: 0 $centered-navigation-item-padding;
-        text-decoration: none;
-
-        &:focus,
-        &:hover {
-          color: $centered-navigation-color-hover;
-        }
-        &.is-active {
-          background-color: white;
-          color: black;
-        }
+        @include link;
       }
 
     }
@@ -124,6 +127,9 @@
       &Menu {
         padding-left: 30px;
         display: inline-block;
+        a {
+          @include link;
+        }
       }
     }
   }
