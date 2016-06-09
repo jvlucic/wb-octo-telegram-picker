@@ -47,7 +47,7 @@ export default function createRoutes(store) {
           name: 'home',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
-              System.import('containers/DashboardPage'),
+              System.import('containers/DashboardPage/DashboardPage'),
             ]);
 
             const renderRoute = loadModule(cb);

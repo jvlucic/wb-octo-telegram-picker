@@ -1,0 +1,24 @@
+[
+  {
+    "campaignId": 1,
+    "date": "2016-01-01 00:00:00",
+    "impressions": 13131,
+    "clicks": 100,
+    "orders": 2,
+    "spend": 67.00,
+    "orderValue": 123.23,
+    "margin": 30.00,
+    "ROI": "1.00"
+  },
+  {
+    "campaignId": 1,
+    "date": "2016-01-02 00:00:00",
+    "impressions": 2444,
+    "clicks": 10,
+    "orders": 2,
+    "spend": 1.00,
+    "orderValue": 123.23,
+    "margin": 30.00,
+    "ROI": "1.00"
+  }
+]

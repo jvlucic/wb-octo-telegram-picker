@@ -1,4 +1,20 @@
 .KPIChartContainer{
-  width:1226px;
+  width:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dummyControls{
+  button{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid black;
+    cursor: pointer;
+    margin-bottom: 5px;
+  }
+}
 
+.KPIListContainer{
+  display: flex;
 }

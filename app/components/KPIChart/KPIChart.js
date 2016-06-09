@@ -11,22 +11,18 @@ const randomColorFactor = () => Math.round(Math.random() * 255);
 const randomColor = (opacity) => `rgba(${randomColorFactor()} , ${randomColorFactor()} , ${randomColorFactor()} , ${opacity || '.3'} )`;
 
 class KPIChart extends Component {
-
+  /* TODO: SHOW LOADER when no DATA IS AVAILABLE*/
   constructor(props) {
     super(props);
     this.randomizeData = this.randomizeData.bind(this);
     this.addDataSet = this.addDataSet.bind(this);
+    const initialChartData = this.props.chartData;
+    /* TODO: remove KPI prop ?? */
+    initialChartData.datasets = initialChartData.datasets.filter(it => this.props.initiallyActiveKPIs.indexOf(it.kpi) >= 0);
     this.state = {
-      chartData: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-          label: 'Impressions',
-          data: [12, 19, 3, 5, 2, 3],
-          borderColor: 'rgba(255,99,132,1)',
-          backgroundColor: 'transparent',
-          borderWidth: 1,
-        }],
-      },
+      activeKPIs: this.props.initiallyActiveKPIs,
+      chartData: initialChartData,
+      KPIValues: this.props.KPIValues,
       chartOptions: {
         scales: {
           yAxes: [{
@@ -42,7 +38,7 @@ class KPIChart extends Component {
   }
 
   randomizeData() {
-    const randomArr = this.state.chartData.datasets[0].data.map(() => Math.random() * 20);
+    const randomArr = this.state.chartData.datasets[0].data.map(() => Math.random() * 255);
     const chartData = { ...this.state.chartData };
     chartData.datasets[0].data = randomArr;
     this.setState({ chartData });
@@ -50,7 +46,7 @@ class KPIChart extends Component {
 
 
   addDataSet() {
-    const randomArr = this.state.chartData.datasets[0].data.map(() => Math.random() * 20);
+    const randomArr = this.state.chartData.datasets[0].data.map(() => Math.random() * 255);
     const chartData = { ...this.state.chartData };
     const dataset = {
       label: `My ${this.state.chartData.datasets.length}  DataSet`,
@@ -70,11 +66,20 @@ class KPIChart extends Component {
     const LineChart = ReactChartJS.Line;
     const { randomizeData, addDataSet } = this;
     return (
-      <div className={styles.KPIChartContainer}>
-        <div >
+      <div >
+        <div className={styles.KPIChartContainer}>
           <LineChart data={this.state.chartData} options={this.state.chartOptions} width="1226" height="250" />
         </div>
-        <div>
+        <div className={styles.KPIListContainer}>
+          {Object.keys(this.props.KPIValues).map(kpiKey => {
+            const kpi = this.props.KPIValues[kpiKey];
+            return (<div className={styles.KPIElem}>
+              <div>{kpi.label}</div>
+              <div>{kpi.value}</div>
+            </div>);
+          })}
+        </div>
+        <div className={styles.dummyControls}>
           <button onClick={randomizeData}> RandomizeChartData</button>
           <button onClick={addDataSet}> addRandomDataSet</button>
         </div>
@@ -85,7 +90,9 @@ class KPIChart extends Component {
 }
 
 KPIChart.propTypes = {
-  data: PropTypes.array,
+  chartData: PropTypes.object,
+  KPIValues: PropTypes.object,
+  initiallyActiveKPIs: PropTypes.array,
 };
 
 export default KPIChart;

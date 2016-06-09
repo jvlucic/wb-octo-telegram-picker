@@ -7,6 +7,8 @@ import { combineReducers } from 'redux-immutable';
 import { fromJS } from 'immutable';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import intl from 'intl/reducer';
+import * as dashboardPage from './containers/DashboardPage';
+
 /*
  * routeReducer
  *
@@ -42,6 +44,7 @@ export default function createReducer(asyncReducers) {
   return combineReducers({
     route: routeReducer,
     intl,
+    [dashboardPage.name]: dashboardPage.reducer,
     ...asyncReducers,
   });
 }

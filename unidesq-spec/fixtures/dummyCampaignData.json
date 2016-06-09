@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "eCommerce Campaign 1",
+    "status": "active",
+    "startDate": "2016-01-01 00:00:00",
+    "endDate": "2016-01-31 00:00:00",
+    "budget": 1000.00,
+    "currency": "EUR",
+    "performance": {
+      "impressions": 13131,
+      "clicks": 100,
+      "orders": 2,
+      "orderValue": 123.23,
+      "spend": 15.00,
+      "margin": 30.00,
+      "ROI": "1.00"
+    }
+  },
+  {
+    "id": 2,
+    "name": "eCommerce Campaign 2",
+    "status": "active",
+    "startDate": "2016-01-01 00:00:00",
+    "endDate": "2016-01-31 00:00:00",
+    "budget": 1000.00,
+    "currency": "EUR",
+    "performance": {
+      "impressions": 13131,
+      "clicks": 100,
+      "orders": 2,
+      "orderValue": 123.23,
+      "spend": 15.00,
+      "margin": 30.00,
+      "ROI": "1.00"
+    }
+  }
+]
