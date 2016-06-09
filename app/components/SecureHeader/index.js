@@ -43,7 +43,7 @@ const msgs = defineMessages({
 
 export default function SecureHeader() {
   return (
-    <header className="SecureHeader">
+    <header className="SecureHeader" role="banner" >
       <div className="SecureHeader-wrapper">
         <aside className="SecureHeader-logo">
           <img src={logo} alt="Unidesq Logo" />
