@@ -2,7 +2,7 @@
 
 ## Instalation
 
-* Install node 4+
+* Install node 5 - npm 3
 * git clone project
 * npm install
 
