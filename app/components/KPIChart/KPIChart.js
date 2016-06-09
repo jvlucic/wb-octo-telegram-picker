@@ -5,24 +5,18 @@
 import React, { PropTypes, Component } from 'react';
 import ReactChartJS from 'react-chartjs';
 import styles from './KPIChart.scss';
-
-const randomColorFactor = () => Math.round(Math.random() * 255);
-
-const randomColor = (opacity) => `rgba(${randomColorFactor()} , ${randomColorFactor()} , ${randomColorFactor()} , ${opacity || '.3'} )`;
+import classnames from 'classnames';
 
 class KPIChart extends Component {
   /* TODO: SHOW LOADER when no DATA IS AVAILABLE*/
   constructor(props) {
     super(props);
-    this.randomizeData = this.randomizeData.bind(this);
-    this.addDataSet = this.addDataSet.bind(this);
-    const initialChartData = this.props.chartData;
-    /* TODO: remove KPI prop ?? */
-    initialChartData.datasets = initialChartData.datasets.filter(it => this.props.initiallyActiveKPIs.indexOf(it.kpi) >= 0);
+    this.toggleKPI = this.toggleKPI.bind(this);
+    const chartData = { ...this.props.chartData };
+    chartData.datasets = chartData.datasets.filter(it => this.props.initiallyActiveKPIs.indexOf(it.kpi) >= 0);
     this.state = {
       activeKPIs: this.props.initiallyActiveKPIs,
-      chartData: initialChartData,
-      KPIValues: this.props.KPIValues,
+      chartData,
       chartOptions: {
         scales: {
           yAxes: [{
@@ -37,51 +31,44 @@ class KPIChart extends Component {
     };
   }
 
-  randomizeData() {
-    const randomArr = this.state.chartData.datasets[0].data.map(() => Math.random() * 255);
-    const chartData = { ...this.state.chartData };
-    chartData.datasets[0].data = randomArr;
-    this.setState({ chartData });
+  toggleKPI(kpi) {
+    const activeKPIs = this.state.activeKPIs.filter(it => it !== kpi);
+    const chartData = this.state.chartData;
+    if (activeKPIs.length === this.state.activeKPIs.length) {
+      const dataSet = this.props.chartData.datasets.filter(it => it.kpi === kpi);
+      chartData.datasets.push(dataSet[0]);
+    } else {
+      const index = chartData.datasets.findIndex(it => it.kpi === kpi);
+      chartData.datasets.splice(index, 1);
+    }
+    this.setState({
+      activeKPIs: activeKPIs.length === this.state.activeKPIs.length ? [...activeKPIs, kpi] : activeKPIs,
+      chartData,
+    });
   }
-
-
-  addDataSet() {
-    const randomArr = this.state.chartData.datasets[0].data.map(() => Math.random() * 255);
-    const chartData = { ...this.state.chartData };
-    const dataset = {
-      label: `My ${this.state.chartData.datasets.length}  DataSet`,
-      borderColor: randomColor(0.4),
-      backgroundColor: 'transparent',
-      pointBorderColor: randomColor(0.7),
-      pointBackgroundColor: randomColor(0.5),
-      pointBorderWidth: 1,
-      data: randomArr,
-    };
-    chartData.datasets.push(dataset);
-    this.setState({ chartData });
-  }
-
 
   render() {
+    const { toggleKPI } = this;
     const LineChart = ReactChartJS.Line;
-    const { randomizeData, addDataSet } = this;
+    const chartData = this.state.chartData;
+    const KPIValues = this.props.KPIValues;
+    const activeKPIsMap = {};
+    this.state.activeKPIs.forEach(it => activeKPIsMap[it] = true); // eslint-disable-line no-return-assign
     return (
       <div >
         <div className={styles.KPIChartContainer}>
-          <LineChart data={this.state.chartData} options={this.state.chartOptions} width="1226" height="250" />
+          <LineChart data={chartData} options={this.state.chartOptions} width="1226" height="250" />
         </div>
         <div className={styles.KPIListContainer}>
-          {Object.keys(this.props.KPIValues).map(kpiKey => {
-            const kpi = this.props.KPIValues[kpiKey];
-            return (<div className={styles.KPIElem}>
-              <div>{kpi.label}</div>
-              <div>{kpi.value}</div>
-            </div>);
+          {Object.keys(KPIValues).map(kpiKey => {
+            const kpi = KPIValues[kpiKey];
+            const classname = classnames(styles.KPIElem, { [styles.active]: activeKPIsMap[kpiKey] });
+            return (
+              <div key={kpiKey} className={classname} onClick={() => toggleKPI(kpiKey)}>
+                <div>{kpi.label}</div>
+                <div>{kpi.value}</div>
+              </div>);
           })}
-        </div>
-        <div className={styles.dummyControls}>
-          <button onClick={randomizeData}> RandomizeChartData</button>
-          <button onClick={addDataSet}> addRandomDataSet</button>
         </div>
       </div>
     );
