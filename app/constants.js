@@ -25,52 +25,52 @@ const constants = {
     },
     CLICKS: {
       key: 'CLICKS',
-      name: 'clicks',
+      name: 'Clicks',
       color: 'rgba(93 , 43 , 170 ,0.8 )',
     },
     CTR: {
       key: 'CTR',
-      name: 'ctr',
+      name: 'CTR',
       color: 'rgba(27 , 68 , 236 ,0.8 )',
     },
     CONVERSION: {
       key: 'CONVERSION',
-      name: 'conversion',
+      name: 'Conversion',
       color: 'rgba(177 , 40 , 101 ,0.8 )',
     },
     CVR: {
       key: 'CVR',
-      name: 'cvr',
+      name: 'CVR',
       color: 'rgba(87 , 10 , 30 ,0.8 )',
     },
     CPM: {
       key: 'CPM',
-      name: 'cpm',
+      name: 'CPM',
       color: 'rgba(80 , 238 , 78 ,0.8 )',
     },
     CPC: {
       key: 'CPC',
-      name: 'cpc',
+      name: 'CPC',
       color: 'rgba(235 , 141 , 76 ,0.8 )',
     },
     CPO: {
       key: 'CPO',
-      name: 'cpo',
+      name: 'CPO',
       color: 'rgba(21 , 237 , 101 ,0.8 )',
     },
     COST: {
       key: 'COST',
-      name: 'cost',
+      name: 'Cost',
       color: 'rgba(42 , 113 , 180 ,0.8 )',
     },
     ORDER_VALUE: {
       key: 'ORDER_VALUE',
-      name: 'orderValue',
+      name: 'Order value',
       color: 'rgba(131 , 158 , 248 ,0.8 )',
     },
     MARGIN: {
       key: 'MARGIN',
-      name: 'margin',
+      name: 'Margin',
       color: 'rgba(42 , 202 , 189 ,0.8 )',
     },
     ROI: {
@@ -82,4 +82,3 @@ const constants = {
 };
 
 export default constants;
-

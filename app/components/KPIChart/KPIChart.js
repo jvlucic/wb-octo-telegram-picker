@@ -5,7 +5,7 @@
 import React, { PropTypes, Component } from 'react';
 import ReactChartJS from 'react-chartjs';
 import styles from './KPIChart.scss';
-import classnames from 'classnames';
+import KPIButton from 'components/KPIButton';
 
 class KPIChart extends Component {
   /* TODO: SHOW LOADER when no DATA IS AVAILABLE*/
@@ -62,12 +62,26 @@ class KPIChart extends Component {
         <div className={styles.KPIListContainer}>
           {Object.keys(KPIValues).map(kpiKey => {
             const kpi = KPIValues[kpiKey];
-            const classname = classnames(styles.KPIElem, { [styles.active]: activeKPIsMap[kpiKey] });
+            // TODO: Do a better way to get the type
+            const type = ['impressions', 'clicks', 'ctr', 'conversion', 'cvr']
+              .reduce((curentType, specialType) => {
+                if (specialType === kpi.label.toLowerCase()) {
+                  return specialType;
+                }
+                return curentType;
+              }, 'normal');
             return (
-              <div key={kpiKey} className={classname} onClick={() => toggleKPI(kpiKey)}>
-                <div>{kpi.label}</div>
-                <div>{kpi.value}</div>
-              </div>);
+              <KPIButton
+                key={kpiKey}
+                name={kpi.label}
+                type={type}
+                value={kpi.value}
+                symbol="$"
+                active={!!activeKPIsMap[kpiKey]}
+                percentage={Math.floor(Math.random() * 7) - 3}
+                onClick={() => toggleKPI(kpiKey)}
+              />
+            );
           })}
         </div>
       </div>

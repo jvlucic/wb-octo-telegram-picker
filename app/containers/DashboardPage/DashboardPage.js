@@ -28,7 +28,6 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     const {KPIData} = this.props;
     return (
       <div>
-        <h1>This is the Dashboard!</h1>
         { KPIData && <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { KPIData.activeKPIs }  /> }
       </div>
     );
