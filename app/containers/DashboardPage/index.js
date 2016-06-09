@@ -10,12 +10,15 @@
  */
 
 import React from 'react';
-
+import KPIChart from '../../components/KPIChart/KPIChart';
 export default class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   render() {
     return (
-      <h1>This is the Dashboard!</h1>
+      <div>
+        <h1>This is the Dashboard!</h1>
+        <KPIChart />
+      </div>
     );
   }
 }
