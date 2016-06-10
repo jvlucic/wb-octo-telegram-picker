@@ -34,76 +34,20 @@ export const KPIDataSelector = createSelector(
       labels: new Array(24).fill(0).map((elem, idx) => idx),
       datasets: getRandomDataSets(),
     };
-
-    const KPIValues = {
-      [constants.KPI.IMPRESSIONS.key]: {
-        label: constants.KPI.IMPRESSIONS.name,
-        color: constants.KPI.IMPRESSIONS.color,
-        value: 534000,
-        change: 3,
-      },
-      [constants.KPI.CLICKS.key]: {
-        label: constants.KPI.CLICKS.name,
-        color: constants.KPI.CLICKS.color,
-        value: 1234,
-        change: 3,
-      },
-      [constants.KPI.CTR.key]: {
-        label: constants.KPI.CTR.name,
-        color: constants.KPI.CTR.color,
-        value: 0.0035,
-        change: 0,
-      },
-      [constants.KPI.CONVERSION.key]: {
-        label: constants.KPI.CONVERSION.name,
-        color: constants.KPI.CONVERSION.color,
-        value: 800,
-        change: -3,
-      },
-      [constants.KPI.CVR.key]: {
-        label: constants.KPI.CVR.name,
-        color: constants.KPI.CVR.color,
-        value: 0.1143,
-        change: 3,
-      },
-      [constants.KPI.CPM.key]: {
-        label: constants.KPI.CPM.name,
-        color: constants.KPI.CPM.color,
-        value: 0.4,
-        change: 3,
-      },
-      [constants.KPI.CPC.key]: {
-        label: constants.KPI.CPC.name,
-        color: constants.KPI.CPC.color,
-        value: 0.4,
-        change: 3,
-      },
-      [constants.KPI.CPO.key]: {
-        label: constants.KPI.CPO.name,
-        color: constants.KPI.CPO.color,
-        value: 8.75,
-        change: 3,
-      },
-      [constants.KPI.ORDER_VALUE.key]: {
-        label: constants.KPI.ORDER_VALUE.name,
-        color: constants.KPI.ORDER_VALUE.color,
-        value: 350000,
-        change: 3,
-      },
-      [constants.KPI.MARGIN.key]: {
-        label: constants.KPI.MARGIN.name,
-        color: constants.KPI.MARGIN.color,
-        value: 28000,
-        change: 3,
-      },
-      [constants.KPI.ROI.key]: {
-        label: constants.KPI.ROI.name,
-        color: constants.KPI.ROI.color,
-        value: 300,
-        change: 3,
-      },
-
-    };
+    const dummyValues = [534000, 1234, 0.0035, 800, 0.1143, 0.4, 0.4, 8.75, 8.75, 350000, 28000, 300];
+    const dummyChanges = [3, 3, 0, -3, 3, 3, 3, 3, 3, 3, 3];
+    const KPIValues = {};
+    const constantine = constants;
+    Object.keys(constantine.KPI).forEach( (kpi, idx) => {
+      KPIValues[kpi] = {
+        label: constants.KPI[kpi].name,
+        color: constants.KPI[kpi].color,
+        value: dummyValues[idx],
+        change: dummyChanges[idx],
+        enabled: constants.KPI[kpi].enabled,
+        valueType: constants.KPI[kpi].valueType,
+      }
+    });
 
     return {KPIValues, chartData, activeKPIs: activeKPIs.toJS()};
   }

@@ -60,29 +60,24 @@ class KPIChart extends Component {
           <LineChart data={chartData} options={this.state.chartOptions} width="1226" height="250" />
         </div>
         <div className={styles.KPIListContainer}>
-          {Object.keys(KPIValues).map(kpiKey => {
-            const kpi = KPIValues[kpiKey];
-            // TODO: Do a better way to get the type
-            const type = ['impressions', 'clicks', 'ctr', 'conversion', 'cvr']
-              .reduce((curentType, specialType) => {
-                if (specialType === kpi.label.toLowerCase()) {
-                  return specialType;
-                }
-                return curentType;
-              }, 'normal');
-            return (
-              <KPIButton
-                key={kpiKey}
-                name={kpi.label}
-                type={type}
-                value={kpi.value}
-                symbol="$"
-                active={!!activeKPIsMap[kpiKey]}
-                percentage={Math.floor(Math.random() * 7) - 3}
-                onClick={() => toggleKPI(kpiKey)}
-              />
-            );
-          })}
+          <div className={styles.KPIListContainer}>
+            {Object.keys(KPIValues).map(kpiKey => {
+              const kpi = KPIValues[kpiKey];
+              return (
+                <KPIButton
+                  key={kpiKey}
+                  type={kpiKey}
+                  name={kpi.label}
+                  value={kpi.value}
+                  symbol="$"
+                  selected={activeKPIsMap[kpiKey]}
+                  enabled={kpi.enabled}
+                  percentage={kpi.change}
+                  onClick={() => toggleKPI(kpiKey)}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     );

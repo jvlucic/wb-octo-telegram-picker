@@ -36,7 +36,8 @@
     "test:firefox": "npm run test -- --browsers Firefox",
     "test:safari": "npm run test -- --browsers Safari",
     "test:ie": "npm run test -- --browsers IE",
-    "coveralls": "cat ./coverage/lcov/lcov.info | coveralls"
+    "coveralls": "cat ./coverage/lcov/lcov.info | coveralls",
+    "svgo": "node ./node_modules/svgo/bin/svgo --config=svgoconfig.yml -f ./icons"
   },
   "lint-staged": {
     "eslint": "*.js",
@@ -199,6 +200,7 @@
     "style-loader": "^0.13.1",
     "stylelint": "^6.3.3",
     "stylelint-config-standard": "^8.0.0",
+    "svgo": "^0.6.6",
     "url-loader": "^0.5.7",
     "webpack": "2.1.0-beta.8",
     "webpack-dev-middleware": "^1.6.1",

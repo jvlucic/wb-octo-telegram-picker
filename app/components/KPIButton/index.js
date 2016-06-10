@@ -4,30 +4,22 @@ import classnames from 'classnames';
 
 const noop = () => {};
 
-export default function KPIButton({ name, value, symbol, type, percentage, active, className, onClick = noop, ...otherProps }) {
-  const typeOfComponent = classnames({
-    'is-kpi-impressions': type === 'impressions',
-    'is-kpi-clicks': type === 'clicks',
-    'is-kpi-ctr': type === 'ctr',
-    'is-kpi-conversion': type === 'conversion',
-    'is-kpi-cvr': type === 'cvr',
+export default function KPIButton({ name, value, symbol, percentage, selected, className, enabled, onClick = noop, ...otherProps }) {
+  const isSelected = classnames({
+    'is-selected': selected,
   });
-  const isActive = classnames({
-    'is-active': active,
+  const isEnabled = classnames({
+    'is-enabled': enabled,
   });
-  let action = onClick;
-  if (type === 'normal') {
-    action = noop;
-  }
   return (
     <article
       {...otherProps}
-      onClick={action}
-      className={classnames('KPI', typeOfComponent, isActive, className)}
+      onClick={onClick}
+      className={classnames('KPI', isSelected, isEnabled, className)}
     >
-      <header className={classnames('KPI-name', typeOfComponent)}>{name}</header>
-      <content className={classnames('KPI-content', typeOfComponent)}>
-        <span className="KPI-value"></span>{value}
+      <header className={classnames('KPI-name')}>{name}</header>
+      <content className={classnames('KPI-content')}>
+        <span className="KPI-value">{value}</span>
         <span className="KPI-symbol">{symbol}</span>
       </content>
       <footer className="KPI-variation">
@@ -51,15 +43,15 @@ export default function KPIButton({ name, value, symbol, type, percentage, activ
 KPIButton.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.number.isRequired,
-  type: PropTypes.oneOf(['normal', 'impressions', 'clicks', 'ctr', 'conversion', 'cvr']),
   percentage: PropTypes.number.isRequired,
   symbol: PropTypes.string.isRequired,
-  active: PropTypes.bool,
+  selected: PropTypes.bool,
+  enabled: PropTypes.bool,
   onClick: PropTypes.func,
   className: PropTypes.string,
 };
 
 KPIButton.defaultProps = {
   type: 'normal',
-  active: false,
+  selected: false,
 };

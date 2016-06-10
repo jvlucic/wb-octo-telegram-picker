@@ -1,95 +1,33 @@
 :global {
   .KPI {
-    $impression-bg-color: #fff4f3;
-    $clicks-bg-color: #f9f4ff;
-    $ctr-bg-color: #fff9f3;
-    $conversion-bg-color: #fff4f9;
-    $cvr-bg-color: #f1f9f6;
 
-    $impression-color: #FF938A;
-    $clicks-color: #CA99FF;
-    $ctr-color: #FFC98D;
-    $conversion-color: #FF99C8;
-    $cvr-color: #7AC8A8;
-
-    $normal-color: #888888;
-
+    $color: #888888;
+    $enabled-color: #191F2D;
     $arrow-up-color: #87ed9b;
     $arrow-down-color: #f88c8c;
 
-    $special-kpis-width: 10%;
-
-
-    color: $normal-color;
+    color: $color;
     float: left;
-    min-width: 8%;
+    width: 9.09%;
     padding: 8px 10px 9px 10px;
     text-align: left;
+    cursor: pointer;
 
-    &.is-kpi-impressions,
-    &.is-kpi-clicks,
-    &.is-kpi-ctr,
-    &.is-kpi-conversion,
-    &.is-kpi-cvr {
-      border-top: none;
-      width: $special-kpis-width;
-    }
-    &:hover {
-      &.is-kpi-impressions {
-        background-color: $impression-bg-color;
-      }
-      &.is-kpi-clicks {
-        background-color: $clicks-bg-color;
-      }
-      &.is-kpi-ctr {
-        background-color: $ctr-bg-color;
-      }
-      &.is-kpi-conversion {
-        background-color: $conversion-bg-color;
-      }
-      &.is-kpi-cvr {
-        background-color: $cvr-bg-color;
-      }
-
+    &.is-enabled{
       .KPI-content {
-        &.is-kpi-impressions {
-          color: $impression-color;
-        }
-        &.is-kpi-clicks {
-          color: $clicks-color;
-        }
-        &.is-kpi-ctr {
-          color: $ctr-color;
-        }
-        &.is-kpi-conversion {
-          color: $conversion-color;
-        }
-        &.is-kpi-cvr {
-          color: $cvr-color;
-        }
+        color: $enabled-color;
       }
     }
+
     &-name {
       font-size: 14px;
-      &.is-kpi-impressions,
-      &.is-kpi-clicks,
-      &.is-kpi-ctr,
-      &.is-kpi-conversion,
-      &.is-kpi-cvr {
-        color: #888888;
-      }
+      text-transform: capitalize;
     }
     &-content {
       font-weight: bold;
       width: 100%;
-      &.is-kpi-impressions,
-      &.is-kpi-clicks,
-      &.is-kpi-ctr,
-      &.is-kpi-conversion,
-      &.is-kpi-cvr {
-        color: #191F2D;
-      }
     }
+
     &-value {
       font-size: 22px;
     }
