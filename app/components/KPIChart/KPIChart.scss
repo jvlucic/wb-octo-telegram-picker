@@ -1,35 +1,32 @@
+$margin-vertical: 15px;
+
 .KPIChartContainer{
   width:100%;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.dummyControls{
-  button{
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid black;
-    cursor: pointer;
-    margin-bottom: 5px;
-  }
+  margin-bottom: $margin-vertical;
 }
 
 .KPIListContainer{
-  width: 100%;
+  margin: $margin-vertical auto;
+  width: 1205px;
   display: flex;
   justify-content: space-between;
   padding: 5px;
   text-align: center;
+  > *{
+    max-width: 9.09%;
+    width: 9.09%;
+    margin: 0 1px;
+  }
   .KPIElem{
     margin: 5px;
     width: 9.09%;
     cursor: pointer;
     border: 1px solid black;
-    opacity: 0.3;
     &.active{
       color: green;
-      opacity: 1;
     }
   }
 }

@@ -1,31 +1,98 @@
 :global {
+  .background{
+    background-color: white;
+  }
+  .background:hover{
+    background-color: transparent;
+  }
+  .container{
+    &.is-disabled{
+      background-color: white !important;
+    }
+  }
   .KPI {
 
     $color: #888888;
     $enabled-color: #191F2D;
     $arrow-up-color: #87ed9b;
     $arrow-down-color: #f88c8c;
-
-    color: $color;
+    $chart-indicator-border-color: #E0E0E0;
+    $chart-indicator-circle-diameter: 11px;
+    $chart-indicator-circle-inner-diameter: 5px;
+    $chart-indicator-transition-config: all 0.25s ease-in;
+    transition: $chart-indicator-transition-config;
+    width: 100%;
     float: left;
-    width: 9.09%;
-    padding: 8px 10px 9px 10px;
+    color: $color;
+    padding: 5px 0 9px 0;
     text-align: left;
-    cursor: pointer;
+    &.is-hovered{
+      background-color: red;
+    }
 
-    &.is-enabled{
-      .KPI-content {
-        color: $enabled-color;
+    &-inner-container{
+      padding: 0 10px 0 10px;
+    }
+
+    &-chart-indicator {
+      height: $chart-indicator-circle-diameter;
+      .KPI-circle-inner {
+        width: $chart-indicator-circle-inner-diameter;
+        height: $chart-indicator-circle-inner-diameter;
+        background-color: black;
+        margin: 2px;
+      }
+      .KPI-circle{
+        width: $chart-indicator-circle-diameter;
+        height: inherit;
+      }
+
+      .KPI-circle, .KPI-circle-inner {
+        border: 1px solid $chart-indicator-border-color;
+        border-radius: 100%;
+        float: left;
+        display: none;
+        transition: $chart-indicator-transition-config;
+      }
+      .KPI-line{
+        padding-top: 5.5px;
+        hr{
+          transition: $chart-indicator-transition-config;
+          border-top: 1px solid $chart-indicator-border-color;
+          width: 100%;
+        }
       }
     }
 
+    &.is-enabled{
+      cursor: pointer;
+      .KPI-content {
+        color: $enabled-color;
+      }
+      .KPI-chart-indicator{
+        padding-left: 10px;
+        .KPI-circle, .KPI-circle-inner{
+          display: block;
+        }
+        .KPI-line {
+          padding-left: $chart-indicator-circle-diameter;
+        }
+      }
+
+    }
+
     &-name {
+      clear: both;
       font-size: 14px;
       text-transform: capitalize;
+      line-height: 17px;
+      margin-top: 3px;
     }
     &-content {
       font-weight: bold;
       width: 100%;
+      display: block;
+      margin-top: -2px;
     }
 
     &-value {
@@ -37,7 +104,10 @@
     }
 
     &-variation {
-      font-size: 15px;
+      font-size: 14px;
+      display: block;
+      margin-top: -5px;
+      margin-bottom: -2px;
     }
 
     &-percentage {
