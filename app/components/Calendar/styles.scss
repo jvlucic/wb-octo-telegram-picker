@@ -1,0 +1,93 @@
+@import 'main';
+:global {
+  .Calendar {
+    @include span-columns(3);
+    @include shift(8);
+    position: relative;
+
+    &-overlay {
+      background-color: white;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0px 0px 5px 0px #e0e0e0;
+      left: initial !important;
+      margin-top: 5px;
+      min-width: 600px;
+      padding-bottom: 10px;
+      position: absolute;
+      right: 0px;
+      top: 40px !important;
+      z-index: 2;
+    }
+
+    &-ShortCuts {
+      @include outer-container;
+      padding: 10px 15px;
+    }
+
+    &-button {
+      background-color: #03C7F1;
+      color: white;
+      font-size: 15px;
+      height: 34px;
+      padding: 0 15px;
+      margin: 0 auto;
+      &.is-disabled {
+        background-color: #F2F2F2;
+        color: #C6C6C6;
+      }
+      &Container {
+        @include span-columns(12);
+        text-align: center;
+      }
+    }
+
+  }
+
+  .ShortCutDay {
+    @include span-columns(3);
+    color: #03C7F1;
+    font-size: 14px;
+    height: 35px;
+    margin-right: 0;
+    text-align: center;
+  }
+}
+
+:global {
+  .DayPicker-Day {
+    color: #888888;
+    font-size: 14px;
+    height: 35px;
+    min-width: 35px;
+    width: 35px;
+    padding: 0 4px;
+  }
+
+  .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+    background-color: #DDF9FF;
+    color: #03C7F1;
+  }
+
+  .DayPicker-Day--startDay:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside),
+  .DayPicker-Day--endDay:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+    background-color: #03C7F1;
+    color: white;
+  }
+
+  .DayPicker-Weekday {
+    color: #adadad;
+    font-size: 12px;
+    abbr[title] {
+      text-decoration: none;
+    }
+  }
+
+  .DayPicker-Day--today {
+    color: #F2F2F2;
+  }
+
+  .DayPicker-Caption {
+    font-size: 14px;
+    color: #888888;
+  }
+}

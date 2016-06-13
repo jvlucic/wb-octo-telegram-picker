@@ -10,13 +10,23 @@
  */
 /* eslint-disable */
 import React from 'react';
-import { KPIChart, InputDate } from 'components';
+import { KPIChart, Calendar } from 'components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { actions } from './reducer';
-import { KPIDataSelector } from './selectors';
+import { changeDateRange } from './actions';
+import { KPIDataSelector, selectRange } from './selectors';
 class DashboardPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  /**
+   * constructor
+   */
+  constructor(props) {
+    super(props);
+
+    // Binding methods to this
+    this.handleOnChange = this.handleOnChange.bind(this);
+  }
 
   componentDidMount() {
     if (!this.props.KPIData) {
@@ -24,11 +34,21 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     }
   }
 
+  /**
+   * Handle date picker changes
+   * @param  {Object} range     - Range given for the input date
+   * @param  {Date} range.to    - Higher date in the range
+   * @param  {Date} range.from  - Lower date in the range
+   */
+  handleOnChange({ to, from }) {
+    this.props.changeDateRange({ to, from });
+  }
+
   render() {
-    const {KPIData} = this.props;
+    const {KPIData, range} = this.props;
     return (
       <div>
-        <InputDate />
+        <Calendar active from={range.from} to={range.to} onChange={this.handleOnChange} />
         { KPIData && <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { KPIData.activeKPIs }  /> }
       </div>
     );
@@ -38,9 +58,10 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
 export default connect(
   createStructuredSelector({
     KPIData: KPIDataSelector,
+    range: selectRange,
   }),
   dispatch => {
-    return bindActionCreators(actions, dispatch);
+    return bindActionCreators({ ...actions, changeDateRange }, dispatch);
   }
 )(DashboardPage);
 

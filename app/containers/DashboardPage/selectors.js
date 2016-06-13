@@ -19,6 +19,22 @@ function getRandomDataSets() {
   }));
 }
 
+const selectToDate = createSelector(
+  getModelSelector,
+  model => model.get('to'),
+);
+
+const selectFromDate = createSelector(
+  getModelSelector,
+  model => model.get('from'),
+);
+
+export const selectRange = createSelector(
+  selectToDate,
+  selectFromDate,
+  (to, from) => ({ to, from }),
+);
+
 export const KPIDataSelector = createSelector(
   getModelSelector,
   model => {
@@ -53,4 +69,3 @@ export const KPIDataSelector = createSelector(
     return {KPIValues, chartData, activeKPIs: activeKPIs.toJS()};
   }
 );
-

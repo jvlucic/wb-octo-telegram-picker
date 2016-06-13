@@ -1,0 +1,15 @@
+:global(.DayPicker) {
+  outline:0;
+  div * {
+    outline:0;
+  }
+}
+
+:global(.DayPicker-Day) {
+  border: none;
+  min-width: 40px;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
