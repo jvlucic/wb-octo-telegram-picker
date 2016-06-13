@@ -10,7 +10,7 @@
  */
 /* eslint-disable */
 import React from 'react';
-import { KPIChart } from 'components';
+import { KPIChart, InputDate } from 'components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -28,6 +28,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     const {KPIData} = this.props;
     return (
       <div>
+        <InputDate />
         { KPIData && <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { KPIData.activeKPIs }  /> }
       </div>
     );

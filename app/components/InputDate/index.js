@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
+import './styles.scss';
 
 const msgs = defineMessages({
   dates: {
@@ -12,9 +13,9 @@ const msgs = defineMessages({
 export default function InputDate({ to, from }) {
   return (
     <div className="InputDate">
-      <div className="InputDate-calendar"></div>
-      <div className="InputDate-text">
-        <FormattedMessage {...msgs} />
+      <div className="InputDate-calendar" />
+      <div className="InputDate-label">
+        <FormattedMessage {...msgs.dates} />
       </div>
       <div className="InputDate-value">
         <FormattedDate value={to} />

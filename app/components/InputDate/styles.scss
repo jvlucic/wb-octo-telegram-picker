@@ -1,0 +1,23 @@
+:global {
+  .InputDate {
+    border: 1px solid #e0e0e0;
+    height: 40px;
+    padding: 0 12px;
+
+    &-label {
+      color: #ADADAD;
+      float: left;
+      font-size: 10px;
+      line-height: 40px;
+      padding-left: 7px;
+    }
+
+    &-value {
+      color: #888888;
+      float: left;
+      font-size: 14px;
+      line-height: 40px;
+      padding-left: 20px;
+    }
+  }
+}
