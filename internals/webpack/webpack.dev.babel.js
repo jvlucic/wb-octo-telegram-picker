@@ -65,5 +65,5 @@ module.exports = require('./webpack.base.babel')({
   },
 
   // Emit a source map for easier debugging
-  devtool: 'inline-source-map',
+  devtool: 'eval',
 });

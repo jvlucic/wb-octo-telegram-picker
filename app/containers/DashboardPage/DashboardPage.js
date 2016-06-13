@@ -10,12 +10,24 @@
  */
 /* eslint-disable */
 import React from 'react';
-import { KPIChart } from 'components';
+import { KPIChart, CampaignTable } from 'components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { actions } from './reducer';
-import { KPIDataSelector } from './selectors';
+import { KPIDataSelector, campaignTableHeadersSelector, campaignTableListSelector } from './selectors';
+import styles from './DashboardPage.scss';
+import { fromJS } from 'immutable';
+
+const list = fromJS([
+  { name: 'Brian Vaughn6', description: 'Software engineer' },
+  { name: 'Brian Vaughn8', description: 'Software engineer' },
+  { name: 'Brian Vaughn1', description: 'Software engineer' },
+  { name: 'Brian Vaughn2', description: 'Software engineer' },
+  { name: 'Brian Vaughn3', description: 'Software engineer' },
+  { name: 'Brian Vaughn4', description: 'Software engineer' },
+]);
+
 class DashboardPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   componentDidMount() {
@@ -25,10 +37,15 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
   }
 
   render() {
-    const {KPIData} = this.props;
+    const {KPIData, tableHeaders, tableList} = this.props;
     return (
       <div>
-        { KPIData && <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { KPIData.activeKPIs }  /> }
+        <div className={styles.KPIChartContainer}>
+          { KPIData && <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { KPIData.activeKPIs }  /> }
+        </div>
+        <div className={styles.campaignTableContainer}>
+          { tableList && <CampaignTable list={tableList} headers={tableHeaders} /> }
+        </div>
       </div>
     );
   }
@@ -37,6 +54,8 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
 export default connect(
   createStructuredSelector({
     KPIData: KPIDataSelector,
+    tableHeaders: campaignTableHeadersSelector,
+    tableList: campaignTableListSelector,
   }),
   dispatch => {
     return bindActionCreators(actions, dispatch);

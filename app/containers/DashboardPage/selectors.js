@@ -19,6 +19,65 @@ function getRandomDataSets() {
   }));
 }
 
+export const campaignDataSelector = createSelector(
+  getModelSelector,
+  model => ( model.get('campaignData') )
+);
+
+export const campaignperformanceDataSelector = createSelector(
+  getModelSelector,
+  model => ( model.get('campaignPerformanceData') )
+);
+
+export const campaignTableHeadersSelector = createSelector(
+  campaignDataSelector,
+  (campaignData) => {
+    if (!campaignData) {
+      return false;
+    }
+    const performance = campaignData[0].performance; // determine headers from first value
+    const headers = [constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS, constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN];
+    if (performance.hasOwnProperty('impressions')){ headers.push(constants.KPI.IMPRESSIONS.key) }
+    if (performance.hasOwnProperty('clicks')){ headers.push(constants.KPI.CLICKS.key) }
+    if (performance.hasOwnProperty('CTR')){ headers.push(constants.KPI.CTR.key) }
+    if (performance.hasOwnProperty('conversion')){ headers.push(constants.KPI.CONVERSION.key) }
+    if (performance.hasOwnProperty('CVR')){ headers.push(constants.KPI.CVR.key) }
+    if (performance.hasOwnProperty('CPM')){ headers.push(constants.KPI.CPM.key) }
+    if (performance.hasOwnProperty('CPC')){ headers.push(constants.KPI.CPC.key) }
+    if (performance.hasOwnProperty('CPO')){ headers.push(constants.KPI.CPO.key) }
+    if (performance.hasOwnProperty('cost')){ headers.push(constants.KPI.COST.key) }
+    if (performance.hasOwnProperty('orderValue')){ headers.push(constants.KPI.ORDER_VALUE.key) }
+    if (performance.hasOwnProperty('ROI')){ headers.push(constants.KPI.ROI.key) }
+    return headers;
+  }
+);
+
+
+export const campaignTableListSelector = createSelector(
+  campaignDataSelector,
+  (campaignData) => {
+    if (!campaignData) {
+      return false;
+    }
+
+    return campaignData.map( data => ({
+      [constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS]: data.active && data.active === "active" ? true : false,
+      [constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN]: { name: data.name, startData: data.startData, endDate: data.endDate, budget: data.budget, currency:data.currency } || null,
+      [constants.KPI.IMPRESSIONS.key]: data.performance.impressions || null,
+      [constants.KPI.CLICKS.key]: data.performance.clicks || null,
+      [constants.KPI.CTR.key]: data.performance.CTR || null,
+      [constants.KPI.CONVERSION.key]: data.performance.conversion || null,
+      [constants.KPI.CVR.key]: data.performance.CVR || null,
+      [constants.KPI.CPM.key]: data.performance.CPM || null,
+      [constants.KPI.CPC.key]: data.performance.CPC || null,
+      [constants.KPI.CPO.key]: data.performance.CPO || null,
+      [constants.KPI.COST.key]: data.performance.cost || null,
+      [constants.KPI.ORDER_VALUE.key]: data.performance.orderValue || null,
+      [constants.KPI.ROI.key]: data.performance.ROI || null,
+    }));
+  }
+);
+
 export const KPIDataSelector = createSelector(
   getModelSelector,
   model => {
@@ -29,7 +88,6 @@ export const KPIDataSelector = createSelector(
       return null;
     }
     /* TODO: PROCESS RAW DATA AND PRODUCES KPI AND CHART DATA*/
-
     const chartData = {
       labels: new Array(24).fill(0).map((elem, idx) => idx),
       datasets: getRandomDataSets(),
@@ -49,7 +107,6 @@ export const KPIDataSelector = createSelector(
         valueType: constants.KPI[kpi].valueType,
       }
     });
-
     return {KPIValues, chartData, activeKPIs: activeKPIs.toJS()};
   }
 );

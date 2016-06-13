@@ -24,6 +24,10 @@ const constants = {
     DAILY: 'daily',
   },
   VALUE_TYPE: valueType,
+  CAMPAIGN_DATA_FIXED_HEADERS: {
+    STATUS: 'status',
+    CAMPAIGN: 'campaign',
+  },
   KPI: {
     IMPRESSIONS: {
       key: 'IMPRESSIONS',
