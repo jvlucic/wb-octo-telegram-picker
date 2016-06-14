@@ -1,1 +1,14 @@
-<svg width="10" height="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><title></title><path d="M11 77L6 72 8.91666667 72 8.91666667 67 13.0833333 67 13.0833333 72 16 72z" transform="translate(-6 -67)" fill="#FF7474" fill-rule="evenodd"/></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="10px" height="10px" viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
+    <title></title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="KPI-Conversion" transform="translate(-6.000000, -67.000000)" fill="#FF7474">
+            <g id="Group-4">
+                <polygon id="" points="11 77 6 72 8.91666667 72 8.91666667 67 13.0833333 67 13.0833333 72 16 72"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>
