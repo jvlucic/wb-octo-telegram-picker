@@ -1,6 +1,14 @@
 .campaignTable{
   width: 100%;
   font-size: 14px;
+  :global{
+    .FlexTable{
+      outline: none;
+      * {
+        outline: none;
+      }
+    }
+  }
 }
 
 .secondHalfColummn{
@@ -26,4 +34,7 @@
 
 .cell{
  color: #888888;
+}
+.statusCell{
+  padding: 5px;
 }

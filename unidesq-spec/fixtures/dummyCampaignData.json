@@ -1,7 +1,7 @@
 [{
   "id": 1,
   "name": "eCommerce Campaign 1",
-  "status": "active",
+  "status": "inactive",
   "startDate": "2016-01-01 00:00:00",
   "endDate": "2016-01-31 00:00:00",
   "budget": 1000.00,
@@ -77,7 +77,7 @@
   {
     "id": 4,
     "name": "eCommerce Campaign 4",
-    "status": "active",
+    "status": "inactive",
     "startDate": "2016-01-01 00:00:00",
     "endDate": "2016-01-31 00:00:00",
     "budget": 1000.00,
