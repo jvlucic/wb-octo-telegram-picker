@@ -1,6 +1,9 @@
 import { fromJS } from 'immutable';
 import { name } from './__init__';
 import constants from '../../constants';
+import { CHANGE_DATE_RANGE } from './constants';
+import moment from 'moment';
+
 /* TODO: replace dummydata for API calls */
 import dummyCampaignData from '../../../unidesq-spec/fixtures/dummyCampaignData.json';
 import dummyCampaignPerfomanceData from '../../../unidesq-spec/fixtures/dummyCampaignPerfomanceData.json';
@@ -9,6 +12,8 @@ const LOAD_CAMPAIGN_DATA = `${name}/LOAD_CAMPAIGN_DATA`;
 const LOAD_CAMPAIGN_DATA_SUCCESS = `${name}/LOAD_CAMPAIGN_DATA_SUCCESS`;
 const LOAD_CAMPAIGN_DATA_ERROR = `${name}/LOAD_CAMPAIGN_DATA_ERROR`;
 
+const now = moment().startOf('day');
+
 export const initialState = fromJS({
   timeFrame: constants.TIMEFRAME.YESTERDAY,
   status: constants.STATUS.ACTIVE,
@@ -16,6 +21,8 @@ export const initialState = fromJS({
   activeKPIs: [constants.KPI.IMPRESSIONS.key, constants.KPI.CLICKS.key],
   campaignPerformanceData: false,
   campaignData: false,
+  to: new Date(now.toDate()),
+  from: new Date(now.subtract(1, 'week').toDate()),
 });
 
 
@@ -38,6 +45,10 @@ export default (state = initialState, action) => {
         .set('loading', false)
         .set('campaignPerformanceData', false)
         .set('campaignData', false);
+    case CHANGE_DATE_RANGE:
+      return state
+        .set('to', action.to)
+        .set('from', action.from);
     default:
       return state;
   }

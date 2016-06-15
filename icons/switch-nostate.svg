@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="31px" height="15px" viewBox="0 0 31 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
+    <title>Switch Standby</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="3.0.8-Dashboard-#2-Copy" transform="translate(-81.000000, -636.000000)">
+            <g id="Group-20" transform="translate(71.000000, 568.000000)">
+                <g id="Group-18" transform="translate(0.000000, 50.000000)">
+                    <g id="Switch-Standby" transform="translate(10.000000, 18.000000)">
+                        <rect id="Rectangle-37" fill="#FFCF74" x="0" y="0" width="30.9375" height="15" rx="7.5"></rect>
+                        <path d="M23.4375,13.125 C26.5441019,13.125 29.0625,10.6066019 29.0625,7.5 C29.0625,4.39339813 26.5441019,1.875 23.4375,1.875 C20.3308981,1.875 17.8125,4.39339813 17.8125,7.5 C17.8125,10.6066019 20.3308981,13.125 23.4375,13.125 Z" id="Oval-4" fill="#FFFFFF"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

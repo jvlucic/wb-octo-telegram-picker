@@ -10,25 +10,25 @@
  */
 /* eslint-disable */
 import React from 'react';
-import { KPIChart, CampaignTable } from 'components';
+import { KPIChart, CampaignTable, Calendar } from 'components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { actions } from './reducer';
-import { KPIDataSelector, campaignTableHeadersSelector, campaignTableListSelector } from './selectors';
+import { KPIDataSelector, selectRange, campaignTableHeadersSelector, campaignTableListSelector } from './selectors';
+import { changeDateRange } from './actions';
 import styles from './DashboardPage.scss';
-import { fromJS } from 'immutable';
-
-const list = fromJS([
-  { name: 'Brian Vaughn6', description: 'Software engineer' },
-  { name: 'Brian Vaughn8', description: 'Software engineer' },
-  { name: 'Brian Vaughn1', description: 'Software engineer' },
-  { name: 'Brian Vaughn2', description: 'Software engineer' },
-  { name: 'Brian Vaughn3', description: 'Software engineer' },
-  { name: 'Brian Vaughn4', description: 'Software engineer' },
-]);
 
 class DashboardPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  /**
+   * constructor
+   */
+  constructor(props) {
+    super(props);
+
+    // Binding methods to this
+    this.handleOnChange = this.handleOnChange.bind(this);
+  }
 
   componentDidMount() {
     if (!this.props.KPIData) {
@@ -36,10 +36,21 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     }
   }
 
+  /**
+   * Handle date picker changes
+   * @param  {Object} range     - Range given for the input date
+   * @param  {Date} range.to    - Higher date in the range
+   * @param  {Date} range.from  - Lower date in the range
+   */
+  handleOnChange({ to, from }) {
+    this.props.changeDateRange({ to, from });
+  }
+
   render() {
-    const {KPIData, tableHeaders, tableList} = this.props;
+    const {KPIData, range, tableHeaders, tableList} = this.props;
     return (
       <div>
+        <Calendar active from={range.from} to={range.to} onChange={this.handleOnChange} />
         <div className={styles.KPIChartContainer}>
           { KPIData && <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { KPIData.activeKPIs }  /> }
         </div>
@@ -56,9 +67,10 @@ export default connect(
     KPIData: KPIDataSelector,
     tableHeaders: campaignTableHeadersSelector,
     tableList: campaignTableListSelector,
+    range: selectRange,
   }),
   dispatch => {
-    return bindActionCreators(actions, dispatch);
+    return bindActionCreators({ ...actions, changeDateRange }, dispatch);
   }
 )(DashboardPage);
 
