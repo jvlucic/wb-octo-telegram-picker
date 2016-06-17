@@ -32,6 +32,7 @@ class CampaignTable extends Component {
     this.headerRenderer = this.headerRenderer.bind(this);
     this.cellRenderer = this.cellRenderer.bind(this);
     this.noRowsRenderer = this.noRowsRenderer.bind(this);
+    this.getRowHeight = this.getRowHeight.bind(this);
     this.sort = this.sort.bind(this);
   }
 
@@ -39,9 +40,6 @@ class CampaignTable extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  getDatum(list, index) {
-    return list[index % list.length]
-  }
 
   cellRenderer({cellData, columnData, dataKey, rowData, rowIndex, ...props}) {
     if (dataKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS) {
@@ -107,6 +105,15 @@ class CampaignTable extends Component {
 
   sort({sortBy, sortDirection}) {
     this.setState({sortBy, sortDirection})
+  }
+
+  getDatum(list, index) {
+    return list[index % list.length]
+  }
+
+  getRowHeight ({ index }) {
+    /*TODO: IMPLEMENT */
+    return this.state.rowHeight;
   }
 
   /*  TODO USE INTL TO TRANSLATE HEADERS */

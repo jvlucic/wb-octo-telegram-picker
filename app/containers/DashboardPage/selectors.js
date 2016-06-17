@@ -2,11 +2,12 @@
 import { name } from './__init__';
 import { createSelector } from 'reselect';
 import constants from '../../constants';
+import dummyDatasets from '../../../unidesq-spec/fixtures/dummyDatasets.json';
 
 export const getModelSelector = (state) => state.get(name);
 
 function getRandomNumberArray(size) {
-  return new Array(size).fill(0).map(() => Math.round(Math.random() * 255));
+  return new Array(size).fill(0).map(() => Math.round(Math.random() * ( Math.random() * 10000 )));
 }
 function getRandomDataSets() {
   return Object.keys(constants.KPI).map(kpi => ({
@@ -106,7 +107,7 @@ export const KPIDataSelector = createSelector(
     /* TODO: PROCESS RAW DATA AND PRODUCES KPI AND CHART DATA*/
     const chartData = {
       labels: new Array(24).fill(0).map((elem, idx) => idx),
-      datasets: getRandomDataSets(),
+      datasets: dummyDatasets,
     };
     const dummyValues = [534000, 1234, 0.0035, 800, 0.1143, 0.4, 0.4, 8.75, 8.75, 350000, 28000, 3];
     const dummyChanges = [3, 3, 0, -3, 3, 3, 3, 3, 3, 3, 3, 3];

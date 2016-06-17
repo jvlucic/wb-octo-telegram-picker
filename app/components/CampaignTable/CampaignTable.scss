@@ -30,6 +30,9 @@
 }
 .campaignName{
   color: #191F2D;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cell{

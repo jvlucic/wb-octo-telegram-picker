@@ -15,30 +15,66 @@ class KPIChart extends Component {
     this.toggleKPI = this.toggleKPI.bind(this);
     this.toggleHovered = this.toggleHovered.bind(this);
     this.axisToRemove = this.axisToRemove.bind(this);
-    let isPercentageAxisActive = false;
-    let isNumericValueAxisActive = false;
+
     const chartData = { ...props.chartData };
+    const defaultDataSetConfig = {
+      tension: 0.1,
+    };
+    const xAxis = {
+      gridLines: {
+        display: true,
+        drawBorder: false,
+        zeroLineWidth: 1,
+        color: 'transparent',
+        zeroLineColor: 'green',
+      },
+      ticks: {
+        beginAtZero: false,
+        fontColor: '#888888',
+      },
+    };
 
-    chartData.datasets.forEach(it => {
-      const dataSet = it;
+    const yAxes = chartData.datasets.map(dataSet => {
       const kpiKey = dataSet.kpi;
-      const kpiObj = props.KPIValues[kpiKey];
-      dataSet.yAxisID = kpiObj.valueType === constants.VALUE_TYPE.PERCENTAGE ?
-        'percentageAxis' :
-        'numericValueAxis';
-
-      dataSet.hidden = props.initiallyActiveKPIs.indexOf(dataSet.kpi) < 0;
-
-      if (!isPercentageAxisActive && !dataSet.hidden) {
-        isPercentageAxisActive = kpiObj.valueType === constants.VALUE_TYPE.PERCENTAGE;
-      }
-      if (!isNumericValueAxisActive && !dataSet.hidden) {
-        isNumericValueAxisActive = kpiObj.valueType !== constants.VALUE_TYPE.PERCENTAGE;
-      }
+      const kpi = props.KPIValues[kpiKey];
+      return {
+        id: kpiKey,
+        position: 'left',
+        display: false,
+        ticks: {
+          beginAtZero: true,
+          callback: (value, index, values) => (index === values.length - 1 ? '' : value),
+          fontColor: kpi.color,
+          labelOffset: 0,
+        },
+        gridLines: {
+          offsetGridLines: true,
+          drawBorder: false,
+          zeroLineWidth: 1,
+          lineWidth: 1,
+          color: kpi.color,
+          zeroLineColor: kpi.color,
+        },
+      };
     });
+    let activatedFirstAxis = false;
+    chartData.datasets = chartData.datasets.map((it, idx) => {
+      const dataSet = { ...defaultDataSetConfig, ...it };
+      const kpiKey = dataSet.kpi;
+      const kpi = props.KPIValues[kpiKey];
+      dataSet.yAxisID = kpiKey;
+      dataSet.hidden = props.initiallyActiveKPIs.indexOf(dataSet.kpi) < 0;
+      if (!dataSet.hidden && !activatedFirstAxis) {
+        yAxes[idx].display = true;
+        xAxis.gridLines.zeroLineColor = kpi.color;
+        activatedFirstAxis = true;
+      }
+      return dataSet;
+    });
+
     this.state = {
-      activeKPIs: props.initiallyActiveKPIs,
       chartData,
+      activeKPIs: props.initiallyActiveKPIs,
       hoveredKPI: null,
       redraw: false,
       chartOptions: {
@@ -46,61 +82,8 @@ class KPIChart extends Component {
           display: false,
         },
         scales: {
-          yAxes: [
-            {
-              id: 'numericValueAxis',
-              position: 'left',
-              ticks: {
-                beginAtZero: false,
-                display: isNumericValueAxisActive,
-                labelOffset: 8,
-                padding: -3.5,
-                mirror: true,
-                callback: (value, index, values) => (index === values.length - 1 ? '' : value),
-                fontColor: '#888888',
-              },
-              gridLines: {
-                offsetGridLines: false,
-                drawBorder: false,
-                zeroLineWidth: 1,
-                lineWidth: 1,
-                color: '#E0E0E0',
-                zeroLineColor: '#E0E0E0',
-              },
-            },
-            {
-              id: 'percentageAxis',
-              position: 'right',
-              ticks: {
-                beginAtZero: false,
-                display: isPercentageAxisActive,
-                labelOffset: 8,
-                padding: -3.5,
-                mirror: true,
-                callback: (value, index, values) => (index === values.length - 1 ? ' b ' : value),
-                fontColor: '#888888',
-              },
-              gridLines: {
-                display: false,
-                offsetGridLines: false,
-                drawBorder: false,
-                zeroLineWidth: 1,
-                lineWidth: 1,
-                color: '#E0E0E0',
-                zeroLineColor: '#E0E0E0',
-              },
-            },
-          ],
-          xAxes: [{
-            gridLines: {
-              display: false,
-              drawBorder: false,
-            },
-            ticks: {
-              beginAtZero: false,
-              fontColor: '#888888',
-            },
-          }],
+          yAxes,
+          xAxes: [xAxis],
         },
         responsive: true,
         maintainAspectRatio: false,
@@ -113,16 +96,47 @@ class KPIChart extends Component {
     const chartData = this.state.chartData;
 
     const chartOptions = this.state.chartOptions;
-    const previousDataSets = [...chartData.datasets].filter(it => !it.hidden);
-
+    // const previousDataSets = [...chartData.datasets].filter(it => !it.hidden);
+    let toggledDatasetWillBeShown = false;
     chartData.datasets.forEach(it => {
       const dataset = it;
       if (dataset.kpi === kpi) {
         dataset.hidden = !dataset.hidden;
+        toggledDatasetWillBeShown = !dataset.hidden;
       }
     });
-    const nextDataSets = [...chartData.datasets].filter(it => !it.hidden);
+    const props = this.props;
 
+    // const nextDataSets = [...chartData.datasets].filter(it => !it.hidden);
+    if (toggledDatasetWillBeShown) {
+      chartOptions.scales.yAxes.forEach((it) => {
+        const yAxis = it;
+        if (yAxis.id === kpi) {
+          const kpiObj = props.KPIValues[kpi];
+          yAxis.display = true;
+          chartOptions.scales.xAxes[0].gridLines.zeroLineColor = kpiObj.color;
+        } else {
+          yAxis.display = false;
+        }
+      });
+    } else {
+      let activatedOneScale = false;
+      for (let idx = 0; idx < chartOptions.scales.yAxes.length; idx++) {
+        const yAxis = chartOptions.scales.yAxes[idx];
+        const dataset = chartData.datasets[idx];
+        if (!dataset.hidden) {
+          if (!activatedOneScale) {
+            const kpiObj = props.KPIValues[dataset.kpi];
+            yAxis.display = true;
+            chartOptions.scales.xAxes[0].gridLines.zeroLineColor = kpiObj.color;
+            activatedOneScale = true;
+          }
+        } else {
+          yAxis.display = false;
+        }
+      }
+    }
+    /*
     const { axisToRemove, axisToAdd } = this.axisToRemove(previousDataSets, nextDataSets);
 
     axisToRemove.forEach(axisName => {
@@ -141,12 +155,12 @@ class KPIChart extends Component {
         }
       });
     });
-
+  */
     this.setState({
       activeKPIs: activeKPIs.length === this.state.activeKPIs.length ? [...activeKPIs, kpi] : activeKPIs,
       chartData,
       chartOptions,
-      redraw: axisToRemove.length > 0 || axisToAdd.length > 0,
+      redraw: true,
     });
   }
 
