@@ -3,49 +3,62 @@
   "label": "Impressions",
   "data": [8549, 1270, 7140, 592, 3723, 382, 4170, 19, 1544, 386, 244, 8697, 1410, 5257, 4035, 1805, 114, 155, 2974, 358, 127, 1366, 322, 601],
   "borderColor": "rgba(255, 147, 138, 1)",
-  "backgroundColor": "transparent",
+  "backgroundColor": "rgba(255, 147, 138, 0.2)",
+  "pointBackgroundColor": "rgba(255, 147, 138, 1)",
+  "fill": false,
   "borderWidth": 1
 }, {
   "kpi": "CLICKS",
   "label": "Clicks",
   "data": [2.98,5.92,0.55,0.13,4.68,3.20,3.79,6.12,0.89,5.41,2.31,4.39,1.44,8.50,0.17,4.81,2.89,0.90,4.36,1.43,1.42,1.62,0.14,0.08],
   "borderColor": "rgba(202, 153, 255, 1)",
-  "backgroundColor": "transparent",
+  "pointBackgroundColor": "rgba(202, 153, 255, 1)",
+  "backgroundColor": "rgba(202, 153, 255, 0.2)",
+  "fill": false,
   "borderWidth": 1
 }, {
   "kpi": "CTR",
   "label": "CTR",
   "data": [2.98,5.92,0.55,0.13,4.68,3.20,3.79,6.12,0.89,5.41,2.31,4.39,1.44,8.50,0.17,4.81,2.89,0.90,4.36,1.43,1.42,1.62,0.14,0.08],
   "borderColor": "rgba(255, 201, 141, 1)",
-  "backgroundColor": "transparent",
+  "pointBackgroundColor": "rgba(255, 201, 141, 1)",
+  "backgroundColor": "rgba(255, 201, 141, 0.2)",
+  "fill": false,
   "borderWidth": 1
 }, {
   "kpi": "CONVERSION",
   "label": "Conversion",
   "data": [298, 1059, 214, 1280, 4151, 6642, 2018, 426, 8206, 5597, 827, 1627, 5819, 7990, 1678, 2564, 6957, 2256, 863, 1974, 3518, 6999, 143, 4623],
   "borderColor": "rgba(255, 153, 200, 1)",
-  "backgroundColor": "transparent",
+  "pointBackgroundColor": "rgba(255, 153, 200, 1)",
+  "backgroundColor": "rgba(255, 153, 200, 0.2)",
+  "fill": false,
   "borderWidth": 1
 }, {
   "kpi": "CVR",
   "label": "CVR",
   "data": [1591, 1639, 1369, 4207, 285, 2709, 262, 7997, 155, 4047, 4712, 9632, 7764, 3962, 2208, 865, 6551, 810, 2857, 4071, 4928, 1326, 5494, 1147],
   "borderColor": "rgba(122, 200, 168, 1)",
-  "backgroundColor": "transparent",
+  "pointBackgroundColor": "rgba(122, 200, 168, 1)",
+  "backgroundColor": "rgba(122, 200, 168, 0.2)",
+  "fill": false,
   "borderWidth": 1
 }, {
   "kpi": "CPM",
   "label": "CPM",
   "data": [821, 1979, 2863, 321, 551, 6895, 126, 2065, 1651, 1584, 480, 7681, 97, 1623, 4632, 6007, 6670, 5649, 1793, 3605, 3400, 2818, 3290, 1646],
   "borderColor": "rgba(122, 200, 168, 1)",
-  "backgroundColor": "transparent",
+  "backgroundColor": "rgba(122, 200, 168, 0.2)",
+  "fill": false,
   "borderWidth": 1
 }, {
   "kpi": "CPC",
   "label": "CPC",
   "data": [5128, 448, 2237, 2008, 218, 445, 1957, 21, 4556, 2973, 4815, 22, 1046, 5783, 1415, 1, 3630, 48, 5740, 450, 5278, 1911, 1208, 46],
   "borderColor": "rgba(122, 200, 168, 1)",
-  "backgroundColor": "transparent",
+  "pointBackgroundColor": "rgba(122, 200, 168, 1)",
+  "backgroundColor": "rgba(122, 200, 168, 0.2)",
+  "fill": false,
   "borderWidth": 1
 }, {
   "kpi": "CPO",

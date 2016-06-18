@@ -6,16 +6,26 @@ import React, { PropTypes, Component } from 'react';
 import ReactChartJS from 'react-chartjs';
 import styles from './KPIChart.scss';
 import KPIButton from 'components/KPIButton';
-import constants from '../../constants';
+
+function setColorAlpha(color, alpha) {
+  const parts = color.split(',');
+  if (parts.length <= 0) { // NOT RGBA FORMAT
+    return color;
+  }
+  parts[3] = `${alpha})`;
+  return parts.join(',');
+}
+
+const GRID_LINES_ALPHA = 0.2;
 
 class KPIChart extends Component {
   /* TODO: SHOW LOADER when no DATA IS AVAILABLE*/
+
   constructor(props) {
     super(props);
     this.toggleKPI = this.toggleKPI.bind(this);
     this.toggleHovered = this.toggleHovered.bind(this);
-    this.axisToRemove = this.axisToRemove.bind(this);
-
+    this.handleChartClick = this.handleChartClick.bind(this);
     const chartData = { ...props.chartData };
     const defaultDataSetConfig = {
       tension: 0.1,
@@ -52,7 +62,7 @@ class KPIChart extends Component {
           drawBorder: false,
           zeroLineWidth: 1,
           lineWidth: 1,
-          color: kpi.color,
+          color: setColorAlpha(kpi.color, GRID_LINES_ALPHA),
           zeroLineColor: kpi.color,
         },
       };
@@ -67,6 +77,7 @@ class KPIChart extends Component {
       if (!dataSet.hidden && !activatedFirstAxis) {
         yAxes[idx].display = true;
         xAxis.gridLines.zeroLineColor = kpi.color;
+        dataSet.fill = true;
         activatedFirstAxis = true;
       }
       return dataSet;
@@ -78,6 +89,13 @@ class KPIChart extends Component {
       hoveredKPI: null,
       redraw: false,
       chartOptions: {
+        hover: {
+          mode: 'dataset',
+          onHover: (elms) => (elms && elms.length > 0 ?  // eslint-disable-line no-return-assign
+              this.refs.lineChart.getCanvas().style.cursor = 'pointer' :
+              this.refs.lineChart.getCanvas().style.cursor = ''
+          ),
+        },
         legend: {
           display: false,
         },
@@ -90,37 +108,26 @@ class KPIChart extends Component {
       },
     };
   }
-
-  toggleKPI(kpi) {
-    const activeKPIs = this.state.activeKPIs.filter(it => it !== kpi);
-    const chartData = this.state.chartData;
-
-    const chartOptions = this.state.chartOptions;
-    // const previousDataSets = [...chartData.datasets].filter(it => !it.hidden);
-    let toggledDatasetWillBeShown = false;
-    chartData.datasets.forEach(it => {
-      const dataset = it;
-      if (dataset.kpi === kpi) {
-        dataset.hidden = !dataset.hidden;
-        toggledDatasetWillBeShown = !dataset.hidden;
-      }
-    });
-    const props = this.props;
-
-    // const nextDataSets = [...chartData.datasets].filter(it => !it.hidden);
+  redrawChart(kpi, props, toggledDatasetWillBeShown, origChartOptions, origChartData) {
+    const chartOptions = origChartOptions;
+    const chartData = origChartData;
     if (toggledDatasetWillBeShown) {
-      chartOptions.scales.yAxes.forEach((it) => {
+      chartOptions.scales.yAxes.forEach((it, idx) => {
         const yAxis = it;
         if (yAxis.id === kpi) {
           const kpiObj = props.KPIValues[kpi];
           yAxis.display = true;
           chartOptions.scales.xAxes[0].gridLines.zeroLineColor = kpiObj.color;
+          chartData.datasets[idx].fill = true;
         } else {
           yAxis.display = false;
+          chartData.datasets[idx].fill = false;
         }
       });
     } else {
-      let activatedOneScale = false;
+      let activatedOneScale = chartOptions.scales.yAxes
+        .map(it => it.id === kpi ? false : it.display) // eslint-disable-line no-confusing-arrow
+        .reduce((a, b) => a || b);
       for (let idx = 0; idx < chartOptions.scales.yAxes.length; idx++) {
         const yAxis = chartOptions.scales.yAxes[idx];
         const dataset = chartData.datasets[idx];
@@ -128,34 +135,74 @@ class KPIChart extends Component {
           if (!activatedOneScale) {
             const kpiObj = props.KPIValues[dataset.kpi];
             yAxis.display = true;
+            dataset.fill = true;
             chartOptions.scales.xAxes[0].gridLines.zeroLineColor = kpiObj.color;
             activatedOneScale = true;
           }
-        } else {
+        }
+        if (dataset.hidden) {
           yAxis.display = false;
+          dataset.fill = false;
         }
       }
     }
-    /*
-    const { axisToRemove, axisToAdd } = this.axisToRemove(previousDataSets, nextDataSets);
+    return { chartOptions, chartData };
+  }
 
-    axisToRemove.forEach(axisName => {
-      chartOptions.scales.yAxes.forEach(it => {
+  toggleKPI(kpi) {
+    const activeKPIs = this.state.activeKPIs.filter(it => it !== kpi);
+    if (activeKPIs.length !== this.state.activeKPIs.length && this.state.activeKPIs.length <= 1) { // Always keep at least one KPI active
+      return;
+    }
+
+    const origChartData = this.state.chartData;
+
+    const origChartOptions = this.state.chartOptions;
+    let toggledDatasetWillBeShown = false;
+    origChartData.datasets.forEach(it => {
+      const dataset = it;
+      if (dataset.kpi === kpi) {
+        dataset.hidden = !dataset.hidden;
+        toggledDatasetWillBeShown = !dataset.hidden;
+      }
+    });
+    const props = this.props;
+    /*
+    if (toggledDatasetWillBeShown) {
+      chartOptions.scales.yAxes.forEach((it, idx) => {
         const yAxis = it;
-        if (yAxis.id === axisName) {
-          yAxis.ticks.display = false;
+        if (yAxis.id === kpi) {
+          const kpiObj = props.KPIValues[kpi];
+          yAxis.display = true;
+          chartOptions.scales.xAxes[0].gridLines.zeroLineColor = kpiObj.color;
+          chartData.datasets[idx].fill = true;
+        } else {
+          yAxis.display = false;
+          chartData.datasets[idx].fill = false;
         }
       });
-    });
-    axisToAdd.forEach(axisName => {
-      chartOptions.scales.yAxes.forEach(it => {
-        const yAxis = it;
-        if (yAxis.id === axisName) {
-          yAxis.ticks.display = true;
+    } else {
+      let activatedOneScale = chartOptions.scales.yAxes.map(it => it.id === kpi ? false : it.display).reduce((a, b) => a || b);
+      for (let idx = 0; idx < chartOptions.scales.yAxes.length; idx++) {
+        const yAxis = chartOptions.scales.yAxes[idx];
+        const dataset = chartData.datasets[idx];
+        if (!dataset.hidden) {
+          if (!activatedOneScale) {
+            const kpiObj = props.KPIValues[dataset.kpi];
+            yAxis.display = true;
+            dataset.fill = true;
+            chartOptions.scales.xAxes[0].gridLines.zeroLineColor = kpiObj.color;
+            activatedOneScale = true;
+          }
         }
-      });
-    });
-  */
+        if (dataset.hidden) {
+          yAxis.display = false;
+          dataset.fill = false;
+        }
+      }
+    }
+    */
+    const { chartOptions, chartData } = this.redrawChart(kpi, props, toggledDatasetWillBeShown, origChartOptions, origChartData);
     this.setState({
       activeKPIs: activeKPIs.length === this.state.activeKPIs.length ? [...activeKPIs, kpi] : activeKPIs,
       chartData,
@@ -171,32 +218,28 @@ class KPIChart extends Component {
     });
   }
 
-  axisToRemove(previousDataSets, nextDataSets) {
-    const previouslyActiveAxis = {};
-    previousDataSets.forEach(dataSet => {
-      const kpiKey = dataSet.kpi;
-      const kpiObj = this.props.KPIValues[kpiKey];
-      const activeAxis = kpiObj.valueType === constants.VALUE_TYPE.PERCENTAGE ?
-        'percentageAxis' :
-        'numericValueAxis';
-      previouslyActiveAxis[activeAxis] = true;
-    });
-    const nextActiveAxis = {};
-    nextDataSets.forEach(dataSet => {
-      const kpiKey = dataSet.kpi;
-      const kpiObj = this.props.KPIValues[kpiKey];
-      const activeAxis = kpiObj.valueType === constants.VALUE_TYPE.PERCENTAGE ?
-        'percentageAxis' :
-        'numericValueAxis';
-      nextActiveAxis[activeAxis] = true;
-    });
-    const axisToRemove = Object.keys(previouslyActiveAxis).filter(x => !(Object.keys(nextActiveAxis).indexOf(x) >= 0)) || [];
-    const axisToAdd = Object.keys(nextActiveAxis).filter(x => !(Object.keys(previouslyActiveAxis).indexOf(x) >= 0)) || [];
-    return { axisToRemove, axisToAdd };
+  handleChartClick(event) {
+    const elementsClicked = this.refs.lineChart.getChart().getElementAtEvent(event);
+    if (elementsClicked.length <= 0) {
+      return;
+    }
+    try {
+      const elementClicked = elementsClicked[0];
+      const kpi = this.refs.lineChart.getChart().data.datasets[elementClicked._datasetIndex].kpi; // eslint-disable-line no-underscore-dangle
+      const { chartOptions, chartData } = this.redrawChart(kpi, this.props, true, this.state.chartOptions, this.state.chartData);
+      this.setState({
+        chartData,
+        chartOptions,
+        redraw: true,
+      });
+    } catch (error) {
+      console.log('whoops');
+      console.log(error);
+    }
   }
 
   render() {
-    const { toggleKPI, toggleHovered } = this;
+    const { toggleKPI, toggleHovered, handleChartClick } = this;
     const LineChart = ReactChartJS.Line;
     const chartData = this.state.chartData;
     const KPIValues = this.props.KPIValues;
@@ -207,7 +250,11 @@ class KPIChart extends Component {
     return (
       <div >
         <div className={styles.KPIChartContainer}>
-          <LineChart ref="lineChart" redraw={this.state.redraw} data={chartData} options={this.state.chartOptions} height="250" />
+          <LineChart
+            ref="lineChart"
+            redraw={this.state.redraw} data={chartData} options={this.state.chartOptions}
+            onClick={handleChartClick} height="250"
+          />
         </div>
         <div className={styles.KPIListContainer}>
           {Object.keys(KPIValues).map(kpiKey => {
