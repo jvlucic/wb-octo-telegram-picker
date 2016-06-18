@@ -223,19 +223,14 @@ class KPIChart extends Component {
     if (elementsClicked.length <= 0) {
       return;
     }
-    try {
-      const elementClicked = elementsClicked[0];
-      const kpi = this.refs.lineChart.getChart().data.datasets[elementClicked._datasetIndex].kpi; // eslint-disable-line no-underscore-dangle
-      const { chartOptions, chartData } = this.redrawChart(kpi, this.props, true, this.state.chartOptions, this.state.chartData);
-      this.setState({
-        chartData,
-        chartOptions,
-        redraw: true,
-      });
-    } catch (error) {
-      console.log('whoops');
-      console.log(error);
-    }
+    const elementClicked = elementsClicked[0];
+    const kpi = this.refs.lineChart.getChart().data.datasets[elementClicked._datasetIndex].kpi; // eslint-disable-line no-underscore-dangle
+    const { chartOptions, chartData } = this.redrawChart(kpi, this.props, true, this.state.chartOptions, this.state.chartData);
+    this.setState({
+      chartData,
+      chartOptions,
+      redraw: true,
+    });
   }
 
   render() {
