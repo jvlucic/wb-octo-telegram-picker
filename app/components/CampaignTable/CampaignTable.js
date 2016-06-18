@@ -131,7 +131,7 @@ class CampaignTable extends Component {
 
     const {list, headers, ...props} = this.props;
 
-    let sortedList = [...list].sort((first, second) => ( first < second ? -1 : 1 ));
+    let sortedList = [...list].sort((first, second) => ( first[sortBy] < second[sortBy] ? -1 : 1 ));
     sortedList = sortDirection === SortDirection.DESC ? sortedList.reverse() : sortedList;
 
     const rowGetter = ({index}) => this.getDatum(sortedList, index);

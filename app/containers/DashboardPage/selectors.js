@@ -48,7 +48,7 @@ export const campaignTableHeadersSelector = createSelector(
     if (performance.hasOwnProperty('CPO')){ headers.push(constants.KPI.CPO.key) }
     if (performance.hasOwnProperty('cost')){ headers.push(constants.KPI.COST.key) }
     if (performance.hasOwnProperty('orderValue')){ headers.push(constants.KPI.ORDER_VALUE.key) }
-    if (performance.hasOwnProperty('ROI')){ headers.push(constants.KPI.ROI.key) }
+    if (performance.hasOwnProperty('roi')){ headers.push(constants.KPI.ROI.key) }
     return headers;
   }
 );
