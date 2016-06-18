@@ -4,7 +4,7 @@ import './styles.scss'; // eslint-disable-line
 import classnames from 'classnames';
 import styles from './styles.scss'; // eslint-disable-line
 import constants from '../../constants';
-
+import {KPIUpIcon, KPIDownIcon, KPIEqualIcon} from '../../theme/assets'
 const noop = () => {
 };
 
@@ -102,7 +102,7 @@ export default function KPIButton({ name, value, symbol, percentage,
             })}
           >
             {
-              (percentage > 0 ? '↑' : percentage < 0 ? '↓' : '') // eslint-disable-line no-nested-ternary
+              (percentage > 0 ? <KPIUpIcon/> : percentage < 0 ? <KPIDownIcon/> : '') // eslint-disable-line no-nested-ternary
             }
           </span>
           <span className="KPI-percentage">{percentage}%</span>

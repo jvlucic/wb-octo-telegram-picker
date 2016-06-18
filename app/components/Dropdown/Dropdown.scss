@@ -1,0 +1,63 @@
+.dropdown {
+  position: relative;
+  z-index: 1000;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  -webkit-touch-callout: none; /* iOS Safari */
+  font-weight: lighter;
+  font-size: .9rem;
+  :global(.Dropdown--Header) {
+    // background: #8F8F8F;
+    padding: 5px 20px;
+    // color: white;
+    // svg {
+    //   fill: white;
+    // }
+  }
+}
+
+.overlay {
+  background-color: white;
+  box-shadow: 4px 4px 4px -4px rgba(0,0,0,0.75), 4px 4px 4px -4px rgba(0,0,0,0.75), -4px 4px 4px -4px rgba(0,0,0,0.75);
+  position: absolute;
+  > * {
+    padding: 10px 20px;
+    text-align: left;
+    position: relative;
+
+    &:not(:last-child):after {
+      content: '';
+      border-bottom: 1px solid #ccc;
+      width: 80%;
+      position: absolute;
+      left: 10%;
+      bottom: 0;
+    }
+
+    &:hover {
+      font-weight: bold;
+      background-color: #f4f2f3;
+    }
+  }
+}
+
+.current {
+  flex: 1 1 auto;
+  padding-right: 10px;
+}
+
+.selected {
+  font-weight: bold;
+  background-color: #f4f2f3;
+}
+
+.icon {
+  width: 8px;
+  svg {
+    fill: black;
+    width: 8px;
+  }
+}

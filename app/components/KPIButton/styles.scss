@@ -115,6 +115,9 @@
     }
 
     &-icon {
+      svg{
+        height: 9px;
+      }
       &--up {
         color: $arrow-up-color;
       }
