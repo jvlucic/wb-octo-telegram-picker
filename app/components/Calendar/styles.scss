@@ -1,8 +1,8 @@
 @import 'main';
 :global {
   .Calendar {
-    @include span-columns(3);
-    @include shift(8);
+    //@include span-columns(3);
+    //@include shift(8);
     position: relative;
 
     &-overlay {

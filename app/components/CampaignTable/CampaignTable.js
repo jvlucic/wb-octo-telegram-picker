@@ -46,7 +46,7 @@ class CampaignTable extends Component {
       return (
         <div className={classnames(styles.cell, styles.statusCell)}>
           <ToggleSwitch
-            defaultChecked={cellData}
+            checked={cellData}
             onChange={() => console.log('CLICKED')} />
         </div>
       )
@@ -123,7 +123,6 @@ class CampaignTable extends Component {
       height,
       overscanRowCount,
       rowHeight,
-      rowCount,
       scrollToIndex,
       sortBy,
       sortDirection
@@ -133,7 +132,7 @@ class CampaignTable extends Component {
 
     let sortedList = [...list].sort((first, second) => ( first[sortBy] < second[sortBy] ? -1 : 1 ));
     sortedList = sortDirection === SortDirection.DESC ? sortedList.reverse() : sortedList;
-
+    const rowCount = sortedList.length;
     const rowGetter = ({index}) => this.getDatum(sortedList, index);
     return (
       <div className={styles.campaignTable}>

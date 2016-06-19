@@ -28,7 +28,6 @@ import UnidesqLogoSVG from '../../icons/unidesq-logo.svg';
 
 export const SvgIcon = ({ ...props, src }) => (
   <span
-    style={{ display: 'inherit' }}
     {...props}
     dangerouslySetInnerHTML={{ __html: src }}
   >

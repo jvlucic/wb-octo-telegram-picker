@@ -1,3 +1,25 @@
 .KPIChartContainer{
   height: 420px;
 }
+
+
+.statusFilter{
+  margin-bottom: 42.5px;
+  margin-top: 25px;
+  height: 40px;
+  .calendarContainer{
+    float: right;
+    width: 300px;
+  }
+  .dropDownContainer{
+    float: left;
+    width: 200px;
+    margin-left: 15px;
+  }
+  .title{
+    float: left;
+    font-size: 19px;
+    color: #191F2D;
+  }
+}
+

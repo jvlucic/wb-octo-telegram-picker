@@ -11,6 +11,7 @@ const LOAD_CAMPAIGN_DATA = `${name}/LOAD_CAMPAIGN_DATA`;
 const LOAD_CAMPAIGN_DATA_SUCCESS = `${name}/LOAD_CAMPAIGN_DATA_SUCCESS`;
 const LOAD_CAMPAIGN_DATA_ERROR = `${name}/LOAD_CAMPAIGN_DATA_ERROR`;
 const CHANGE_DATE_RANGE = `${name}/CHANGE_DATE_RANGE`;
+const CHANGE_CAMPAIGN_STATUS = `${name}/CHANGE_CAMPAIGN_STATUS`;
 
 const now = moment().startOf('day');
 
@@ -22,6 +23,7 @@ export const initialState = fromJS({
   campaignPerformanceData: false,
   campaignData: false,
   to: new Date(now.toDate()),
+  selectedCampaign: false,
   from: new Date(now.subtract(1, 'week').toDate()),
 });
 
@@ -49,6 +51,9 @@ export default (state = initialState, action) => {
       return state
         .set('to', action.to)
         .set('from', action.from);
+    case CHANGE_CAMPAIGN_STATUS:
+      return state
+        .set('status', action.status);
     default:
       return state;
   }
@@ -110,6 +115,13 @@ export function changeDateRange({ to, from }) {
   };
 }
 
+export function changeCampaignStatusFilter(status) {
+  return {
+    type: CHANGE_CAMPAIGN_STATUS,
+    status,
+  };
+}
+
 export function getCampaignData() {
   return (dispatch, getState) => {
     dispatch(loadCampaignData());
@@ -123,4 +135,5 @@ export const actions = {
   LOAD_CAMPAIGN_DATA_ERROR,
   changeDateRange,
   getCampaignData,
+  changeCampaignStatusFilter,
 };

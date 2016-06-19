@@ -2,12 +2,12 @@ import React, { PropTypes, Component } from 'react';
 import classnames from 'classnames';
 import { Overlay } from 'react-overlays';
 import styles from './Dropdown.scss';
-import { ArrowDownFillIcon } from 'theme/assets';
+import { SelectArrowIcon } from '../../theme/assets';
 
 export function DropdownItem({ children, value, currentValue, onChange }) { // eslint-disable-line react/prop-types
   return (
     <div
-      onClick={() => onChange(value)}
+      onClick={(event) => onChange(event, value)}
       className={classnames({ [styles.selected]: currentValue === value })}
     >
       {children}
@@ -43,13 +43,17 @@ class Dropdown extends Component {
     });
   }
 
-  handleOnShow() {
+  handleOnShow(event) {
+    event.stopPropagation();
+    event.preventDefault();
     this.setState({
       show: true,
     });
   }
 
-  handleOnChange(value) {
+  handleOnChange(event, value) {
+    event.stopPropagation();
+    event.preventDefault();
     this.props.onChange(value);
     this.handleOnHide();
   }
@@ -63,17 +67,16 @@ class Dropdown extends Component {
       ...otherProps,
     } = this.props;
     return (
-      <div className={classnames('row', styles.dropdown, className)} {...otherProps}>
+      <div onClick={this.handleOnShow} className={classnames('row', styles.dropdown, className, this.state.show ? styles.active : '')} {...otherProps}>
         <div
           className={classnames('row Dropdown--Header')}
           ref={element => this._dropdown = element} // eslint-disable-line no-return-assign, no-underscore-dangle
-          onClick={this.handleOnShow}
         >
           <div className={classnames(styles.current)}>
             {React.cloneElement(currentContainer, { value })}
           </div>
           <div className={classnames(styles.icon)}>
-            <ArrowDownFillIcon />
+            <SelectArrowIcon />
           </div>
         </div>
         <Overlay

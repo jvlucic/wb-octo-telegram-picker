@@ -81,7 +81,8 @@ export const campaignTableListSelector = createSelector(
       [constants.KPI.ORDER_VALUE.key]: data.performance.orderValue || null,
       [constants.KPI.ROI.key]: data.performance.ROI || null,
     })).filter(
-      campaign => status === constants.STATUS.ACTIVE ? campaign[constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS] : !campaign[constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS]
+      campaign => status === constants.STATUS.ALL ? true :
+        status === constants.STATUS.ACTIVE ? campaign[constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS] : !campaign[constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS]
     );
     return filteredData ;
   }
