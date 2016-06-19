@@ -122,37 +122,37 @@ class AccountPage extends React.Component { // eslint-disable-line react/prefer-
                 htmlFor={this.ids.username}
                 labelText={formatMessage(msgs.labelUsername)}
               >
-                <Input type="text" id={this.ids.username} />
+                <Input type="text" id={this.ids.username} placeholder={formatMessage(msgs.labelUsername)} />
               </FormGroupAccount>
               <FormGroupAccount
                 htmlFor={this.ids.firstName}
                 labelText={formatMessage(msgs.labelFirstName)}
               >
-                <Input type="text" id={this.ids.firstName} />
+                <Input type="text" id={this.ids.firstName} placeholder={formatMessage(msgs.labelFirstName)} />
               </FormGroupAccount>
               <FormGroupAccount
                 htmlFor={this.ids.lastName}
                 labelText={formatMessage(msgs.labelLastName)}
               >
-                <Input type="text" id={this.ids.lastName} />
+                <Input type="text" id={this.ids.lastName} placeholder={formatMessage(msgs.labelLastName)} />
               </FormGroupAccount>
               <FormGroupAccount
                 htmlFor={this.ids.emailAddress}
                 labelText={formatMessage(msgs.labelEmailAddress)}
               >
-                <Input type="text" id={this.ids.emailAddress} />
+                <Input type="text" id={this.ids.emailAddress} placeholder={formatMessage(msgs.labelEmailAddress)} />
               </FormGroupAccount>
               <FormGroupAccount
                 htmlFor={this.ids.companyName}
                 labelText={formatMessage(msgs.labelCompanyName)}
               >
-                <Input type="text" id={this.ids.companyName} />
+                <Input type="text" id={this.ids.companyName} placeholder={formatMessage(msgs.labelCompanyName)} />
               </FormGroupAccount>
               <FormGroupAccount
                 htmlFor={this.ids.phoneNumber}
                 labelText={formatMessage(msgs.labelPhoneNumber)}
               >
-                <Input type="text" id={this.ids.phoneNumber} />
+                <Input type="text" id={this.ids.phoneNumber} placeholder={formatMessage(msgs.labelPhoneNumber)} />
               </FormGroupAccount>
               <Button className="AccountPage-profileButton" buttonType="large">
                 Update
@@ -163,19 +163,19 @@ class AccountPage extends React.Component { // eslint-disable-line react/prefer-
                 htmlFor={this.ids.currentPassword}
                 labelText={formatMessage(msgs.labelCurrentPassword)}
               >
-                <Input type="password" id={this.ids.usecurrentPasswordrname} />
+                <Input type="password" id={this.ids.usecurrentPasswordrname} placeholder={formatMessage(msgs.labelCurrentPassword)} />
               </FormGroupAccount>
               <FormGroupAccount
                 htmlFor={this.ids.newPassword}
                 labelText={formatMessage(msgs.labelNewPassword)}
               >
-                <Input type="password" id={this.ids.newPassword} />
+                <Input type="password" id={this.ids.newPassword} placeholder={formatMessage(msgs.labelNewPassword)} />
               </FormGroupAccount>
               <FormGroupAccount
                 htmlFor={this.ids.verifyNewPassword}
                 labelText={formatMessage(msgs.labelVerifyNewPasword)}
               >
-                <Input type="password" id={this.ids.verifyNewPassword} />
+                <Input type="password" id={this.ids.verifyNewPassword} placeholder={formatMessage(msgs.labelVerifyNewPasword)} />
               </FormGroupAccount>
               <Button className="AccountPage-changePasswordButton" buttonType="large" disabled>
                 Save new password

@@ -1,6 +1,6 @@
 @import 'main';
 
-$header-height: 40px !default;
+$header-height: 60px !default;
 $font-size: 12px !default;
 $link-color: #03c7f1 !default;
 
@@ -13,6 +13,7 @@ $link-color: #03c7f1 !default;
   .LoginApp-header {
     @include outer-container(100%);
     height: $header-height;
+    padding-top: 20px;
   }
 
   .LoginApp-headerHome {
