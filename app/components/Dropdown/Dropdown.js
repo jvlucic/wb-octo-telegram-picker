@@ -18,7 +18,7 @@ export function DropdownItem({ children, value, currentValue, onChange }) { // e
 function DropdownCurrent({ value }) { // eslint-disable-line react/prop-types
   return (
     <div>
-      {value}
+      {value.label}
     </div>
   );
 }

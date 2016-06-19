@@ -7,22 +7,22 @@ class CampaignFilterDropdown extends Component {
     super(props);
     this.handleOnChange = this.handleOnChange.bind(this);
     this.options = [
-      { value: constants.STATUS.ACTIVE, label: constants.STATUS.ACTIVE },
-      { value: constants.STATUS.ALL, label: constants.STATUS.ALL },
-      { value: constants.STATUS.INACTIVE, label: constants.STATUS.INACTIVE },
+      { value: constants.STATUS.ACTIVE, label: 'Active' },
+      { value: constants.STATUS.ALL, label: 'All Campaigns' },
+      { value: constants.STATUS.INACTIVE, label: 'Inactive' },
     ];
     this.state = this.options.find(it => this.props.initialValue === it.value) || this.options[0];
   }
 
   handleOnChange(value) {
-    this.setState({ value });
+    this.setState(this.options.find(it => value === it.value) || this.options[0]);
     this.props.onChange(value);
   }
 
   render() {
     return (
       <Dropdown
-        value={this.state.value}
+        value={this.state}
         onChange={this.handleOnChange}
       >
         {this.options
