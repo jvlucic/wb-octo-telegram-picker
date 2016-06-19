@@ -6,6 +6,7 @@
   $input-border-color: #e0e0e0 !default;
   $input-hover-border-color: #d0d0d0 !default;
   $input-focus-border-color: #28cff3 !default;
+  $input-disabled-bg-color: #FAFAFA !default;
   $input-height: 50px;
   $input-width: 320px;
   $input-icon-width: 50px;
@@ -89,6 +90,7 @@
   }
 
   .Input-passwordIcon {
+    background-color: #fafafa;
     border: 1px solid $input-border-color;
     float: left;
     width: $input-icon-width;

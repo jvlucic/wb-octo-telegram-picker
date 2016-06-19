@@ -130,11 +130,10 @@ export default function createRoutes(store) {
       ],
     },
     {
-      path: '/login',
-      name: 'login',
+      name: 'loginApp',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          System.import('containers/LoginPage'),
+          System.import('containers/LoginApp'),
         ]);
 
         const renderRoute = loadModule(cb);
@@ -145,7 +144,44 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
-    }, {
+      childRoutes: [
+        {
+          path: '/login',
+          name: 'login',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/LoginPage'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/forgot',
+          name: 'forgot',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/ForgotPage'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+      ],
+    },
+    {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

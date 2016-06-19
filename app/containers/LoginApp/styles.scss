@@ -1,0 +1,46 @@
+@import 'main';
+
+$header-height: 40px !default;
+$font-size: 12px !default;
+$link-color: #03c7f1 !default;
+
+:global {
+  .LoginApp {
+    min-width: $min-width;
+    padding: 0px $glutter;
+  }
+
+  .LoginApp-header {
+    @include outer-container(100%);
+    height: $header-height;
+  }
+
+  .LoginApp-headerHome {
+    @include span-columns(2);
+    font-size: $font-size;
+    line-height: $header-height;
+    text-align: left;
+  }
+
+  .LoginApp-headerLogo {
+    @include span-columns(8);
+    text-align: center;
+    img {
+      height: $header-height;
+    }
+  }
+
+  .LoginApp-headerGetAccount {
+    @include span-columns(2);
+    color: $link-color;
+    font-size: $font-size;
+    line-height: $header-height;
+    text-align: right;
+  }
+
+  .LoginApp-container {
+    width: 400px;
+    margin: 0 auto;
+    margin-top: 120px;
+  }
+}

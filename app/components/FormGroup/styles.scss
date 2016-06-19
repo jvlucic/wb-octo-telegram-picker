@@ -1,0 +1,31 @@
+@import 'variables';
+:global {
+  .FormGroup {
+    display: block;
+    height: auto;
+  }
+
+  .FormGroup-label {
+    color: #18272E;
+    display: block;
+    float: left;
+    font-size: 14px;
+    font-weight: normal;
+    padding-bottom: 8px;
+    width: 100%;
+    &.has-error {
+      color: $form-invalid-color;
+    }
+  }
+
+  .FormGroup-error {
+    color: $form-invalid-color;
+    display: none;
+    float: left;
+    padding-top: 7px;
+    width: 100%;
+    &.has-error {
+      display: block;
+    }
+  }
+}
