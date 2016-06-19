@@ -1,7 +1,6 @@
 import { fromJS } from 'immutable';
 import { name } from './__init__';
 import constants from '../../constants';
-import { CHANGE_DATE_RANGE } from './constants';
 import moment from 'moment';
 
 /* TODO: replace dummydata for API calls */
@@ -11,6 +10,7 @@ import dummyCampaignPerfomanceData from '../../../unidesq-spec/fixtures/dummyCam
 const LOAD_CAMPAIGN_DATA = `${name}/LOAD_CAMPAIGN_DATA`;
 const LOAD_CAMPAIGN_DATA_SUCCESS = `${name}/LOAD_CAMPAIGN_DATA_SUCCESS`;
 const LOAD_CAMPAIGN_DATA_ERROR = `${name}/LOAD_CAMPAIGN_DATA_ERROR`;
+const CHANGE_DATE_RANGE = `${name}/CHANGE_DATE_RANGE`;
 
 const now = moment().startOf('day');
 
@@ -74,28 +74,46 @@ export function loadingError(error) {
   };
 }
 
-
 function fetchCampaignData() {
   return new Promise(resolve => setTimeout(() => resolve(dummyCampaignData), 1000));
 }
 
-function fetchCampaignPerfomanceData() {
+function fetchCampaignPerformanceData() {
   return new Promise(resolve => setTimeout(() => resolve(dummyCampaignPerfomanceData), 1000));
+}
+
+function changeDateRangeState({ to, from }) {
+  return {
+    type: CHANGE_DATE_RANGE,
+    to,
+    from,
+  };
+}
+
+function refreshCampaignData(dispatch, getState) {
+  const filters = getState().get(name);
+  const requestCampaignData = fetchCampaignData(filters);
+  const requestCampaignPerformanceData = fetchCampaignPerformanceData(filters);
+  Promise.all([requestCampaignData, requestCampaignPerformanceData])
+    .then(([campaignData, campaignPerformanceData]) => {
+      dispatch(loadedCampaignData({ campaignData, campaignPerformanceData }));
+    })
+    .catch((err) => {
+      dispatch(loadingError(err));
+    });
+}
+
+export function changeDateRange({ to, from }) {
+  return (dispatch, getState) => {
+    dispatch(changeDateRangeState({ to, from }));
+    refreshCampaignData(dispatch, getState);
+  };
 }
 
 export function getCampaignData() {
   return (dispatch, getState) => {
     dispatch(loadCampaignData());
-    const filters = getState().get(name);
-    const requestCampaignData = fetchCampaignData(filters);
-    const requestCampaignPerformanceData = fetchCampaignPerfomanceData(filters);
-    Promise.all([requestCampaignData, requestCampaignPerformanceData])
-      .then(([campaignData, campaignPerformanceData]) => {
-        dispatch(loadedCampaignData({ campaignData, campaignPerformanceData }));
-      })
-      .catch((err) => {
-        dispatch(loadingError(err));
-      });
+    refreshCampaignData(dispatch, getState);
   };
 }
 
@@ -103,5 +121,6 @@ export const actions = {
   LOAD_CAMPAIGN_DATA,
   LOAD_CAMPAIGN_DATA_SUCCESS,
   LOAD_CAMPAIGN_DATA_ERROR,
+  changeDateRange,
   getCampaignData,
 };

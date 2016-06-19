@@ -16,7 +16,6 @@ import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { actions } from './reducer';
 import { KPIDataSelector, selectRange, campaignTableHeadersSelector, campaignTableListSelector } from './selectors';
-import { changeDateRange } from './actions';
 import styles from './DashboardPage.scss';
 
 class DashboardPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -70,11 +69,12 @@ export default connect(
     range: selectRange,
   }),
   dispatch => {
-    return bindActionCreators({ ...actions, changeDateRange }, dispatch);
+    return bindActionCreators({ ...actions }, dispatch);
   }
 )(DashboardPage);
 
 DashboardPage.propTypes = {
   KPIData: React.PropTypes.object,
   getCampaignData: React.PropTypes.func.isRequired,
+  changeDateRange: React.PropTypes.func.isRequired,
 };

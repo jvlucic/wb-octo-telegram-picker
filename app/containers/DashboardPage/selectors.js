@@ -20,6 +20,11 @@ function getRandomDataSets() {
   }));
 }
 
+export const campaignStatusSelector = createSelector(
+  getModelSelector,
+  model => ( model.get('status') )
+);
+
 export const campaignDataSelector = createSelector(
   getModelSelector,
   model => ( model.get('campaignData') )
@@ -56,13 +61,13 @@ export const campaignTableHeadersSelector = createSelector(
 
 export const campaignTableListSelector = createSelector(
   campaignDataSelector,
-  (campaignData) => {
+  campaignStatusSelector,
+  (campaignData, status) => {
     if (!campaignData) {
       return false;
     }
-
-    return campaignData.map( data => ({
-      [constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS]: data.status && data.status === "active" ? true : false,
+    const filteredData = campaignData.map( data => ({
+      [constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS]: data.status && data.status === constants.STATUS.ACTIVE ? true : false,
       [constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN]: { name: data.name, startData: data.startData, endDate: data.endDate, budget: data.budget, currency:data.currency } || null,
       [constants.KPI.IMPRESSIONS.key]: data.performance.impressions || null,
       [constants.KPI.CLICKS.key]: data.performance.clicks || null,
@@ -75,7 +80,10 @@ export const campaignTableListSelector = createSelector(
       [constants.KPI.COST.key]: data.performance.cost || null,
       [constants.KPI.ORDER_VALUE.key]: data.performance.orderValue || null,
       [constants.KPI.ROI.key]: data.performance.ROI || null,
-    }));
+    })).filter(
+      campaign => status === constants.STATUS.ACTIVE ? campaign[constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS] : !campaign[constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS]
+    );
+    return filteredData ;
   }
 );
 
