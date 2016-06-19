@@ -1,0 +1,13 @@
+:global {
+  .Checkbox {
+    width: 320px;
+    &-input {
+      height: 16px;
+      width: 16px;
+    }
+
+    &-text {
+      padding-left: 5px;
+    }
+  }
+}

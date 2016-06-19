@@ -1,0 +1,66 @@
+@import 'main';
+:global {
+  .LoginPage {
+    $header-height: 40px !default;
+    $font-size: 12px !default;
+    min-width: $min-width;
+    padding: 0px $glutter;
+
+    &-header {
+      @include outer-container(100%);
+      height: $header-height;
+      &Home {
+        @include span-columns(2);
+        font-size: $font-size;
+        line-height: $header-height;
+        text-align: left;
+      }
+
+      &Logo {
+        @include span-columns(8);
+        text-align: center;
+        img {
+          height: $header-height;
+        }
+      }
+
+      &GetAccount {
+        @include span-columns(2);
+        color: #03c7f1;
+        font-size: $font-size;
+        line-height: $header-height;
+        text-align: right;
+      }
+    }
+
+    &-container {
+      width: 400px;
+      margin: 0 auto;
+      margin-top: 120px;
+    }
+  }
+}
+
+:global {
+  .Login {
+
+    &-message {
+      font-weight: lighter;
+      font-size: 32px;
+    }
+
+    &-box {
+      margin-top: 45px;
+      width: 320px;
+      margin-left: 40px;
+    }
+
+    &-input {
+      margin-bottom: 15px;
+      &--checkbox {
+        color: #aeaeae;
+        font-size: 12px;
+      }
+    }
+  }
+}
