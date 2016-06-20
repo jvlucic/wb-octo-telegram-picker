@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { actions } from './reducer';
-import { KPIDataSelector, selectRange, campaignTableHeadersSelector, campaignTableListSelector, campaignStatusSelector } from './selectors';
+import { KPIDataSelector, selectRange, campaignTableHeadersSelector, campaignTableListSelector, campaignStatusSelector, selectedCampaignSelector } from './selectors';
 import styles from './DashboardPage.scss';
 
 class DashboardPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -28,6 +28,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     // Binding methods to this
     this.handleOnChangeDateRangeFilter = this.handleOnChangeDateRangeFilter.bind(this);
     this.handleOnChangeCampaignStatusFilter = this.handleOnChangeCampaignStatusFilter.bind(this);
+    this.handleOnChangeSelectedCampaignFilter = this.handleOnChangeSelectedCampaignFilter.bind(this);
   }
 
   componentDidMount() {
@@ -48,16 +49,20 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
 
   handleOnChangeCampaignStatusFilter(status) {
     this.props.changeCampaignStatusFilter(status);
+  }  
+  
+  handleOnChangeSelectedCampaignFilter(status) {
+    this.props.changeSelectedCampaignFilter(status);
   }
 
   render() {
-    const {KPIData, range, tableHeaders, tableList, status} = this.props;
+    const {KPIData, range, tableHeaders, tableList, status, selectedCampaign} = this.props;
     return (
       <div>
         <div className={styles.statusFilter}>
           <span className={styles.title} >Showing data across</span>
           <div className={styles.dropDownContainer}>
-            <CampaignFilterDropdown initialValue={status} onChange={this.handleOnChangeCampaignStatusFilter} />
+            <CampaignFilterDropdown selectedCampaign={selectedCampaign} initialValue={status} onChange={this.handleOnChangeCampaignStatusFilter} />
           </div>
           <div className={styles.calendarContainer}>
             <Calendar active from={range.from} to={range.to} onChange={this.handleOnChangeDateRangeFilter} />
@@ -68,7 +73,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
           { KPIData && <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { KPIData.activeKPIs }  /> }
         </div>
         <div className={styles.campaignTableContainer}>
-          { tableList && <CampaignTable list={tableList} headers={tableHeaders} /> }
+          { tableList && <CampaignTable list={tableList} headers={tableHeaders} onRowSelect={this.handleOnChangeSelectedCampaignFilter} selectedCampaign={selectedCampaign} /> }
         </div>
       </div>
     );
@@ -82,6 +87,7 @@ export default connect(
     tableList: campaignTableListSelector,
     range: selectRange,
     status: campaignStatusSelector,
+    selectedCampaign: selectedCampaignSelector,
   }),
   dispatch => {
     return bindActionCreators({ ...actions }, dispatch);
@@ -93,4 +99,5 @@ DashboardPage.propTypes = {
   getCampaignData: React.PropTypes.func.isRequired,
   changeDateRange: React.PropTypes.func.isRequired,
   changeCampaignStatusFilter: React.PropTypes.func.isRequired,
+  changeSelectedCampaignFilter: React.PropTypes.func.isRequired,
 };

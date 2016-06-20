@@ -27,12 +27,14 @@ class CampaignTable extends Component {
       scrollToIndex: undefined,
       sortBy: 'name',
       sortDirection: SortDirection.ASC,
+      selectedRow: false,
     };
-
+    this.currentList = [];
     this.headerRenderer = this.headerRenderer.bind(this);
     this.cellRenderer = this.cellRenderer.bind(this);
     this.noRowsRenderer = this.noRowsRenderer.bind(this);
     this.getRowHeight = this.getRowHeight.bind(this);
+    this.handleRowSelect = this.handleRowSelect.bind(this);
     this.sort = this.sort.bind(this);
   }
 
@@ -40,8 +42,12 @@ class CampaignTable extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
+  handleRowSelect(campaign, event) {
+    this.props.onRowSelect(campaign);
+  }
 
   cellRenderer({cellData, columnData, dataKey, rowData, rowIndex, ...props}) {
+    const campaign = rowData[constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN];
     if (dataKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS) {
       return (
         <div className={classnames(styles.cell, styles.statusCell)}>
@@ -54,7 +60,7 @@ class CampaignTable extends Component {
 
     if (dataKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN) {
       return (
-        <div className={styles.cell}>
+        <div className={classnames(styles.cell)} onClick={(event) => this.handleRowSelect(campaign, event)}>
           <div className={styles.campaignName}>{cellData.name}</div>
           <div>
             <div className={styles.campaignBudget}>{cellData.budget}</div>
@@ -94,12 +100,14 @@ class CampaignTable extends Component {
       </div>
     )
   }
-
+  
   rowClassName({index, ...props}) {
     if (index < 0) {
       return styles.headerRow
     } else {
-      return index % 2 === 0 ? styles.evenRow : styles.oddRow
+      const campaignID = this.currentList[index][constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN].id;
+      const selectedRow = this.props.selectedCampaign && campaignID === this.props.selectedCampaign.id ? true : null;
+      return selectedRow ?  styles.selectedRow : index % 2 === 0 ? styles.evenRow : styles.oddRow
     }
   }
 
@@ -133,7 +141,8 @@ class CampaignTable extends Component {
     let sortedList = [...list].sort((first, second) => ( first[sortBy] < second[sortBy] ? -1 : 1 ));
     sortedList = sortDirection === SortDirection.DESC ? sortedList.reverse() : sortedList;
     const rowCount = sortedList.length;
-    const rowGetter = ({index}) => this.getDatum(sortedList, index);
+    this.currentList = sortedList;
+    const rowGetter = ({index}) => this.getDatum(this.currentList, index);
     return (
       <div className={styles.campaignTable}>
         <AutoSizer disableHeight>
@@ -158,6 +167,7 @@ class CampaignTable extends Component {
               {headers.map(
                 header => (
                   <FlexColumn
+                    key={header}
                     label={header}
                     dataKey={header}
                     disableSort={false}
@@ -180,6 +190,8 @@ class CampaignTable extends Component {
 
 CampaignTable.propTypes = {
   campaignData: PropTypes.object,
+  onRowSelect: PropTypes.func,
+  selectedCampaign: PropTypes.object,
 };
 
 export default CampaignTable;

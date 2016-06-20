@@ -36,8 +36,12 @@
 }
 
 .cell{
- color: #888888;
+  color: #888888;
+  cursor: pointer;
 }
 .statusCell{
   padding: 5px;
+}
+.selectedRow{
+  background-color: #DDF9FF;
 }

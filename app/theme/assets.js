@@ -35,7 +35,7 @@ export const SvgIcon = ({ ...props, src }) => (
 );
 
 SvgIcon.propTypes = {
-  src: React.PropTypes.object,
+  src: React.PropTypes.string,
 };
 
 export const AlertCloseIcon = (props) => <SvgIcon {...props} src={AlertCloseSVG} />;

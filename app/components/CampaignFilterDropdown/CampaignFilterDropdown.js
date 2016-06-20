@@ -7,11 +7,17 @@ class CampaignFilterDropdown extends Component {
     super(props);
     this.handleOnChange = this.handleOnChange.bind(this);
     this.options = [
-      { value: constants.STATUS.ACTIVE, label: 'Active' },
       { value: constants.STATUS.ALL, label: 'All Campaigns' },
-      { value: constants.STATUS.INACTIVE, label: 'Inactive' },
+      { value: constants.STATUS.ACTIVE, label: 'Active Campaigns' },
+      { value: constants.STATUS.INACTIVE, label: 'Inactive Campaigns' },
     ];
     this.state = this.options.find(it => this.props.initialValue === it.value) || this.options[0];
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedCampaign) {
+      this.setState({ value: nextProps.selectedCampaign.id, label: nextProps.selectedCampaign.name, disabled: true });
+    }
   }
 
   handleOnChange(value) {
@@ -20,13 +26,17 @@ class CampaignFilterDropdown extends Component {
   }
 
   render() {
+    const options = [...this.options];
+    if (this.props.selectedCampaign) {
+      options.push({ value: this.props.selectedCampaign.id, label: this.props.selectedCampaign.name, disabled: true });
+    }
     return (
       <Dropdown
         value={this.state}
         onChange={this.handleOnChange}
       >
-        {this.options
-          .map(item => <DropdownItem key={item.value} value={item.value}>{item.label}</DropdownItem>)
+        {options
+          .map(item => <DropdownItem key={item.value} value={item}>{item.label}</DropdownItem>)
         }
       </Dropdown>
     );
@@ -35,5 +45,6 @@ class CampaignFilterDropdown extends Component {
 CampaignFilterDropdown.propTypes = {
   onChange: PropTypes.func.isRequired,
   initialValue: PropTypes.string,
+  selectedCampaign: PropTypes.object,
 };
 export default CampaignFilterDropdown;

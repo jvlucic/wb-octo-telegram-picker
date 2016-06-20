@@ -25,6 +25,11 @@ export const campaignStatusSelector = createSelector(
   model => ( model.get('status') )
 );
 
+export const selectedCampaignSelector = createSelector(
+  getModelSelector,
+  model => ( model.get('selectedCampaign') )
+);
+
 export const campaignDataSelector = createSelector(
   getModelSelector,
   model => ( model.get('campaignData') )
@@ -68,7 +73,7 @@ export const campaignTableListSelector = createSelector(
     }
     const filteredData = campaignData.map( data => ({
       [constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS]: data.status && data.status === constants.STATUS.ACTIVE ? true : false,
-      [constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN]: { name: data.name, startData: data.startData, endDate: data.endDate, budget: data.budget, currency:data.currency } || null,
+      [constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN]: { id: data.id, name: data.name, startData: data.startData, endDate: data.endDate, budget: data.budget, currency:data.currency } || null,
       [constants.KPI.IMPRESSIONS.key]: data.performance.impressions || null,
       [constants.KPI.CLICKS.key]: data.performance.clicks || null,
       [constants.KPI.CTR.key]: data.performance.CTR || null,

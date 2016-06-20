@@ -5,10 +5,14 @@ import styles from './Dropdown.scss';
 import { SelectArrowIcon } from '../../theme/assets';
 
 export function DropdownItem({ children, value, currentValue, onChange }) { // eslint-disable-line react/prop-types
+  const className = {
+    [styles.selected]: currentValue.value === value.value,
+    [styles.disabled]: value.disabled,
+  };
   return (
     <div
-      onClick={(event) => onChange(event, value)}
-      className={classnames({ [styles.selected]: currentValue === value })}
+      onClick={value.disabled ? undefined : (event) => onChange(event, value.value)}
+      className={classnames(className)}
     >
       {children}
     </div>

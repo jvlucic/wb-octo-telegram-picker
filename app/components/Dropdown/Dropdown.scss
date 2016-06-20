@@ -16,6 +16,7 @@
     //   fill: white;
     // }
     height: 30px;
+
   }
   height: 40px;
   border: 1px solid #e0e0e0;
@@ -27,6 +28,7 @@
     border: 1px solid #03C7F1;
     outline: 1px solid rgba(3, 199, 240, 0.2);
   }
+
 }
 
 .overlay {
@@ -36,15 +38,20 @@
   margin-left: -1px;
   margin-top: 2.2px;
   border: 1px solid #e0e0e0;
+  color: #888888;
   box-shadow: 0px 3px 7px 0px rgba(224,224,224,1);
+
   > * {
     padding: 11.5px 20px;
     text-align: left;
     position: relative;
-
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:hover {
-      background-color: #f4f2f3;
+      background-color: #F2FDFF;
+      color: #03C7F1;
     }
   }
 }
@@ -53,11 +60,26 @@
   float: left;
   padding-right: 10px;
   line-height: 19px;
+  max-width: 85%;
+  > * {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .selected {
   font-weight: bold;
-  background-color: #f4f2f3;
+  color: #191F2D;
+}
+
+.disabled{
+  background-color: #FAFAFA;
+  color: #C6C6C6;
+  &:hover {
+    background-color: #FAFAFA;
+    color: #C6C6C6;
+  }
 }
 
 .icon {

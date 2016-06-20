@@ -167,41 +167,6 @@ class KPIChart extends Component {
       }
     });
     const props = this.props;
-    /*
-    if (toggledDatasetWillBeShown) {
-      chartOptions.scales.yAxes.forEach((it, idx) => {
-        const yAxis = it;
-        if (yAxis.id === kpi) {
-          const kpiObj = props.KPIValues[kpi];
-          yAxis.display = true;
-          chartOptions.scales.xAxes[0].gridLines.zeroLineColor = kpiObj.color;
-          chartData.datasets[idx].fill = true;
-        } else {
-          yAxis.display = false;
-          chartData.datasets[idx].fill = false;
-        }
-      });
-    } else {
-      let activatedOneScale = chartOptions.scales.yAxes.map(it => it.id === kpi ? false : it.display).reduce((a, b) => a || b);
-      for (let idx = 0; idx < chartOptions.scales.yAxes.length; idx++) {
-        const yAxis = chartOptions.scales.yAxes[idx];
-        const dataset = chartData.datasets[idx];
-        if (!dataset.hidden) {
-          if (!activatedOneScale) {
-            const kpiObj = props.KPIValues[dataset.kpi];
-            yAxis.display = true;
-            dataset.fill = true;
-            chartOptions.scales.xAxes[0].gridLines.zeroLineColor = kpiObj.color;
-            activatedOneScale = true;
-          }
-        }
-        if (dataset.hidden) {
-          yAxis.display = false;
-          dataset.fill = false;
-        }
-      }
-    }
-    */
     const { chartOptions, chartData } = this.redrawChart(kpi, props, toggledDatasetWillBeShown, origChartOptions, origChartData);
     this.setState({
       activeKPIs: activeKPIs.length === this.state.activeKPIs.length ? [...activeKPIs, kpi] : activeKPIs,
@@ -255,9 +220,8 @@ class KPIChart extends Component {
           {Object.keys(KPIValues).map(kpiKey => {
             const kpi = KPIValues[kpiKey];
             return (
-              <div onMouseEnter={() => toggleHovered(kpiKey)} onMouseLeave={() => toggleHovered(null)}>
+              <div key={kpiKey} onMouseEnter={() => toggleHovered(kpiKey)} onMouseLeave={() => toggleHovered(null)}>
                 <KPIButton
-                  key={kpiKey}
                   type={kpiKey}
                   name={kpi.label}
                   value={kpi.value}
