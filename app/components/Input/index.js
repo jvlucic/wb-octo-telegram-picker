@@ -18,10 +18,10 @@ export default class Input extends Component {
   }
 
   renderInput() {
-    const { className, error, valid, ...props } = this.props;
+    const { className, error, valid, touched, submitted, ...props } = this.props;
     const stateClass = classnames({
-      'has-error': !!error,
-      'is-valid': !!valid,
+      'has-error': !!error && (touched || submitted),
+      'is-valid': !!valid && (touched || submitted),
     });
     return (
       <div className={classnames('Input-container', className)}>
@@ -54,8 +54,10 @@ export default class Input extends Component {
 
 Input.propTypes = {
   className: PropTypes.string,
-  error: PropTypes.any,
-  valid: PropTypes.any,
+  error: PropTypes.string,
+  valid: PropTypes.bool,
+  touched: PropTypes.bool,
+  submitted: PropTypes.bool,
   type: PropTypes.string,
 };
 

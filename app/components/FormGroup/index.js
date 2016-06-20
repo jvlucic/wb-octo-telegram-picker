@@ -9,9 +9,11 @@ export default function FormGroup({ htmlFor, className, error, labelText, childr
 
   return (
     <div className={classnames('FormGroup', className, classStates)}>
-      <label htmlFor={htmlFor} className={classnames('FormGroup-label', classStates)}>
-        {labelText}
-      </label>
+      {labelText &&
+        <label htmlFor={htmlFor} className={classnames('FormGroup-label', classStates)}>
+          {labelText}
+        </label>
+      }
       {children}
       <div className={classnames('FormGroup-error', classStates)}>
         <span>{error}</span>
