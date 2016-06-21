@@ -15,7 +15,7 @@ const loadModule = (cb) => (componentModule) => {
 
 function requireAuth(store) {
   return (nextState, replace) => {
-    if (!selectIsLogged(store.getState())) {
+    if (!selectIsLogged(store.getState()) || true) {
       replace('login');
     }
   };
