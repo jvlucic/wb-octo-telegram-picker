@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 import { name } from './__init__';
+import { dateDiffInDays } from '../../utils/utils';
 import constants from '../../constants';
 import moment from 'moment';
 
@@ -25,7 +26,7 @@ export const initialState = fromJS({
   campaignData: false,
   to: new Date(now.toDate()),
   selectedCampaign: null,
-  from: new Date(now.subtract(1, 'week').toDate()),
+  from: new Date(now.subtract(1, 'day').toDate()),
 });
 
 
@@ -48,10 +49,13 @@ export default (state = initialState, action) => {
         .set('loading', false)
         .set('campaignPerformanceData', false)
         .set('campaignData', false);
-    case CHANGE_DATE_RANGE:
+    case CHANGE_DATE_RANGE: {
+      const daysBetweenDates = dateDiffInDays(action.to, action.from);
       return state
         .set('to', action.to)
-        .set('from', action.from);
+        .set('from', action.from)
+        .set('frequency', daysBetweenDates <= 1 ? constants.FREQUENCY.HOURLY : constants.FREQUENCY.DAILY);
+    }
     case CHANGE_CAMPAIGN_STATUS:
       return state
         .set('status', action.status)

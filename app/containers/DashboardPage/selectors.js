@@ -2,6 +2,8 @@
 import {name} from './__init__';
 import {createSelector} from 'reselect';
 import constants from '../../constants';
+import { parseDate } from '../../utils/utils';
+
 import dummyDatasets from '../../../unidesq-spec/fixtures/dummyDatasets.json';
 
 export const getModelSelector = (state) => state.get(name);
@@ -187,6 +189,46 @@ export const KPIDataSelector = createSelector(
     const dummyChanges = [3, 3, 0, -3, 3, 3, 3, 3, 3, 3, 3, 3];
     const KPIValues = {};
     const initialValue = {};
+    const performanceAccumulator = {};
+    const campaigns = {};
+    campaignPerformanceData
+      .forEach(({campaignId, date, ...kpiValues}) => {
+        campaigns[campaignId] = true;
+        Object.keys(kpiValues).forEach(kpi => {
+          if (!performanceAccumulator.hasOwnProperty(date)) {
+            performanceAccumulator[date] = {};
+            performanceAccumulator[date]['campaigns'] = {};
+          }
+          if (!performanceAccumulator[date].hasOwnProperty(kpi)) {
+            performanceAccumulator[date][kpi] = 0;
+          }
+          performanceAccumulator[date]['campaigns'][campaignId] = true;
+          performanceAccumulator[date][kpi] += parseFloat(kpiValues[kpi]) || 0;
+        })
+      });
+    Object.keys(performanceAccumulator).forEach( date => {
+      Object.keys(performanceAccumulator[date]).forEach( kpi => {
+        const kpiInfo = getKPIFromKey(kpi);
+        if (kpiInfo && kpiInfo.valueType === constants.VALUE_TYPE.PERCENTAGE){
+          performanceAccumulator[date][kpi] /= Object.keys(performanceAccumulator[date]['campaigns']).length;
+        }
+      });
+    });
+    /* TODO: handle HOURLY DATA*/
+    const labels = Object.keys(performanceAccumulator).map( date => {
+      const dateParsed = parseDate(date);
+      return `${dateParsed.getDate()}-${dateParsed.getMonth() + 1}`
+    });
+
+    Object.keys(constants.KPI).map(kpi => ({
+      kpi: constants.KPI[kpi].key,
+      label: constants.KPI[kpi].name,
+      data: getRandomNumberArray(24),
+      borderColor: constants.KPI[kpi].color,
+      backgroundColor: 'transparent',
+      borderWidth: 1,
+    }));
+
     /* CALCULATE KPI VALUES UNDER CHART */
     Object.values(constants.KPI).forEach(({key: kpi}) => initialValue[kpi] = 0);
     const reduced = campaignData
