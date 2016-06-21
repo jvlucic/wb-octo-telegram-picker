@@ -25,8 +25,8 @@ class CampaignTable extends Component {
       rowHeight: 70,
       rowCount: props.list.length,
       scrollToIndex: undefined,
-      sortBy: 'name',
-      sortDirection: SortDirection.ASC,
+      sortBy: constants.KPI.IMPRESSIONS.key,
+      sortDirection: SortDirection.DESC,
       selectedRow: false,
     };
     this.currentList = [];
@@ -96,7 +96,7 @@ class CampaignTable extends Component {
   noRowsRenderer() {
     return (
       <div className={styles.noRows}>
-        No rows
+        No campaign data available
       </div>
     )
   }

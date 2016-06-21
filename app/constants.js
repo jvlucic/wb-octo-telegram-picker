@@ -30,7 +30,7 @@ const constants = {
   },
   KPI: {
     IMPRESSIONS: {
-      key: 'IMPRESSIONS',
+      key: 'impressions',
       name: 'Impressions',
       color: 'rgba(255, 147, 138, 1)',
       colorHovered: 'rgba(255, 147, 138, 0.1)',
@@ -38,7 +38,7 @@ const constants = {
       valueType: valueType.NUMBER,
     },
     CLICKS: {
-      key: 'CLICKS',
+      key: 'clicks',
       name: 'Clicks',
       color: 'rgba(202, 153, 255, 1)',
       colorHovered: 'rgba(202, 153, 255, 0.1)',
@@ -46,7 +46,7 @@ const constants = {
       valueType: valueType.NUMBER,
     },
     CTR: {
-      key: 'CTR',
+      key: 'ctr',
       name: 'CTR',
       color: 'rgba(255, 201, 141, 1)',
       colorHovered: 'rgba(255, 201, 141, 0.1)',
@@ -54,7 +54,7 @@ const constants = {
       valueType: valueType.PERCENTAGE,
     },
     CONVERSION: {
-      key: 'CONVERSION',
+      key: 'conversion',
       name: 'Conversion',
       color: 'rgba(255, 153, 200, 1)',
       colorHovered: 'rgba(255, 153, 200, 0.1)',
@@ -62,7 +62,7 @@ const constants = {
       valueType: valueType.NUMBER,
     },
     CVR: {
-      key: 'CVR',
+      key: 'cvr',
       name: 'CVR',
       color: 'rgba(122, 200, 168, 1)',
       colorHovered: 'rgba(122, 200, 168, 0.1)',
@@ -70,7 +70,7 @@ const constants = {
       valueType: valueType.PERCENTAGE,
     },
     CPM: {
-      key: 'CPM',
+      key: 'cpm',
       name: 'CPM',
       color: 'rgba(122, 200, 168, 1)',
       colorHovered: 'rgba(122, 200, 168, 0.1)',
@@ -78,7 +78,7 @@ const constants = {
       valueType: valueType.CURRENCY,
     },
     CPC: {
-      key: 'CPC',
+      key: 'cpc',
       name: 'CPC',
       color: 'rgba(122, 200, 168, 1)',
       colorHovered: 'rgba(122, 200, 168, 0.1)',
@@ -86,7 +86,7 @@ const constants = {
       valueType: valueType.CURRENCY,
     },
     CPO: {
-      key: 'CPO',
+      key: 'cpo',
       name: 'CPO',
       color: 'rgba(122, 200, 168, 1)',
       colorHovered: 'rgba(122, 200, 168, 0.1)',
@@ -94,7 +94,7 @@ const constants = {
       valueType: valueType.CURRENCY,
     },
     COST: {
-      key: 'COST',
+      key: 'cost',
       name: 'Cost',
       color: 'rgba(122, 200, 168, 1)',
       colorHovered: 'rgba(122, 200, 168, 0.1)',
@@ -102,7 +102,7 @@ const constants = {
       valueType: valueType.CURRENCY,
     },
     ORDER_VALUE: {
-      key: 'ORDER_VALUE',
+      key: 'orderValue',
       name: 'Order value',
       color: 'rgba(122, 200, 168, 1)',
       colorHovered: 'rgba(122, 200, 168, 0.1)',
@@ -110,7 +110,7 @@ const constants = {
       valueType: valueType.CURRENCY,
     },
     MARGIN: {
-      key: 'MARGIN',
+      key: 'margin',
       name: 'Margin',
       color: 'rgba(122, 200, 168, 1)',
       colorHovered: 'rgba(122, 200, 168, 0.1)',
@@ -118,7 +118,7 @@ const constants = {
       valueType: valueType.CURRENCY,
     },
     ROI: {
-      key: 'ROI',
+      key: 'roi',
       name: 'ROI',
       color: 'rgba(122, 200, 168, 1)',
       colorHovered: 'rgba(122, 200, 168, 0.1)',

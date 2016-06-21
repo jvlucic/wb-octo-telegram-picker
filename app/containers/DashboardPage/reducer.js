@@ -109,6 +109,8 @@ function refreshCampaignData(dispatch, getState) {
       dispatch(loadedCampaignData({ campaignData, campaignPerformanceData }));
     })
     .catch((err) => {
+      console.log('ERROR');
+      console.log(err);
       dispatch(loadingError(err));
     });
 }
@@ -120,10 +122,17 @@ export function changeDateRange({ to, from }) {
   };
 }
 
-export function changeCampaignStatusFilter(status) {
+function changeCampaignStatusFilterState(status) {
   return {
     type: CHANGE_CAMPAIGN_STATUS,
     status,
+  };
+}
+
+export function changeCampaignStatusFilter(status) {
+  return (dispatch, getState) => {
+    dispatch(changeCampaignStatusFilterState(status));
+    refreshCampaignData(dispatch, getState);
   };
 }
 

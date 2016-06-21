@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { name } from './__init__';
-import { createSelector } from 'reselect';
+import {name} from './__init__';
+import {createSelector} from 'reselect';
 import constants from '../../constants';
 import dummyDatasets from '../../../unidesq-spec/fixtures/dummyDatasets.json';
 
@@ -20,6 +20,11 @@ function getRandomDataSets() {
   }));
 }
 
+export const activeKPIsSelector = createSelector(
+  getModelSelector,
+  model => ( model.get('activeKPIs') )
+);
+
 export const campaignStatusSelector = createSelector(
   getModelSelector,
   model => ( model.get('status') )
@@ -35,7 +40,7 @@ export const campaignDataSelector = createSelector(
   model => ( model.get('campaignData') )
 );
 
-export const campaignperformanceDataSelector = createSelector(
+export const campaignPerformanceDataSelector = createSelector(
   getModelSelector,
   model => ( model.get('campaignPerformanceData') )
 );
@@ -48,17 +53,36 @@ export const campaignTableHeadersSelector = createSelector(
     }
     const performance = campaignData[0].performance; // determine headers from first value
     const headers = [constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS, constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN];
-    if (performance.hasOwnProperty('impressions')){ headers.push(constants.KPI.IMPRESSIONS.key) }
-    if (performance.hasOwnProperty('clicks')){ headers.push(constants.KPI.CLICKS.key) }
-    if (performance.hasOwnProperty('CTR')){ headers.push(constants.KPI.CTR.key) }
-    if (performance.hasOwnProperty('conversion')){ headers.push(constants.KPI.CONVERSION.key) }
-    if (performance.hasOwnProperty('CVR')){ headers.push(constants.KPI.CVR.key) }
-    if (performance.hasOwnProperty('CPM')){ headers.push(constants.KPI.CPM.key) }
-    if (performance.hasOwnProperty('CPC')){ headers.push(constants.KPI.CPC.key) }
-    if (performance.hasOwnProperty('CPO')){ headers.push(constants.KPI.CPO.key) }
-    if (performance.hasOwnProperty('cost')){ headers.push(constants.KPI.COST.key) }
-    if (performance.hasOwnProperty('orderValue')){ headers.push(constants.KPI.ORDER_VALUE.key) }
-    if (performance.hasOwnProperty('roi')){ headers.push(constants.KPI.ROI.key) }
+    if (performance.hasOwnProperty('impressions')) {
+      headers.push(constants.KPI.IMPRESSIONS.key)
+    }
+    if (performance.hasOwnProperty('clicks')) {
+      headers.push(constants.KPI.CLICKS.key)
+    }
+    if (performance.hasOwnProperty('ctr')) {
+      headers.push(constants.KPI.CTR.key)
+    }
+    if (performance.hasOwnProperty('conversion')) {
+      headers.push(constants.KPI.CONVERSION.key)
+    }
+    if (performance.hasOwnProperty('cvr')) {
+      headers.push(constants.KPI.CVR.key)
+    }
+    if (performance.hasOwnProperty('cpm')) {
+      headers.push(constants.KPI.CPM.key)
+    }
+    if (performance.hasOwnProperty('cpc')) {
+      headers.push(constants.KPI.CPC.key)
+    }
+    if (performance.hasOwnProperty('cpo')) {
+      headers.push(constants.KPI.CPO.key)
+    }
+    if (performance.hasOwnProperty('orderValue')) {
+      headers.push(constants.KPI.ORDER_VALUE.key)
+    }
+    if (performance.hasOwnProperty('roi')) {
+      headers.push(constants.KPI.ROI.key)
+    }
     return headers;
   }
 );
@@ -71,25 +95,33 @@ export const campaignTableListSelector = createSelector(
     if (!campaignData) {
       return false;
     }
-    const filteredData = campaignData.map( data => ({
+
+    const getValue = (data, type) => ( typeof data.performance[type] !== 'undefined' && data.performance[type] !== null ? data.performance[type] : null );
+    const filteredData = campaignData.map(data => ({
       [constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS]: data.status && data.status === constants.STATUS.ACTIVE ? true : false,
-      [constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN]: { id: data.id, name: data.name, startData: data.startData, endDate: data.endDate, budget: data.budget, currency:data.currency } || null,
-      [constants.KPI.IMPRESSIONS.key]: data.performance.impressions || null,
-      [constants.KPI.CLICKS.key]: data.performance.clicks || null,
-      [constants.KPI.CTR.key]: data.performance.CTR || null,
-      [constants.KPI.CONVERSION.key]: data.performance.conversion || null,
-      [constants.KPI.CVR.key]: data.performance.CVR || null,
-      [constants.KPI.CPM.key]: data.performance.CPM || null,
-      [constants.KPI.CPC.key]: data.performance.CPC || null,
-      [constants.KPI.CPO.key]: data.performance.CPO || null,
-      [constants.KPI.COST.key]: data.performance.cost || null,
-      [constants.KPI.ORDER_VALUE.key]: data.performance.orderValue || null,
-      [constants.KPI.ROI.key]: data.performance.ROI || null,
+      [constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN]: {
+        id: data.id,
+        name: data.name,
+        startData: data.startData,
+        endDate: data.endDate,
+        budget: data.budget,
+        currency: data.currency
+      } || null,
+      [constants.KPI.IMPRESSIONS.key]: getValue(data, 'impressions'),
+      [constants.KPI.CLICKS.key]: getValue(data, 'clicks'),
+      [constants.KPI.CTR.key]: getValue(data, 'ctr'),
+      [constants.KPI.CONVERSION.key]: getValue(data, 'conversion'),
+      [constants.KPI.CVR.key]: getValue(data, 'cvr'),
+      [constants.KPI.CPM.key]: getValue(data, 'cpm'),
+      [constants.KPI.CPC.key]: getValue(data, 'cpc'),
+      [constants.KPI.CPO.key]: getValue(data, 'cpo'),
+      [constants.KPI.ORDER_VALUE.key]: getValue(data, 'orderValue'),
+      [constants.KPI.ROI.key]: getValue(data, 'roi'),
     })).filter(
       campaign => status === constants.STATUS.ALL ? true :
         status === constants.STATUS.ACTIVE ? campaign[constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS] : !campaign[constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS]
     );
-    return filteredData ;
+    return filteredData;
   }
 );
 
@@ -106,15 +138,44 @@ const selectFromDate = createSelector(
 export const selectRange = createSelector(
   selectToDate,
   selectFromDate,
-  (to, from) => ({ to, from }),
+  (to, from) => ({to, from}),
 );
-
+const getKPIFromKey = (key) => {
+  switch (key) {
+    case constants.KPI.IMPRESSIONS.key:
+      return constants.KPI.IMPRESSIONS;
+    case constants.KPI.CLICKS.key:
+      return constants.KPI.CLICKS;
+    case constants.KPI.CTR.key:
+      return constants.KPI.CTR;
+    case constants.KPI.CONVERSION.key:
+      return constants.KPI.CONVERSION;
+    case constants.KPI.CVR.key:
+      return constants.KPI.CVR;
+    case constants.KPI.CPM.key:
+      return constants.KPI.CPM;
+    case constants.KPI.CPC.key:
+      return constants.KPI.CPC;
+    case constants.KPI.CPO.key:
+      return constants.KPI.CPO;
+    case constants.KPI.COST.key:
+      return constants.KPI.COST;
+    case constants.KPI.ORDER_VALUE.key:
+      return constants.KPI.ORDER_VALUE;
+    case constants.KPI.MARGIN.key:
+      return constants.KPI.MARGIN;
+    case constants.KPI.ROI.key:
+      return constants.KPI.ROI;
+    default:
+      return null
+  }
+};
 export const KPIDataSelector = createSelector(
-  getModelSelector,
-  model => {
-    const campaignData = model.get('campaignData');
-    const campaignPerformanceData = model.get('campaignPerformanceData');
-    const activeKPIs = model.get('activeKPIs');
+  campaignDataSelector,
+  campaignStatusSelector,
+  campaignPerformanceDataSelector,
+  activeKPIsSelector,
+  (campaignData, status, campaignPerformanceData, activeKPIs) => {
     if (!campaignData || !campaignPerformanceData) {
       return null;
     }
@@ -123,21 +184,34 @@ export const KPIDataSelector = createSelector(
       labels: new Array(24).fill(0).map((elem, idx) => idx),
       datasets: dummyDatasets,
     };
-    const dummyValues = [534000, 1234, 0.0035, 800, 0.1143, 0.4, 0.4, 8.75, 8.75, 350000, 28000, 3];
     const dummyChanges = [3, 3, 0, -3, 3, 3, 3, 3, 3, 3, 3, 3];
     const KPIValues = {};
-    const constantine = constants;
-    Object.keys(constantine.KPI).forEach( (kpi, idx) => {
-      KPIValues[kpi] = {
+    const initialValue = {};
+    /* CALCULATE KPI VALUES UNDER CHART */
+    Object.values(constants.KPI).forEach(({key: kpi}) => initialValue[kpi] = 0);
+    const reduced = campaignData
+      .filter(campaign => status === constants.STATUS.ALL ? true : status === campaign.status)
+      .reduce((performanceA, {performance: performanceB}) => {
+        for (const kpi in performanceA) {
+          if (performanceB.hasOwnProperty(kpi)) {
+            performanceA[kpi] = performanceA[kpi] + performanceB[kpi];
+          }
+        }
+        return performanceA;
+      }, initialValue);
+    Object.keys(constants.KPI).forEach((kpi, idx) => {
+      KPIValues[constants.KPI[kpi].key] = {
         label: constants.KPI[kpi].name,
         color: constants.KPI[kpi].color,
         colorHovered: constants.KPI[kpi].colorHovered,
-        value: dummyValues[idx],
+        value: constants.KPI[kpi].valueType === constants.VALUE_TYPE.PERCENTAGE ? reduced[constants.KPI[kpi].key] / campaignData.length : reduced[constants.KPI[kpi].key],
         change: dummyChanges[idx],
         enabled: constants.KPI[kpi].enabled,
         valueType: constants.KPI[kpi].valueType,
       }
     });
+    /* CALCULATE KPI VALUES UNDER CHART */
+
     return {KPIValues, chartData, activeKPIs: activeKPIs.toJS()};
   }
 );
