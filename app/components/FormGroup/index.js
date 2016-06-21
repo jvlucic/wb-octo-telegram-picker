@@ -2,9 +2,9 @@ import React, { PropTypes } from 'react';
 import classnames from 'classnames';
 import './styles.scss';
 
-export default function FormGroup({ htmlFor, className, error, labelText, children }) {
+export default function FormGroup({ htmlFor, className, error, touched, labelText, children }) {
   const classStates = classnames({
-    'has-error': !!error,
+    'has-error': !!error && touched,
   });
 
   return (
@@ -26,6 +26,7 @@ FormGroup.propTypes = {
   htmlFor: PropTypes.string,
   className: PropTypes.string,
   error: PropTypes.string,
+  touched: PropTypes.bool,
   labelText: PropTypes.string,
   children: PropTypes.node,
 };

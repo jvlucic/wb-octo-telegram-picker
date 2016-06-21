@@ -98,6 +98,8 @@ class LoginPage extends React.Component { // eslint-disable-line react/prefer-st
           </div>
           <FormGroup
             htmlFor={this.ids.username}
+            className="Login-formGroup"
+            {...username}
           >
             <Input
               id={this.ids.username}
@@ -109,6 +111,8 @@ class LoginPage extends React.Component { // eslint-disable-line react/prefer-st
           </FormGroup>
           <FormGroup
             htmlFor={this.ids.password}
+            className="Login-formGroup"
+            {...password}
           >
             <Input
               id={this.ids.password}

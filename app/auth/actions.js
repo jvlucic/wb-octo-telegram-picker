@@ -5,6 +5,7 @@ import {
   LOGGING_IN_ERROR,
 } from './constants';
 import request from 'utils/request';
+import { generateURL } from 'utils/unidesqApi';
 
 /**
  * LOGGING_IN action creation
@@ -61,7 +62,7 @@ export function logginInError(error) {
 export function authenticate(username, password) {
   return (dispatch) => {
     dispatch(logginIn());
-    const url = 'http://api-test.unidesq.com/auth';
+    const url = generateURL('auth');
     return request(url, {
       method: 'POST',
       headers: {
@@ -70,11 +71,24 @@ export function authenticate(username, password) {
       body: JSON.stringify({ username, password }),
     })
     .then(
-      ({ data, err }) => {
+      ({ data: auth, err }) => {
         if (err) {
           return dispatch(logginInError('The username or the password are invalid.'));
         }
-        return dispatch(logginInSuccess(data));
+        const urlUser = generateURL('user');
+        return request(urlUser)
+          .then(
+            ({ data: user, err: userErr }) => {
+              if (userErr) {
+                return dispatch(logginInError('The username or the password are invalid.'));
+              }
+              const logginInSuccessData = { ...auth, user };
+              // Store the success response in localstorage
+              localStorage.setItem('logginInSuccess', JSON.stringify(logginInSuccessData));
+              return dispatch(logginInSuccess(logginInSuccessData));
+            },
+            () => dispatch(logginInError('The username or the password are invalid.')),
+          );
       },
       () => dispatch(logginInError('The username or the password are invalid.')),
      );

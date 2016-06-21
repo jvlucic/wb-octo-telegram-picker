@@ -30,11 +30,14 @@ $link-color: #03c7f1 !default;
   }
 
   .Login-input {
-    margin-bottom: 15px;
     &--checkbox {
       color: #aeaeae;
       font-size: 12px;
     }
+  }
+
+  .Login-formGroup {
+    margin-bottom: 15px;
   }
 
   .Login-forgot {

@@ -12,7 +12,7 @@ import { fromJS } from 'immutable';
 
 // The initial state of the App
 const initialState = fromJS({
-  username: null,
+  user: null,
   logged: false,
   loggingIn: false,
   error: null,
@@ -42,7 +42,7 @@ function intlReducer(state = initialState, action) {
         .set('expireIn', action.expire_in)
         .set('accessToken', action.access_token)
         .set('refreshToken', action.refresh_token)
-        .set('username', action.username);
+        .set('user', fromJS(action.user));
     case LOGGING_IN_ERROR:
       return state
         .set('loggingIn', false)
@@ -56,7 +56,7 @@ function intlReducer(state = initialState, action) {
       .set('expireIn', 0)
       .set('accessToken', null)
       .set('refreshToken', null)
-      .set('username', null);
+      .set('user', null);
     default:
       return state;
   }

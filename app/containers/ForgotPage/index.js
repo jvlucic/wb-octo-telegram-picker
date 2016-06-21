@@ -10,6 +10,7 @@ import Input from 'components/Input';
 import Button from 'components/Button';
 import { Link, withRouter } from 'react-router';
 import { AlertSuccessIcon } from 'theme/assets';
+import { reduxForm } from 'redux-form';
 import './styles.scss';
 
 const msgs = defineMessages({
@@ -50,6 +51,17 @@ const msgs = defineMessages({
   },
 });
 
+
+export const fields = ['email'];
+export function validate(values) {
+  const errors = {};
+
+  if (!values.email) {
+    errors.email = 'Email is required';
+  }
+
+  return errors;
+}
 /**
  * Page that the user goes then need reset the password
  */
@@ -62,7 +74,7 @@ class ForgotPage extends React.Component { // eslint-disable-line react/prefer-s
     super(props);
 
     // Binding this to function
-    this.handleOnResetPasswordClick = this.handleOnResetPasswordClick.bind(this);
+    this.handleForgotSubmit = this.handleForgotSubmit.bind(this);
     this.handleOnGoHomeClick = this.handleOnGoHomeClick.bind(this);
 
     this.state = {
@@ -70,7 +82,7 @@ class ForgotPage extends React.Component { // eslint-disable-line react/prefer-s
     };
   }
 
-  handleOnResetPasswordClick() {
+  handleForgotSubmit() {
     this.setState({ wasSended: true });
   }
 
@@ -79,7 +91,11 @@ class ForgotPage extends React.Component { // eslint-disable-line react/prefer-s
   }
 
   render() {
-    const { intl: { formatMessage } = {} } = this.props;
+    const {
+      intl: { formatMessage } = {},
+      fields: { email } = {},
+      handleSubmit,
+    } = this.props;
 
     if (this.state.wasSended) {
       return (
@@ -105,16 +121,21 @@ class ForgotPage extends React.Component { // eslint-disable-line react/prefer-s
     }
 
     return (
-      <section className="Forgot">
+      <form className="Forgot" onSubmit={handleSubmit(this.handleForgotSubmit)}>
         <header className="Forgot-message">
           <FormattedMessage {...msgs.label} />
         </header>
         <div className="Forgot-box">
-          <Input type="text" className="Forgot-input" placeholder={formatMessage(msgs.emailAddress)} />
+          <Input
+            type="text"
+            className="Forgot-input"
+            placeholder={formatMessage(msgs.emailAddress)}
+            {...email}
+          />
           <Button
+            type="submit"
             className="Forgot-button"
             buttonType="large"
-            onClick={this.handleOnResetPasswordClick}
             expanded
           >
             <FormattedMessage {...msgs.recoverPassword} />
@@ -126,14 +147,23 @@ class ForgotPage extends React.Component { // eslint-disable-line react/prefer-s
             </Link>
           </div>
         </div>
-      </section>
+      </form>
     );
   }
 }
 
 ForgotPage.propTypes = {
   intl: PropTypes.object,
+  fields: PropTypes.shape({
+    email: PropTypes.object,
+  }),
+  handleSubmit: PropTypes.func,
   router: PropTypes.object,
 };
 
-export default injectIntl(withRouter(ForgotPage));
+export default reduxForm({
+  form: 'forgot',
+  fields,
+  validate,
+  getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint).toJS(),
+})(injectIntl(withRouter(ForgotPage)));
