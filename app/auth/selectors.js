@@ -2,9 +2,30 @@ import { createSelector } from 'reselect';
 
 const selectAuth = (state) => state.get('auth');
 
-export const selectUsername = createSelector(
+export const selectUser = createSelector(
   selectAuth,
-  (auth) => auth.get('username'),
+  (auth) => auth.get('user'),
+);
+
+export const selectUsername = createSelector(
+  selectUser,
+  user => user.get('username'),
+);
+
+export const selectFirstName = createSelector(
+  selectUser,
+  user => user.get('firstName'),
+);
+
+export const selectLastName = createSelector(
+  selectUser,
+  user => user.get('lastName'),
+);
+
+export const selectComposeName = createSelector(
+  selectFirstName,
+  selectLastName,
+  (firstName, lastName) => `${firstName} ${lastName}`,
 );
 
 export const selectIsLogged = createSelector(
