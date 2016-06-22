@@ -1,0 +1,105 @@
+@import 'main';
+
+:global {
+  $input-color: #888888 !default;
+  $input-placeholder-color: #C6C6C6 !default;
+  $input-border-color: #e0e0e0 !default;
+  $input-hover-border-color: #d0d0d0 !default;
+  $input-focus-border-color: #28cff3 !default;
+  $input-disabled-bg-color: #FAFAFA !default;
+  $input-height: 50px;
+  $input-width: 320px;
+  $input-icon-width: 50px;
+  @mixin inputIcon {
+    display: none;
+    position: absolute;
+    right: $input-height / 4;
+    top: $input-height / 4;
+    svg {
+      height: $input-height / 4;
+      width: $input-height / 4;
+    }
+  }
+  .Input-container {
+    position: relative;
+    width: 320px;
+    float: left;
+    height: $input-height;
+  }
+
+  .Input {
+    border: 1px solid $input-border-color;
+    color: $input-color;
+    font-size: 16px;
+    height: $input-height;
+    width: 320px;
+    padding: 0px 15px;
+    &::placeholder {
+      color: $input-placeholder-color;
+      font-weight: lighter;
+    }
+
+    &:hover {
+      border-color: $input-hover-border-color;
+    }
+    &:focus {
+      border-color: $input-focus-border-color;
+      outline:none;
+    }
+    &.has-error {
+      border-color: $form-invalid-color;
+    }
+
+    &.is-valid {
+      border-color: $form-valid-color;
+    }
+  }
+
+  .Input-checkIcon {
+    @include inputIcon();
+    &.is-valid {
+      display: block;
+    }
+  }
+
+  .Input-errorIcon {
+    @include inputIcon();
+    &.has-error {
+      display: block;
+    }
+  }
+
+  .Input-password {
+    float: left;
+    height: $input-height;
+    width: $input-width;
+    .Input {
+      width: $input-width - $input-icon-width;
+      float: left;
+      &:hover + .Input-passwordIcon {
+        border-color: $input-hover-border-color;
+      }
+      &:focus + .Input-passwordIcon {
+        border-color: $input-focus-border-color;
+        outline:none;
+      }
+    }
+    .Input-container {
+      width: $input-width - $input-icon-width;
+    }
+  }
+
+  .Input-passwordIcon {
+    background-color: #fafafa;
+    border: 1px solid $input-border-color;
+    float: left;
+    width: $input-icon-width;
+    height: $input-height;
+    svg {
+      width: $input-icon-width / 2;
+      height: $input-height / 2;
+      margin-top: $input-height / 4;
+      margin-left: $input-height / 4;
+    }
+  }
+}
