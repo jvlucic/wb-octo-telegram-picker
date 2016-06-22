@@ -20,7 +20,7 @@ class CampaignTable extends Component {
 
     this.state = {
       headerHeight: 50,
-      height: 450,
+      height: (props.list.length + 1) * 70,
       overscanRowCount: 10,
       rowHeight: 70,
       rowCount: props.list.length,
@@ -82,13 +82,15 @@ class CampaignTable extends Component {
     sortDirection
   }) {
     const isSecondHalf = this.props.headers.indexOf(dataKey) >= 2;
-    const className = classnames({
+    const className = classnames(
+      styles.header, {
       [styles.secondHalfColummn]: isSecondHalf,
     });
     return (
       <div className={className}>
+        { sortBy === dataKey && isSecondHalf && <SortIndicator sortDirection={sortDirection}/> }
         {label}
-        { sortBy === dataKey &&  <SortIndicator sortDirection={sortDirection}/> }
+        { sortBy === dataKey && !isSecondHalf && <SortIndicator sortDirection={sortDirection}/> }
       </div>
     );
   }

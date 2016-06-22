@@ -8,17 +8,22 @@ $margin-vertical: 15px;
   margin-bottom: $margin-vertical;
 }
 
+.KPIListContainer > div:last-child{
+}
+
 .KPIListContainer{
   margin: $margin-vertical auto;
-  width: 1205px;
-  display: flex;
-  justify-content: space-between;
-  padding: 5px;
+  padding: 5px 0;
+  width: 100%;
+  //width: 1205px;
   text-align: center;
+  overflow: hidden;
+
   > *{
-    max-width: 9.09%;
-    width: 9.09%;
+    max-width: 8.2%;
+    width: 8.2%;
     margin: 0 1px;
+    float: left;
   }
   .KPIElem{
     margin: 5px;
