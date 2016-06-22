@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react';
 import classnames from 'classnames';
+import './styles.scss';
 
 export default function Button({ children, buttonType, expanded, className, ...otherProps }) {
   return (
     <button
       {...otherProps}
-      className={classnames('Button', className, {
+      className={classnames('Button Button--primary', className, {
         'Button--large': buttonType === 'large',
         'is-expanded': expanded,
       })}

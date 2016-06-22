@@ -1,0 +1,53 @@
+@import 'main';
+
+$link-color: #03c7f1 !default;
+
+:global {
+  .Login-message {
+    font-weight: lighter;
+    font-size: 32px;
+  }
+
+  .Login-box {
+    margin-top: 45px;
+    width: 320px;
+    margin-left: 40px;
+  }
+
+  .Login-error {
+    color: $form-invalid-color;
+    clear: both;
+    display: none;
+    padding-bottom: 15px;
+    width: 100%;
+    &.has-error {
+      display: block;
+    }
+  }
+
+  .Login-button {
+    margin-top: 40px;
+  }
+
+  .Login-input {
+    &--checkbox {
+      color: #aeaeae;
+      font-size: 12px;
+    }
+  }
+
+  .Login-formGroup {
+    margin-bottom: 15px;
+  }
+
+  .Login-forgot {
+    margin-top: 15px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .Login-forgotLink {
+    color: $link-color;
+    font-size: 14px;
+  }
+}

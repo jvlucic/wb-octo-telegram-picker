@@ -2,11 +2,12 @@
  * Combine all reducers in this file and export the combined reducers.
  * If we were to do this in store.js, reducers wouldn't be hot reloadable.
  */
-
 import { combineReducers } from 'redux-immutable';
 import { fromJS } from 'immutable';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import intl from 'intl/reducer';
+import auth from 'auth/reducer';
+import { reducer as formReducer } from 'redux-form';
 import * as dashboardPage from './containers/DashboardPage';
 
 /*
@@ -37,13 +38,19 @@ function routeReducer(state = routeInitialState, action) {
   }
 }
 
+function formInmutableReducer(state = fromJS({}), action) {
+  return fromJS(formReducer(state.toJS(), action));
+}
+
 /**
  * Creates the main reducer with the asynchronously loaded ones
  */
 export default function createReducer(asyncReducers) {
   return combineReducers({
-    route: routeReducer,
     intl,
+    auth,
+    route: routeReducer,
+    form: formInmutableReducer,
     [dashboardPage.name]: dashboardPage.reducer,
     ...asyncReducers,
   });

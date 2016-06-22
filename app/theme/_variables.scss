@@ -4,7 +4,7 @@ $glutter: 24px;
 
 $min-width: $min-breakpoint - ( $glutter * 2 );
 
-$padding-horizontal-base: 10px; 
+$padding-horizontal-base: 10px;
 
 // font
 $default-font:  'Lato', sans-serif;
@@ -12,3 +12,12 @@ $default-font-size: 14px;
 
 $font-family: $default-font;
 $font-size: $default-font-size;
+
+// Form
+
+$form-invalid-color: #ff7474;
+$form-valid-color: #72e188;
+
+
+//Links
+$link-color: #03c7f1 !default;

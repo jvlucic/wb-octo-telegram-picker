@@ -1,0 +1,57 @@
+@import 'main';
+
+:global {
+  .Forgot-message {
+    color: #888888;
+    font-weight: normal;
+    font-size: 16px;
+  }
+
+  .Forgot-message--ok {
+    padding-bottom: 44px; 
+  }
+
+  .Forgot-box {
+    margin-top: 45px;
+    width: 320px;
+    margin-left: 40px;
+  }
+
+  .Forgot-button {
+  }
+
+  .Forgot-input {
+    margin-bottom: 15px;
+    &--checkbox {
+      color: #aeaeae;
+      font-size: 12px;
+    }
+  }
+
+  .Forgot-havingProblem {
+    color: #adadad;
+    font-size: 14px;
+    margin-top: 15px;
+    text-align: center
+  }
+
+  .Forgot-contactSupport {
+    color: $link-color;
+    padding-left: 5px;
+  }
+
+  .Forgot-icon {
+    text-align: center;
+    width: 100%;
+    padding-bottom: 32.5px;
+  }
+
+  .Forgot-okIcon {
+
+    svg {
+      width: 65px;
+      height: 65px;
+      fill: #7AEB91;
+    }
+  }
+}

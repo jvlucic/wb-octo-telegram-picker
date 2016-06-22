@@ -3,6 +3,7 @@
 // See http://blog.mxstbr.com/2016/01/react-apps-with-pages for more information
 // about the code splitting business
 // import { getHooks } from 'utils/hooks';
+import { selectIsLogged } from 'auth/selectors';
 
 const errorLoading = (err) => {
   console.error('Dynamic page loading failed', err); // eslint-disable-line no-console
@@ -14,7 +15,7 @@ const loadModule = (cb) => (componentModule) => {
 
 function requireAuth(store) {
   return (nextState, replace) => {
-    if (!store.getState()) {
+    if (!selectIsLogged(store.getState()) && false) {
       replace('login');
     }
   };
@@ -130,11 +131,10 @@ export default function createRoutes(store) {
       ],
     },
     {
-      path: '/login',
-      name: 'login',
+      name: 'loginApp',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          System.import('containers/LoginPage'),
+          System.import('containers/LoginApp'),
         ]);
 
         const renderRoute = loadModule(cb);
@@ -145,7 +145,44 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
-    }, {
+      childRoutes: [
+        {
+          path: '/login',
+          name: 'login',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/LoginPage'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+        {
+          path: '/forgot',
+          name: 'forgot',
+          getComponent(nextState, cb) {
+            const importModules = Promise.all([
+              System.import('containers/ForgotPage'),
+            ]);
+
+            const renderRoute = loadModule(cb);
+
+            importModules.then(([component]) => {
+              renderRoute(component);
+            });
+
+            importModules.catch(errorLoading);
+          },
+        },
+      ],
+    },
+    {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {
