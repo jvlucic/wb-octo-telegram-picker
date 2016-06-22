@@ -15,12 +15,12 @@ $margin-vertical: 15px;
   //width: 1205px;
   text-align: center;
   overflow: hidden;
-
+  display: flex;
+  justify-content: space-between;
   > *{
-    max-width: 8.2%;
-    width: 8.2%;
+    max-width: 8.3%;
+    width: 8.3%;
     margin: 0 1px;
-    float: left;
   }
   .KPIElem{
     margin: 5px;
