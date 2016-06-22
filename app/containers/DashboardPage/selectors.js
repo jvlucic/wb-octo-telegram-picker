@@ -2,9 +2,9 @@
 import {name} from './__init__';
 import {createSelector} from 'reselect';
 import constants from '../../constants';
-import { parseDate } from '../../utils/utils';
+import { getDayAndMonth, setColorAlpha } from '../../utils/utils';
 
-import dummyDatasets from '../../../unidesq-spec/fixtures/dummyDatasets.json';
+import dummyDatasets from '../../../unidesq-spec/fixtures/dummyWeekDatasets.json';
 
 export const getModelSelector = (state) => state.get(name);
 
@@ -182,10 +182,12 @@ export const KPIDataSelector = createSelector(
       return null;
     }
     /* TODO: PROCESS RAW DATA AND PRODUCES KPI AND CHART DATA*/
+    /*
     const chartData = {
       labels: new Array(24).fill(0).map((elem, idx) => idx),
       datasets: dummyDatasets,
     };
+    */
     const dummyChanges = [3, 3, 0, -3, 3, 3, 3, 3, 3, 3, 3, 3];
     const KPIValues = {};
     const initialValue = {};
@@ -215,19 +217,30 @@ export const KPIDataSelector = createSelector(
       });
     });
     /* TODO: handle HOURLY DATA*/
-    const labels = Object.keys(performanceAccumulator).map( date => {
-      const dateParsed = parseDate(date);
-      return `${dateParsed.getDate()}-${dateParsed.getMonth() + 1}`
+    const labels = Object.keys(performanceAccumulator).map( date => getDayAndMonth(date));
+    const performanceByKPIs = {};
+    
+    Object.values(performanceAccumulator).forEach( data => {
+      Object.keys(data).forEach( kpi => {
+        if (!performanceByKPIs.hasOwnProperty(kpi)) {
+          performanceByKPIs[kpi] = [];
+        }
+        performanceByKPIs[kpi].push(data[kpi]);
+      })
     });
-
-    Object.keys(constants.KPI).map(kpi => ({
-      kpi: constants.KPI[kpi].key,
-      label: constants.KPI[kpi].name,
-      data: getRandomNumberArray(24),
-      borderColor: constants.KPI[kpi].color,
-      backgroundColor: 'transparent',
-      borderWidth: 1,
-    }));
+    const chartData = {
+      labels: labels,
+      datasets: Object.keys(constants.KPI).map(kpi => ({
+        kpi: constants.KPI[kpi].key,
+        label: constants.KPI[kpi].name,
+        data: performanceByKPIs[constants.KPI[kpi].key] || dummyDatasets[constants.KPI[kpi].key].data ,
+        borderColor: constants.KPI[kpi].color,
+        pointBackgroundColor: constants.KPI[kpi].color,
+        backgroundColor: setColorAlpha(constants.KPI[kpi].color, 0.2),
+        fill: false,
+        borderWidth: 1,
+      })).filter( dataset => getKPIFromKey(dataset.kpi).enabled ),
+    };
 
     /* CALCULATE KPI VALUES UNDER CHART */
     Object.values(constants.KPI).forEach(({key: kpi}) => initialValue[kpi] = 0);

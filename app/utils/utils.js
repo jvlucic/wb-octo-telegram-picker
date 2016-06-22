@@ -1,6 +1,7 @@
 /**
  * Created by mongoose on 21/06/16.
  */
+import moment from 'moment';
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -19,4 +20,22 @@ export function parseDate(str) {
   const [year, month, day] = dayPart.split('-');
   const date = new Date(year, month - 1, day);
   return Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date.getTime()) ? date : null;
+}
+
+export function getDayAndMonth(str) {
+  if (!str) {
+    return null;
+  }
+  const date = parseDate(str);
+  return moment(date).format('MMM DD.');
+}
+
+
+export function setColorAlpha(color, alpha) {
+  const parts = color.split(',');
+  if (parts.length <= 0) { // NOT RGBA FORMAT
+    return color;
+  }
+  parts[3] = `${alpha})`;
+  return parts.join(',');
 }
