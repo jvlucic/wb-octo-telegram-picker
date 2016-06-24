@@ -19,6 +19,14 @@ export function parseDate(str) {
   return moment(str, 'ddd MMM DD HH:mm:ss ZZ YYYY').toDate();
 }
 
+export function addDaysToDate(date, days) {
+  return moment(date).add(days, 'day').toDate();
+}
+
+export function getDayAndMonthFromDate(date) {
+  return moment(date).format('MMM DD.');
+}
+
 export function getDayAndMonth(str) {
   if (!str) {
     return null;

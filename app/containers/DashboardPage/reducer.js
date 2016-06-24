@@ -27,7 +27,7 @@ export const initialState = fromJS({
   campaignData: false,
   to: new Date(now.toDate()),
   selectedCampaign: null,
-  from: new Date(now.subtract(1, 'day').toDate()),
+  from: now.subtract(7, 'day').toDate(),
   loading: false,
 });
 
