@@ -11,7 +11,11 @@ import constants from '../../constants';
 import classnames from 'classnames';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import Loader from '../Loader/Loader';
+import { ToastContainer, ToastMessage } from 'react-toastr';
+import './Toaster.scss'; // only needs to be imported once
+import './ToasterAnimate.scss'; // only needs to be imported once
 
+const ToastMessageFactory = React.createFactory(ToastMessage.animation);
 
 class CampaignTable extends Component {
 
@@ -31,6 +35,8 @@ class CampaignTable extends Component {
       selectedRow: false,
     };
     this.currentList = [];
+    this.addAlert = this.addAlert.bind(this);
+    this.clearAlert = this.clearAlert.bind(this);
     this.headerRenderer = this.headerRenderer.bind(this);
     this.cellRenderer = this.cellRenderer.bind(this);
     this.noRowsRenderer = this.noRowsRenderer.bind(this);
@@ -42,6 +48,17 @@ class CampaignTable extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
+  }
+
+  addAlert() {
+    this.refs.container.error(`hi! Now is ${new Date()}`, `///title\\\\\\`, {
+      closeButton: true,
+      timeOut:2000
+    });
+  }
+
+  clearAlert() {
+    this.refs.container.clear();
   }
 
   handleRowSelect(campaign, event) {
@@ -163,6 +180,17 @@ class CampaignTable extends Component {
     const rowGetter = ({index}) => this.getDatum(this.currentList, index);
     return (
       <div className={styles.campaignTable}>
+        <ToastContainer
+          toastMessageFactory={ToastMessageFactory}
+          ref="container"
+          className="toast-top-right"
+        />
+        <button className="primary" onClick={::this.addAlert}>
+          Hello
+        </button>
+        <button className="primary" onClick={::this.clearAlert}>
+          CLEAR
+        </button>
         <AutoSizer disableHeight>
           {({width}) => (
             <FlexTable
