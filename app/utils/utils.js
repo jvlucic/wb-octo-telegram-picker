@@ -16,10 +16,7 @@ export function parseDate(str) {
   if (!str) {
     return null;
   }
-  const dayPart = str.split('T')[0];
-  const [year, month, day] = dayPart.split('-');
-  const date = new Date(year, month - 1, day);
-  return Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date.getTime()) ? date : null;
+  return moment(str, 'ddd MMM DD HH:mm:ss ZZ YYYY').toDate();
 }
 
 export function getDayAndMonth(str) {
@@ -30,6 +27,14 @@ export function getDayAndMonth(str) {
   return moment(date).format('MMM DD.');
 }
 
+export function getHour(str) {
+  if (!str) {
+    return null;
+  }
+  const hourPart = str.split(' ')[1];
+  const hourt = hourPart.split(':')[0];
+  return hourt;
+}
 
 export function setColorAlpha(color, alpha) {
   const parts = color.split(',');
@@ -38,4 +43,23 @@ export function setColorAlpha(color, alpha) {
   }
   parts[3] = `${alpha})`;
   return parts.join(',');
+}
+
+export function numberFormatter(num) {
+  if (num >= 1000000000) {
+    const norm = (num / 1000000000);
+    return `${norm.toFixed(norm % 1 !== 0 ? 2 : 0).replace(/\.0$/, '')}G`;
+  }
+  if (num >= 1000000) {
+    const norm = (num / 1000000);
+    return `${norm.toFixed(norm % 1 !== 0 ? 2 : 0).replace(/\.0$/, '')}M`;
+  }
+  if (num >= 1000) {
+    const norm = (num / 1000);
+    return `${norm.toFixed(norm % 1 !== 0 ? 2 : 0).replace(/\.0$/, '')}K`;
+  }
+  if (num <= 1 && num > 0) {
+    return `${(num).toFixed(2).replace(/\.0$/, '')}`;
+  }
+  return num;
 }

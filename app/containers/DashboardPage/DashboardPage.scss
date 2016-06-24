@@ -2,6 +2,20 @@
   height: 420px;
 }
 
+.KPIChartContainer, .campaignTableContainer, .statusFilter{
+  animation-duration: 0.5s;
+  animation-name: appear;
+
+  @keyframes appear {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+}
 
 .statusFilter{
   margin-bottom: 42.5px;

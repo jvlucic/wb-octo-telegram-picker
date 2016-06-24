@@ -7,6 +7,7 @@ import moment from 'moment';
 /* TODO: replace dummydata for API calls */
 import dummyCampaignData from '../../../unidesq-spec/fixtures/dummyCampaignData.json';
 import dummyCampaignPerfomanceData from '../../../unidesq-spec/fixtures/dummyCampaignPerfomanceData.json';
+import dummyCampaignPerfomanceHourlyData from '../../../unidesq-spec/fixtures/dummyCampaignPerfomanceHourlyData.json';
 
 const LOAD_CAMPAIGN_DATA = `${name}/LOAD_CAMPAIGN_DATA`;
 const LOAD_CAMPAIGN_DATA_SUCCESS = `${name}/LOAD_CAMPAIGN_DATA_SUCCESS`;
@@ -27,6 +28,7 @@ export const initialState = fromJS({
   to: new Date(now.toDate()),
   selectedCampaign: null,
   from: new Date(now.subtract(1, 'day').toDate()),
+  loading: false,
 });
 
 
@@ -34,7 +36,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case LOAD_CAMPAIGN_DATA:
       return state
-        .set('loading', 'true')
+        .set('loading', true)
         .set('error', false)
         .set('campaignPerformanceData', false)
         .set('campaignData', false);
@@ -50,7 +52,7 @@ export default (state = initialState, action) => {
         .set('campaignPerformanceData', false)
         .set('campaignData', false);
     case CHANGE_DATE_RANGE: {
-      const daysBetweenDates = dateDiffInDays(action.to, action.from);
+      const daysBetweenDates = dateDiffInDays(action.from, action.to);
       return state
         .set('to', action.to)
         .set('from', action.from)
@@ -92,8 +94,11 @@ function fetchCampaignData() {
   return new Promise(resolve => setTimeout(() => resolve(dummyCampaignData), 1000));
 }
 
-function fetchCampaignPerformanceData() {
-  return new Promise(resolve => setTimeout(() => resolve(dummyCampaignPerfomanceData), 1000));
+function fetchCampaignPerformanceData(filters) {
+  if (filters.get('frequency') === constants.FREQUENCY.DAILY) {
+    return new Promise(resolve => setTimeout(() => resolve(dummyCampaignPerfomanceData), 1000));
+  }
+  return new Promise(resolve => setTimeout(() => resolve(dummyCampaignPerfomanceHourlyData), 1000));
 }
 
 function changeDateRangeState({ to, from }) {
@@ -105,6 +110,7 @@ function changeDateRangeState({ to, from }) {
 }
 
 function refreshCampaignData(dispatch, getState) {
+  dispatch(loadCampaignData());
   const filters = getState().get(name);
   const requestCampaignData = fetchCampaignData(filters);
   const requestCampaignPerformanceData = fetchCampaignPerformanceData(filters);
@@ -149,7 +155,6 @@ export function changeSelectedCampaignFilter(id) {
 
 export function getCampaignData() {
   return (dispatch, getState) => {
-    dispatch(loadCampaignData());
     refreshCampaignData(dispatch, getState);
   };
 }

@@ -10,12 +10,14 @@
  */
 /* eslint-disable */
 import React from 'react';
-import { KPIChart, CampaignTable, Calendar, CampaignFilterDropdown } from 'components';
+import { KPIChart, CampaignTable, Calendar, CampaignFilterDropdown, Loader } from 'components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { actions } from './reducer';
-import { KPIDataSelector, selectRange, campaignTableHeadersSelector, campaignTableListSelector, campaignStatusSelector, selectedCampaignSelector } from './selectors';
+import { KPIDataSelector, selectRange, campaignTableHeadersSelector,
+         campaignTableListSelector, campaignStatusSelector, selectedCampaignSelector,
+         activeKPIsSelector, loadingSelector } from './selectors';
 import styles from './DashboardPage.scss';
 
 class DashboardPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -56,7 +58,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
   }
 
   render() {
-    const {KPIData, range, tableHeaders, tableList, status, selectedCampaign} = this.props;
+    const {KPIData, range, tableHeaders, tableList, status, selectedCampaign, activeKPIs, loading} = this.props;
     return (
       <div>
         <div className={styles.statusFilter}>
@@ -68,13 +70,13 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
             <Calendar active from={range.from} to={range.to} onChange={this.handleOnChangeDateRangeFilter} />
           </div>
         </div>
-        
-        <div className={styles.KPIChartContainer}>
-          { KPIData && <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { KPIData.activeKPIs }  /> }
-        </div>
-        <div className={styles.campaignTableContainer}>
-          { tableList && <CampaignTable list={tableList} headers={tableHeaders} onRowSelect={this.handleOnChangeSelectedCampaignFilter} selectedCampaign={selectedCampaign} /> }
-        </div>
+        {loading && <div><Loader/></div>}
+        { !loading && KPIData &&  <div className={styles.KPIChartContainer}>
+          <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { activeKPIs }  />
+        </div>}
+        { !loading && tableList && <div className={styles.campaignTableContainer}>
+           <CampaignTable list={tableList} headers={tableHeaders} onRowSelect={this.handleOnChangeSelectedCampaignFilter} selectedCampaign={selectedCampaign} />
+        </div> }
       </div>
     );
   }
@@ -88,6 +90,8 @@ export default connect(
     range: selectRange,
     status: campaignStatusSelector,
     selectedCampaign: selectedCampaignSelector,
+    activeKPIs: activeKPIsSelector,
+    loading: loadingSelector,
   }),
   dispatch => {
     return bindActionCreators({ ...actions }, dispatch);

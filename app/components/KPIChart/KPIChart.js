@@ -6,6 +6,7 @@ import React, { PropTypes, Component } from 'react';
 import ReactChartJS from 'react-chartjs';
 import styles from './KPIChart.scss';
 import KPIButton from 'components/KPIButton';
+import { numberFormatter } from '../../utils/utils';
 
 function setColorAlpha(color, alpha) {
   const parts = color.split(',');
@@ -26,7 +27,99 @@ class KPIChart extends Component {
     this.toggleKPI = this.toggleKPI.bind(this);
     this.toggleHovered = this.toggleHovered.bind(this);
     this.handleChartClick = this.handleChartClick.bind(this);
+    /*
+    const defaultDataSetConfig = {
+      tension: 0.1,
+    };
+    const xAxis = {
+      gridLines: {
+        display: true,
+        drawBorder: false,
+        zeroLineWidth: 1,
+        color: 'transparent',
+        zeroLineColor: 'green',
+      },
+      ticks: {
+        beginAtZero: false,
+        fontColor: '#888888',
+      },
+    };
     const chartData = { ...props.chartData };
+
+    const yAxes = chartData.datasets.map(dataSet => {
+      const kpiKey = dataSet.kpi;
+      const kpi = props.KPIValues[kpiKey];
+      return {
+        id: kpiKey,
+        position: 'left',
+        display: false,
+        ticks: {
+          beginAtZero: true,
+          callback: (value, index, values) => (index === values.length - 1 ? '' : numberFormatter(value)),
+          fontColor: kpi.color,
+          labelOffset: 0,
+        },
+        gridLines: {
+          offsetGridLines: true,
+          drawBorder: false,
+          zeroLineWidth: 1,
+          lineWidth: 1,
+          color: setColorAlpha(kpi.color, GRID_LINES_ALPHA),
+          zeroLineColor: kpi.color,
+        },
+      };
+    });
+    let activatedFirstAxis = false;
+    chartData.datasets = chartData.datasets.map((it, idx) => {
+      const dataSet = { ...defaultDataSetConfig, ...it };
+      const kpiKey = dataSet.kpi;
+      const kpi = props.KPIValues[kpiKey];
+      dataSet.yAxisID = kpiKey;
+      dataSet.hidden = props.initiallyActiveKPIs.indexOf(dataSet.kpi) < 0;
+      if (!dataSet.hidden && !activatedFirstAxis) {
+        yAxes[idx].display = true;
+        xAxis.gridLines.zeroLineColor = kpi.color;
+        dataSet.fill = true;
+        activatedFirstAxis = true;
+      }
+      return dataSet;
+    });
+    */
+    const { chartData, yAxes, xAxis } = this.processDataSets(props.chartData, this.props);
+    this.state = {
+      chartData,
+      activeKPIs: props.initiallyActiveKPIs,
+      hoveredKPI: null,
+      redraw: false,
+      chartOptions: {
+        hover: {
+          mode: 'dataset',
+          onHover: (elms) => (elms && elms.length > 0 ?  // eslint-disable-line no-return-assign
+              this.refs.lineChart.getCanvas().style.cursor = 'pointer' :
+              this.refs.lineChart.getCanvas().style.cursor = ''
+          ),
+        },
+        legend: {
+          display: false,
+        },
+        scales: {
+          yAxes,
+          xAxes: [xAxis],
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.chartData && nextProps.chartData !== this.state.chartData) {
+      const { chartData, yAxes, xAxis } = this.processDataSets(nextProps.chartData, this.props);
+      this.setState({ chartData, yAxes, xAxis, redraw: true });
+    }
+  }
+
+  processDataSets(originalChartData, props) {
     const defaultDataSetConfig = {
       tension: 0.1,
     };
@@ -44,6 +137,7 @@ class KPIChart extends Component {
       },
     };
 
+    const chartData = { ...originalChartData };
     const yAxes = chartData.datasets.map(dataSet => {
       const kpiKey = dataSet.kpi;
       const kpi = props.KPIValues[kpiKey];
@@ -53,7 +147,7 @@ class KPIChart extends Component {
         display: false,
         ticks: {
           beginAtZero: true,
-          callback: (value, index, values) => (index === values.length - 1 ? '' : value),
+          callback: (value, index, values) => (index === values.length - 1 ? '' : numberFormatter(value)),
           fontColor: kpi.color,
           labelOffset: 0,
         },
@@ -83,31 +177,9 @@ class KPIChart extends Component {
       return dataSet;
     });
 
-    this.state = {
-      chartData,
-      activeKPIs: props.initiallyActiveKPIs,
-      hoveredKPI: null,
-      redraw: false,
-      chartOptions: {
-        hover: {
-          mode: 'dataset',
-          onHover: (elms) => (elms && elms.length > 0 ?  // eslint-disable-line no-return-assign
-              this.refs.lineChart.getCanvas().style.cursor = 'pointer' :
-              this.refs.lineChart.getCanvas().style.cursor = ''
-          ),
-        },
-        legend: {
-          display: false,
-        },
-        scales: {
-          yAxes,
-          xAxes: [xAxis],
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-      },
-    };
+    return { chartData, yAxes, xAxis };
   }
+
   redrawChart(kpi, props, toggledDatasetWillBeShown, origChartOptions, origChartData) {
     const chartOptions = origChartOptions;
     const chartData = origChartData;

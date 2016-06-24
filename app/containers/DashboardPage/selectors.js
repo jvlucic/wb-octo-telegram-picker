@@ -2,34 +2,30 @@
 import {name} from './__init__';
 import {createSelector} from 'reselect';
 import constants from '../../constants';
-import { getDayAndMonth, setColorAlpha } from '../../utils/utils';
+import { getDayAndMonth, getHour, setColorAlpha } from '../../utils/utils';
 
 import dummyDatasets from '../../../unidesq-spec/fixtures/dummyWeekDatasets.json';
 
 export const getModelSelector = (state) => state.get(name);
 
-function getRandomNumberArray(size) {
-  return new Array(size).fill(0).map(() => Math.round(Math.random() * ( Math.random() * 10000 )));
-}
-function getRandomDataSets() {
-  return Object.keys(constants.KPI).map(kpi => ({
-    kpi: constants.KPI[kpi].key,
-    label: constants.KPI[kpi].name,
-    data: getRandomNumberArray(24),
-    borderColor: constants.KPI[kpi].color,
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-  }));
-}
+export const loadingSelector = createSelector(
+  getModelSelector,
+  model => ( model.get('loading') )
+);
 
 export const activeKPIsSelector = createSelector(
   getModelSelector,
-  model => ( model.get('activeKPIs') )
+  model => ( model.get('activeKPIs') ? model.get('activeKPIs').toJS() : null )
 );
 
 export const campaignStatusSelector = createSelector(
   getModelSelector,
   model => ( model.get('status') )
+);
+
+export const campaignFrequencySelector = createSelector(
+  getModelSelector,
+  model => ( model.get('frequency') )
 );
 
 export const selectedCampaignSelector = createSelector(
@@ -175,19 +171,14 @@ const getKPIFromKey = (key) => {
 export const KPIDataSelector = createSelector(
   campaignDataSelector,
   campaignStatusSelector,
+  campaignFrequencySelector,
   campaignPerformanceDataSelector,
-  activeKPIsSelector,
-  (campaignData, status, campaignPerformanceData, activeKPIs) => {
-    if (!campaignData || !campaignPerformanceData) {
+  loadingSelector,
+  (campaignData, status, frequency, campaignPerformanceData, loading) => {
+    if (!campaignData || !campaignPerformanceData || loading) {
       return null;
     }
     /* TODO: PROCESS RAW DATA AND PRODUCES KPI AND CHART DATA*/
-    /*
-    const chartData = {
-      labels: new Array(24).fill(0).map((elem, idx) => idx),
-      datasets: dummyDatasets,
-    };
-    */
     const dummyChanges = [3, 3, 0, -3, 3, 3, 3, 3, 3, 3, 3, 3];
     const KPIValues = {};
     const initialValue = {};
@@ -217,7 +208,12 @@ export const KPIDataSelector = createSelector(
       });
     });
     /* TODO: handle HOURLY DATA*/
-    const labels = Object.keys(performanceAccumulator).map( date => getDayAndMonth(date));
+    let labels = [];
+    if (frequency === constants.FREQUENCY.DAILY){
+      labels = Object.keys(performanceAccumulator).map( date => getDayAndMonth(date))
+    }else if (frequency === constants.FREQUENCY.HOURLY) {
+      labels = Object.keys(performanceAccumulator).map( date => getHour(date))
+    }
     const performanceByKPIs = {};
     
     Object.values(performanceAccumulator).forEach( data => {
@@ -233,7 +229,7 @@ export const KPIDataSelector = createSelector(
       datasets: Object.keys(constants.KPI).map(kpi => ({
         kpi: constants.KPI[kpi].key,
         label: constants.KPI[kpi].name,
-        data: performanceByKPIs[constants.KPI[kpi].key] || dummyDatasets[constants.KPI[kpi].key].data ,
+        data: performanceByKPIs[constants.KPI[kpi].key] ,
         borderColor: constants.KPI[kpi].color,
         pointBackgroundColor: constants.KPI[kpi].color,
         backgroundColor: setColorAlpha(constants.KPI[kpi].color, 0.2),
@@ -267,7 +263,7 @@ export const KPIDataSelector = createSelector(
     });
     /* CALCULATE KPI VALUES UNDER CHART */
 
-    return {KPIValues, chartData, activeKPIs: activeKPIs.toJS()};
+    return {KPIValues, chartData};
   }
 );
 
