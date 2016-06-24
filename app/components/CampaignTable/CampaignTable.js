@@ -10,6 +10,7 @@ import shallowCompare from 'react-addons-shallow-compare'
 import constants from '../../constants';
 import classnames from 'classnames';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
+import Loader from '../Loader/Loader';
 
 
 class CampaignTable extends Component {
@@ -35,6 +36,7 @@ class CampaignTable extends Component {
     this.noRowsRenderer = this.noRowsRenderer.bind(this);
     this.getRowHeight = this.getRowHeight.bind(this);
     this.handleRowSelect = this.handleRowSelect.bind(this);
+    this.handleToggleSwitchClick = this.handleToggleSwitchClick.bind(this);
     this.sort = this.sort.bind(this);
   }
 
@@ -43,17 +45,31 @@ class CampaignTable extends Component {
   }
 
   handleRowSelect(campaign, event) {
+    event.preventDefault();
+    event.stopPropagation();
     this.props.onRowSelect(campaign);
+  }  
+  
+  handleToggleSwitchClick(campaignId, status) {
+    this.props.onToggleSwitchClick(campaignId, status);
   }
 
   cellRenderer({cellData, columnData, dataKey, rowData, rowIndex, ...props}) {
     const campaign = rowData[constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN];
     if (dataKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS) {
-      return (
-        <div className={classnames(styles.cell, styles.statusCell)}>
+      let switchCell = null;
+      if (campaign.changed === 'loading'){
+        switchCell = <Loader className={styles.toggleLoader}/>
+      } else {
+        switchCell = (
           <ToggleSwitch
             checked={cellData}
-            onChange={() => console.log('CLICKED')} />
+            onChange={() => this.handleToggleSwitchClick(campaign.id, !cellData)}/>
+        );
+      }
+      return (
+        <div className={classnames(styles.cell, styles.statusCell)}>
+          { switchCell }
         </div>
       )
     }
@@ -193,6 +209,7 @@ class CampaignTable extends Component {
 CampaignTable.propTypes = {
   campaignData: PropTypes.object,
   onRowSelect: PropTypes.func,
+  onToggleSwitchClick: PropTypes.func,
   selectedCampaign: PropTypes.object,
 };
 

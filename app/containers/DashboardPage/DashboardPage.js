@@ -28,6 +28,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     super(props);
 
     // Binding methods to this
+    this.handleOnChangeCampaignStatus = this.handleOnChangeCampaignStatus.bind(this);
     this.handleOnChangeDateRangeFilter = this.handleOnChangeDateRangeFilter.bind(this);
     this.handleOnChangeCampaignStatusFilter = this.handleOnChangeCampaignStatusFilter.bind(this);
     this.handleOnChangeSelectedCampaignFilter = this.handleOnChangeSelectedCampaignFilter.bind(this);
@@ -55,6 +56,9 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
   
   handleOnChangeSelectedCampaignFilter(status) {
     this.props.changeSelectedCampaignFilter(status);
+  }  
+  handleOnChangeCampaignStatus(id, status) {
+    this.props.changeCampaignStatus(id, status);
   }
 
   render() {
@@ -75,7 +79,12 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
           <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { activeKPIs }  />
         </div>}
         { !loading && tableList && <div className={styles.campaignTableContainer}>
-           <CampaignTable list={tableList} headers={tableHeaders} onRowSelect={this.handleOnChangeSelectedCampaignFilter} selectedCampaign={selectedCampaign} />
+           <CampaignTable 
+             list={tableList}
+             headers={tableHeaders}
+             onRowSelect={this.handleOnChangeSelectedCampaignFilter}
+             onToggleSwitchClick={this.handleOnChangeCampaignStatus}
+             selectedCampaign={selectedCampaign} />
         </div> }
       </div>
     );
@@ -102,6 +111,7 @@ DashboardPage.propTypes = {
   KPIData: React.PropTypes.object,
   getCampaignData: React.PropTypes.func.isRequired,
   changeDateRange: React.PropTypes.func.isRequired,
+  changeCampaignStatus: React.PropTypes.func.isRequired,
   changeCampaignStatusFilter: React.PropTypes.func.isRequired,
   changeSelectedCampaignFilter: React.PropTypes.func.isRequired,
 };

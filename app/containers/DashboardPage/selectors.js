@@ -115,7 +115,8 @@ export const campaignTableListSelector = createSelector(
         startData: data.startData,
         endDate: data.endDate,
         budget: data.budget,
-        currency: data.currency
+        currency: data.currency,
+        changed: typeof data.changed !== 'undefined' ? data.changed : false,
       } || null,
       [constants.KPI.IMPRESSIONS.key]: getValue(data, 'impressions'),
       [constants.KPI.CLICKS.key]: getValue(data, 'clicks'),
@@ -128,7 +129,7 @@ export const campaignTableListSelector = createSelector(
       [constants.KPI.ORDER_VALUE.key]: getValue(data, 'orderValue'),
       [constants.KPI.ROI.key]: getValue(data, 'roi'),
     })).filter(
-      campaign => status === constants.STATUS.ALL ? true :
+      campaign => status === constants.STATUS.ALL || campaign.campaign.changed ? true :
         status === constants.STATUS.ACTIVE ? campaign[constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS] : !campaign[constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS]
     );
     return filteredData;
@@ -198,6 +199,7 @@ export const KPIDataSelector = createSelector(
     if (!campaignData || !campaignPerformanceData || loading) {
       return null;
     }
+    const campaignDataMap = campaignData.reduce( (map, data) => ({ [data.id]: data, ...map }) ,{});
     /* TODO: PROCESS RAW DATA AND PRODUCES KPI AND CHART DATA*/
     const dummyChanges = [3, 3, 0, -3, 3, 3, 3, 3, 3, 3, 3, 3];
     const KPIValues = {};
@@ -206,6 +208,9 @@ export const KPIDataSelector = createSelector(
     const campaigns = {};
     campaignPerformanceData
       .forEach(({campaignId, date, ...kpiValues}) => {
+        if(!campaignDataMap.hasOwnProperty(campaignId) || (status === constants.STATUS.ALL ? false : campaignDataMap[campaignId].status !== status) ) {
+          return;
+        }
         campaigns[campaignId] = true;
         Object.keys(kpiValues).forEach(kpi => {
           if (!performanceAccumulator.hasOwnProperty(date)) {
@@ -243,7 +248,7 @@ export const KPIDataSelector = createSelector(
           dateIdx = addDaysToDate(dateIdx, 1);
         }
       }else if (frequency === constants.FREQUENCY.HOURLY) {
-        labels = ['00', '01']
+        labels = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
       }
     }
 
@@ -276,7 +281,7 @@ export const KPIDataSelector = createSelector(
     /* CALCULATE KPI VALUES UNDER CHART */
     Object.values(constants.KPI).forEach(({key: kpi}) => initialValue[kpi] = 0);
     const reduced = campaignData
-      .filter(campaign => status === constants.STATUS.ALL ? true : status === campaign.status)
+      .filter(campaign => status === constants.STATUS.ALL  ? true : status === campaign.status)
       .reduce((performanceA, {performance: performanceB}) => {
         for (const kpi in performanceA) {
           if (performanceB.hasOwnProperty(kpi)) {

@@ -13,8 +13,11 @@ const LOAD_CAMPAIGN_DATA = `${name}/LOAD_CAMPAIGN_DATA`;
 const LOAD_CAMPAIGN_DATA_SUCCESS = `${name}/LOAD_CAMPAIGN_DATA_SUCCESS`;
 const LOAD_CAMPAIGN_DATA_ERROR = `${name}/LOAD_CAMPAIGN_DATA_ERROR`;
 const CHANGE_DATE_RANGE = `${name}/CHANGE_DATE_RANGE`;
-const CHANGE_CAMPAIGN_STATUS = `${name}/CHANGE_CAMPAIGN_STATUS`;
+const CHANGE_CAMPAIGN_FILTER_STATUS = `${name}/CHANGE_CAMPAIGN_FILTER_STATUS`;
 const CHANGE_SELECTED_CAMPAIGN = `${name}/CHANGE_SELECTED_CAMPAIGN`;
+const LOAD_CHANGE_CAMPAIGN_STATUS = `${name}/LOAD_CHANGE_CAMPAIGN_STATUS`;
+const LOAD_CHANGE_CAMPAIGN_STATUS_SUCCESS = `${name}/LOAD_CHANGE_CAMPAIGN_STATUS_SUCCESS`;
+const LOAD_CHANGE_CAMPAIGN_STATUS_ERROR = `${name}/LOAD_CHANGE_CAMPAIGN_STATUS_ERROR`;
 
 const now = moment().startOf('day');
 
@@ -58,13 +61,28 @@ export default (state = initialState, action) => {
         .set('from', action.from)
         .set('frequency', daysBetweenDates <= 1 ? constants.FREQUENCY.HOURLY : constants.FREQUENCY.DAILY);
     }
-    case CHANGE_CAMPAIGN_STATUS:
+    case CHANGE_CAMPAIGN_FILTER_STATUS:
       return state
         .set('status', action.status)
         .set('selectedCampaign', null);
     case CHANGE_SELECTED_CAMPAIGN:
       return state
         .set('selectedCampaign', action.id);
+    case LOAD_CHANGE_CAMPAIGN_STATUS: {
+      const campaignData = state.get('campaignData').map(campaign => campaign.id === action.campaignId ? { ...campaign, changed: 'loading', status: action.status } : campaign); // eslint-disable-line no-confusing-arrow
+      return state
+        .set('campaignData', campaignData);
+    }
+    case LOAD_CHANGE_CAMPAIGN_STATUS_SUCCESS: {
+      const campaignData = state.get('campaignData').map(campaign => campaign.id === action.campaignId ? { ...campaign, changed: false, status: action.status } : campaign); // eslint-disable-line no-confusing-arrow
+      return state
+        .set('campaignData', campaignData);
+    }
+    case LOAD_CHANGE_CAMPAIGN_STATUS_ERROR: {
+      const campaignData = state.get('campaignData').map(campaign => campaign.id === action.campaignId ? { ...campaign, changed: 'error', status: action.status } : campaign); // eslint-disable-line no-confusing-arrow
+      return state
+        .set('campaignData', campaignData);
+    }
     default:
       return state;
   }
@@ -134,7 +152,7 @@ export function changeDateRange({ to, from }) {
 
 function changeCampaignStatusFilterState(status) {
   return {
-    type: CHANGE_CAMPAIGN_STATUS,
+    type: CHANGE_CAMPAIGN_FILTER_STATUS,
     status,
   };
 }
@@ -153,6 +171,49 @@ export function changeSelectedCampaignFilter(id) {
   };
 }
 
+export function loadChangeCampaignStatus(campaignId, status) {
+  return {
+    type: LOAD_CHANGE_CAMPAIGN_STATUS,
+    campaignId,
+    status,
+  };
+}
+export function loadedChangeCampaignStatus(campaignId, status) {
+  return {
+    type: LOAD_CHANGE_CAMPAIGN_STATUS_SUCCESS,
+    campaignId,
+    status,
+  };
+}
+export function loadChangeCampaignStatusError(campaignId, status) {
+  return {
+    type: LOAD_CHANGE_CAMPAIGN_STATUS_ERROR,
+    campaignId,
+    status,
+  };
+}
+function requestChangeCampaignStatus(campaignId, value) { // eslint-disable-line no-unused-vars
+  // return new Promise(resolve => setTimeout(() => resolve(null), 1000));
+  return new Promise((resolve, reject) => setTimeout(() => reject(new Error('burgy')), 1000));
+}
+
+function changeCampaignStatus(campaignId, value) {
+  return (dispatch) => {
+    const status = value ? constants.STATUS.ACTIVE : constants.STATUS.INACTIVE;
+    dispatch(loadChangeCampaignStatus(campaignId, status));
+    requestChangeCampaignStatus(campaignId, value)
+      .then(() => {
+        dispatch(loadedChangeCampaignStatus(campaignId, status));
+      })
+      .catch((err) => {
+        console.log('ERROR');
+        console.log(err);
+        const errorStatus = !value ? constants.STATUS.ACTIVE : constants.STATUS.INACTIVE;
+        dispatch(loadChangeCampaignStatusError(campaignId, errorStatus));
+      });
+  };
+}
+
 export function getCampaignData() {
   return (dispatch, getState) => {
     refreshCampaignData(dispatch, getState);
@@ -167,4 +228,5 @@ export const actions = {
   getCampaignData,
   changeCampaignStatusFilter,
   changeSelectedCampaignFilter,
+  changeCampaignStatus,
 };

@@ -33,8 +33,9 @@ class ToggleSwitch extends Component {
 
   handleClick(event) {
     const checkbox = this.refs.input;
+    event.preventDefault();
+    event.stopPropagation();
     if (event.target !== checkbox) {
-      event.preventDefault();
       checkbox.focus();
       checkbox.click();
       return;

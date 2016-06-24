@@ -10,6 +10,13 @@
     }
   }
 }
+.toggleLoader{
+  position: relative;
+  > div {
+    width: 35px !important;
+    margin: 0 !important;
+  }
+}
 
 .secondHalfColummn{
   text-align: right;
