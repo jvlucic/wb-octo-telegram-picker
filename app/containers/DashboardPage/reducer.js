@@ -32,6 +32,7 @@ export const initialState = fromJS({
   selectedCampaign: null,
   from: now.subtract(7, 'day').toDate(),
   loading: false,
+  toggledCampaign: false,
 });
 
 
@@ -43,11 +44,13 @@ export default (state = initialState, action) => {
         .set('error', false)
         .set('campaignPerformanceData', false)
         .set('campaignData', false);
-    case LOAD_CAMPAIGN_DATA_SUCCESS:
+    case LOAD_CAMPAIGN_DATA_SUCCESS: {
+      const campaignDataMap = action.campaignData.reduce((map, data) => ({ [data.id]: data, ...map }), {});
       return state
         .set('loading', false)
         .set('campaignPerformanceData', action.campaignPerformanceData)
-        .set('campaignData', action.campaignData);
+        .set('campaignData', campaignDataMap);
+    }
     case LOAD_CAMPAIGN_DATA_ERROR:
       return state
         .set('error', action.error)
@@ -69,18 +72,33 @@ export default (state = initialState, action) => {
       return state
         .set('selectedCampaign', action.id);
     case LOAD_CHANGE_CAMPAIGN_STATUS: {
-      const campaignData = state.get('campaignData').map(campaign => campaign.id === action.campaignId ? { ...campaign, changed: 'loading', status: action.status } : campaign); // eslint-disable-line no-confusing-arrow
+      const campaignData = { ...state.get('campaignData') };
+      if (campaignData.hasOwnProperty(action.campaignId)) {
+        const campaign = campaignData[action.campaignId];
+        campaignData[action.campaignId] = { ...campaign, changed: 'loading' };
+      }
       return state
+        .set('toggledCampaign', action.campaignId)
         .set('campaignData', campaignData);
     }
     case LOAD_CHANGE_CAMPAIGN_STATUS_SUCCESS: {
-      const campaignData = state.get('campaignData').map(campaign => campaign.id === action.campaignId ? { ...campaign, changed: false, status: action.status } : campaign); // eslint-disable-line no-confusing-arrow
+      const campaignData = { ...state.get('campaignData') };
+      if (campaignData.hasOwnProperty(action.campaignId)) {
+        const campaign = campaignData[action.campaignId];
+        campaignData[action.campaignId] = { ...campaign, changed: 'success', status: action.status };
+      }
       return state
+        .set('toggledCampaign', action.campaignId)
         .set('campaignData', campaignData);
     }
     case LOAD_CHANGE_CAMPAIGN_STATUS_ERROR: {
-      const campaignData = state.get('campaignData').map(campaign => campaign.id === action.campaignId ? { ...campaign, changed: 'error', status: action.status } : campaign); // eslint-disable-line no-confusing-arrow
+      const campaignData = { ...state.get('campaignData') };
+      if (campaignData.hasOwnProperty(action.campaignId)) {
+        const campaign = campaignData[action.campaignId];
+        campaignData[action.campaignId] = { ...campaign, changed: 'error', status: action.status };
+      }
       return state
+        .set('toggledCampaign', action.campaignId)
         .set('campaignData', campaignData);
     }
     default:
@@ -193,8 +211,8 @@ export function loadChangeCampaignStatusError(campaignId, status) {
   };
 }
 function requestChangeCampaignStatus(campaignId, value) { // eslint-disable-line no-unused-vars
-  // return new Promise(resolve => setTimeout(() => resolve(null), 1000));
-  return new Promise((resolve, reject) => setTimeout(() => reject(new Error('burgy')), 1000));
+  return new Promise(resolve => setTimeout(() => resolve(null), 1000));
+  // return new Promise((resolve, reject) => setTimeout(() => reject(new Error('burgy')), 1000));
 }
 
 function changeCampaignStatus(campaignId, value) {

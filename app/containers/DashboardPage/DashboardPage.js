@@ -17,7 +17,7 @@ import { createStructuredSelector } from 'reselect';
 import { actions } from './reducer';
 import { KPIDataSelector, selectRange, campaignTableHeadersSelector,
          campaignTableListSelector, campaignStatusSelector, selectedCampaignSelector,
-         activeKPIsSelector, loadingSelector } from './selectors';
+         activeKPIsSelector, loadingSelector, toggledCampaignSelector } from './selectors';
 import styles from './DashboardPage.scss';
 
 class DashboardPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -62,7 +62,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
   }
 
   render() {
-    const {KPIData, range, tableHeaders, tableList, status, selectedCampaign, activeKPIs, loading} = this.props;
+    const {KPIData, range, tableHeaders, tableList, status, selectedCampaign, activeKPIs, loading, toggledCampaign} = this.props;
     return (
       <div>
         <div className={styles.statusFilter}>
@@ -84,6 +84,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
              headers={tableHeaders}
              onRowSelect={this.handleOnChangeSelectedCampaignFilter}
              onToggleSwitchClick={this.handleOnChangeCampaignStatus}
+             toggledCampaign={toggledCampaign}
              selectedCampaign={selectedCampaign} />
         </div> }
       </div>
@@ -101,6 +102,7 @@ export default connect(
     selectedCampaign: selectedCampaignSelector,
     activeKPIs: activeKPIsSelector,
     loading: loadingSelector,
+    toggledCampaign: toggledCampaignSelector,
   }),
   dispatch => {
     return bindActionCreators({ ...actions }, dispatch);

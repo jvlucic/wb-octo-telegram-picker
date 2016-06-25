@@ -11,7 +11,7 @@ import constants from '../../constants';
 import classnames from 'classnames';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import Loader from '../Loader/Loader';
-import { ToastContainer, ToastMessage } from 'react-toastr';
+import {ToastContainer, ToastMessage} from 'react-toastr';
 import './Toaster.scss'; // only needs to be imported once
 import './ToasterAnimate.scss'; // only needs to be imported once
 
@@ -22,13 +22,13 @@ class CampaignTable extends Component {
   /* TODO: SHOW LOADER when no DATA IS AVAILABLE*/
   constructor(props, context) {
     super(props, context);
-
+    const rowCount = Object.keys(props.list).length;
     this.state = {
       headerHeight: 50,
-      height: (props.list.length + 1) * 70,
+      height: (rowCount + 1) * 70,
       overscanRowCount: 10,
       rowHeight: 70,
-      rowCount: props.list.length,
+      rowCount: rowCount,
       scrollToIndex: undefined,
       sortBy: constants.KPI.IMPRESSIONS.key,
       sortDirection: SortDirection.DESC,
@@ -46,15 +46,34 @@ class CampaignTable extends Component {
     this.sort = this.sort.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const toggledCampaign = nextProps.toggledCampaign;
+    /*TODO: Translate Toast Message */
+    if (toggledCampaign) {
+      const previousCampaignChangedStatus = this.props.list[toggledCampaign].campaign.changed;
+      const nextCampaignChangedStatus = nextProps.list[toggledCampaign] && nextProps.list[toggledCampaign].campaign.changed || 'success';
+      if (previousCampaignChangedStatus === 'loading' && nextCampaignChangedStatus && nextCampaignChangedStatus !== 'loading') {
+        if (nextCampaignChangedStatus === 'error') {
+          this.addAlert('error', `Campaign ${toggledCampaign} update failed`, null);
+        } else if (nextCampaignChangedStatus === 'success') {
+          this.addAlert('success', `Campaign ${toggledCampaign} successfully updated`, null);
+        }
+      }
+    }
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  addAlert() {
-    this.refs.container.error(`hi! Now is ${new Date()}`, `///title\\\\\\`, {
-      closeButton: true,
-      timeOut:2000
-    });
+  addAlert(type, message, title) {
+    if (this.refs.container) {
+      this.refs.container[type](message, title, {
+        closeButton: true,
+        timeOut: 2000,
+        preventDuplicates: false,
+      });
+    }
   }
 
   clearAlert() {
@@ -65,8 +84,8 @@ class CampaignTable extends Component {
     event.preventDefault();
     event.stopPropagation();
     this.props.onRowSelect(campaign);
-  }  
-  
+  }
+
   handleToggleSwitchClick(campaignId, status) {
     this.props.onToggleSwitchClick(campaignId, status);
   }
@@ -75,7 +94,7 @@ class CampaignTable extends Component {
     const campaign = rowData[constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN];
     if (dataKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS) {
       let switchCell = null;
-      if (campaign.changed === 'loading'){
+      if (campaign.changed === 'loading') {
         switchCell = <Loader className={styles.toggleLoader}/>
       } else {
         switchCell = (
@@ -84,6 +103,7 @@ class CampaignTable extends Component {
             onChange={() => this.handleToggleSwitchClick(campaign.id, !cellData)}/>
         );
       }
+
       return (
         <div className={classnames(styles.cell, styles.statusCell)}>
           { switchCell }
@@ -103,7 +123,8 @@ class CampaignTable extends Component {
       )
     }
     const isSecondHalf = this.props.headers.indexOf(dataKey) >= 2;
-    return isSecondHalf ? <div className={classnames(styles.cell, styles.secondHalfColummn)}>{cellData}</div> : <div className={styles.cell}>{cellData}</div>
+    return isSecondHalf ? <div className={classnames(styles.cell, styles.secondHalfColummn)}>{cellData}</div> :
+      <div className={styles.cell}>{cellData}</div>
   }
 
   headerRenderer({
@@ -117,8 +138,8 @@ class CampaignTable extends Component {
     const isSecondHalf = this.props.headers.indexOf(dataKey) >= 2;
     const className = classnames(
       styles.header, {
-      [styles.secondHalfColummn]: isSecondHalf,
-    });
+        [styles.secondHalfColummn]: isSecondHalf,
+      });
     return (
       <div className={className}>
         { sortBy === dataKey && isSecondHalf && <SortIndicator sortDirection={sortDirection}/> }
@@ -135,14 +156,14 @@ class CampaignTable extends Component {
       </div>
     )
   }
-  
+
   rowClassName({index, ...props}) {
     if (index < 0) {
       return styles.headerRow
     } else {
       const campaignID = this.currentList[index][constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN].id;
       const selectedRow = this.props.selectedCampaign && campaignID === this.props.selectedCampaign.id ? true : null;
-      return selectedRow ?  styles.selectedRow : index % 2 === 0 ? styles.evenRow : styles.oddRow
+      return selectedRow ? styles.selectedRow : index % 2 === 0 ? styles.evenRow : styles.oddRow
     }
   }
 
@@ -154,7 +175,7 @@ class CampaignTable extends Component {
     return list[index % list.length]
   }
 
-  getRowHeight ({ index }) {
+  getRowHeight({index}) {
     /*TODO: IMPLEMENT */
     return this.state.rowHeight;
   }
@@ -172,12 +193,12 @@ class CampaignTable extends Component {
     } = this.state;
 
     const {list, headers, ...props} = this.props;
-
-    let sortedList = [...list].sort((first, second) => ( first[sortBy] < second[sortBy] ? -1 : 1 ));
+    let sortedList = Object.values(list).sort((first, second) => ( first[sortBy] < second[sortBy] ? -1 : 1 ));
     sortedList = sortDirection === SortDirection.DESC ? sortedList.reverse() : sortedList;
     const rowCount = sortedList.length;
     this.currentList = sortedList;
     const rowGetter = ({index}) => this.getDatum(this.currentList, index);
+
     return (
       <div className={styles.campaignTable}>
         <ToastContainer
@@ -185,12 +206,6 @@ class CampaignTable extends Component {
           ref="container"
           className="toast-top-right"
         />
-        <button className="primary" onClick={::this.addAlert}>
-          Hello
-        </button>
-        <button className="primary" onClick={::this.clearAlert}>
-          CLEAR
-        </button>
         <AutoSizer disableHeight>
           {({width}) => (
             <FlexTable
@@ -239,6 +254,10 @@ CampaignTable.propTypes = {
   onRowSelect: PropTypes.func,
   onToggleSwitchClick: PropTypes.func,
   selectedCampaign: PropTypes.object,
+  toggledCampaign: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.number,
+  ]),
 };
 
 export default CampaignTable;
