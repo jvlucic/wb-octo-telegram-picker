@@ -23,7 +23,7 @@ export default class App extends React.Component { // eslint-disable-line react/
   render() {
     return (
       <div className={styles.tmp}>
-        {this.props.children}
+        {this.props.children && React.cloneElement(this.props.children, { onRemoveTaco: this.handleRemoveTaco })}}
       </div>
     );
   }
