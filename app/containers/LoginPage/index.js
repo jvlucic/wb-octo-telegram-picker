@@ -65,14 +65,11 @@ class LoginPage extends React.Component { // eslint-disable-line react/prefer-st
     };
   }
 
-  componentWillReceiveProps(newProps) {
-    if (this.props.isLogged !== newProps.isLogged && newProps.isLogged === true) {
-      this.props.router.push('/');
-    }
-  }
-
   handleFormSubmit({ username, password }, dispatch) {
-    return dispatch(authenticate(username, password));
+    return dispatch(authenticate(username, password))
+      .then(
+        () => this.props.router.push('/'),
+      );
   }
 
   render() {

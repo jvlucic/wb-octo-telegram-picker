@@ -1,27 +1,16 @@
-function composeHeaders(...headersGenerator) {
-  return headersGenerator.reduce((headers, generator) => generator(headers), {});
-}
-
-export function generateURL(path, version = 'v2') {
+export function generateURL(path) {
   const adjustedPath = path[0] !== '/' ? `/${path}` : path;
-  return `http://api-test.unidesq.com/${version}${adjustedPath}`;
+  return `http://api-test.unidesq.com${adjustedPath}`;
 }
 
 export function secureHeader(token) {
-  return (headers) => ({
-    ...headers,
-    Autorization: `Bearer ${token}`,
-  });
-}
-
-export function applicationJsonHeader(headers) {
   return {
-    ...headers,
-    'Content-type': 'application/json; charset=UTF-8',
+    Authorization: `Bearer ${token}`,
   };
 }
 
-export const secureApplicationJsonHeader = token => composeHeaders(
-  secureHeader(token),
-  applicationJsonHeader
-);
+export function applicationJsonHeader() {
+  return {
+    'Content-type': 'application/json; charset=UTF-8',
+  };
+}

@@ -7,22 +7,27 @@ export const selectUser = createSelector(
   (auth) => auth.get('user'),
 );
 
+export const selectToken = createSelector(
+  selectAuth,
+  (auth) => auth && auth.get('accessToken'),
+);
+
 export const selectUsername = createSelector(
   selectUser,
-  user => user.get('username'),
+  user => user && user.get('username'),
 );
 
 export const selectFirstName = createSelector(
   selectUser,
-  user => user.get('firstName'),
+  user => user && user.get('firstName'),
 );
 
 export const selectLastName = createSelector(
   selectUser,
-  user => user.get('lastName'),
+  user => user && user.get('lastName'),
 );
 
-export const selectComposeName = createSelector(
+export const selectFullName = createSelector(
   selectFirstName,
   selectLastName,
   (firstName, lastName) => `${firstName} ${lastName}`,

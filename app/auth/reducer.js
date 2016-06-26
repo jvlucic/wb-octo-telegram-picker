@@ -6,6 +6,7 @@ import {
   LOGGING_IN_SUCCESS,
   LOGGING_IN,
   LOGGING_IN_ERROR,
+  USER_INFO,
   LOGOUT,
 } from './constants';
 import { fromJS } from 'immutable';
@@ -41,8 +42,7 @@ function intlReducer(state = initialState, action) {
         .set('roles', fromJS(action.roles))
         .set('expireIn', action.expire_in)
         .set('accessToken', action.access_token)
-        .set('refreshToken', action.refresh_token)
-        .set('user', fromJS(action.user));
+        .set('refreshToken', action.refresh_token);
     case LOGGING_IN_ERROR:
       return state
         .set('loggingIn', false)
@@ -57,6 +57,9 @@ function intlReducer(state = initialState, action) {
       .set('accessToken', null)
       .set('refreshToken', null)
       .set('user', null);
+    case USER_INFO:
+      return state
+        .set('user', fromJS(action.user));
     default:
       return state;
   }

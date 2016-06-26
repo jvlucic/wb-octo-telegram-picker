@@ -21,7 +21,7 @@ import useScroll from 'react-router-scroll';
 import configureStore from './store';
 import { loadPolyfillAndData } from 'intl/intUtils';
 import ReduxIntl from 'intl/ReduxIntl';
-import { logginInSuccess } from 'auth/actions';
+import { logginInSuccess, getUserInfo } from 'auth/actions';
 
 // Import the CSS reset, which HtmlWebpackPlugin transfers to the build folder
 import 'sanitize.css/lib/sanitize.css';
@@ -50,10 +50,14 @@ const rootRoute = {
   childRoutes: createRoutes(store),
 };
 const logginInData = localStorage.getItem('logginInSuccess');
+let gettingUser = Promise.resolve();
 if (logginInData) {
   store.dispatch(logginInSuccess(JSON.parse(logginInData)));
+  gettingUser = store.dispatch(getUserInfo());
 }
-loadPolyfillAndData('en')
+
+gettingUser
+  .then(() => loadPolyfillAndData('en'))
   .then(() => {
     ReactDOM.render(
       <Provider store={store}>

@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import logo from './unidesq-logo.png';
 import './styles.scss';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Link } from 'react-router';
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
+import { selectFullName } from 'auth/selectors';
+
 const msgs = defineMessages({
   dashboard: {
     id: 'app.secure.header.nav.dashboard',
@@ -41,7 +45,7 @@ const msgs = defineMessages({
   },
 });
 
-export default function SecureHeader() {
+function SecureHeader({ fullName }) {
   return (
     <header className="SecureHeader" role="banner" >
       <div className="SecureHeader-wrapper">
@@ -74,7 +78,7 @@ export default function SecureHeader() {
         </nav>
         <div className="SecureHeader-account">
           <div className="SecureHeader-accountWelcome">
-            <FormattedMessage {...msgs.welcome} values={{ name: 'John Doe' }} />
+            <FormattedMessage {...msgs.welcome} values={{ name: fullName }} />
             <a className="SecureHeader-accountHelp">
               <FormattedMessage {...msgs.needHelp} />
             </a>
@@ -89,3 +93,11 @@ export default function SecureHeader() {
     </header>
   );
 }
+
+SecureHeader.propTypes = {
+  fullName: PropTypes.string,
+};
+
+export default connect(createStructuredSelector({
+  fullName: selectFullName,
+}))(SecureHeader);
