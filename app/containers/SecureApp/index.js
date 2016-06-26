@@ -15,7 +15,7 @@ export default class SecurePage extends React.Component { // eslint-disable-line
     return (
       <section className="SecureApp">
         <SecureHeader />
-        <article className="SecureApp-content">{React.Children.only(this.props.children)}</article>
+        <article className="SecureApp-content">{React.Children.only(React.cloneElement(this.props.children, { addAlert: this.props.addAlert }))}</article>
         <footer></footer>
       </section>
     );
@@ -23,4 +23,5 @@ export default class SecurePage extends React.Component { // eslint-disable-line
 }
 SecurePage.propTypes = {
   children: React.PropTypes.node,
+  addAlert: React.PropTypes.func,
 };

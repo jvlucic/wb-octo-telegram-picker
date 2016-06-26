@@ -28,6 +28,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     super(props);
 
     // Binding methods to this
+    this.handleOnAddAlert = this.handleOnAddAlert.bind(this);
     this.handleOnChangeCampaignStatus = this.handleOnChangeCampaignStatus.bind(this);
     this.handleOnChangeDateRangeFilter = this.handleOnChangeDateRangeFilter.bind(this);
     this.handleOnChangeCampaignStatusFilter = this.handleOnChangeCampaignStatusFilter.bind(this);
@@ -39,7 +40,9 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
       this.props.getCampaignData();
     }
   }
-
+  handleOnAddAlert(type, message, title) {
+    this.props.addAlert(type, message, title);
+  }
   /**
    * Handle date picker changes
    * @param  {Object} range     - Range given for the input date
@@ -84,6 +87,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
              headers={tableHeaders}
              onRowSelect={this.handleOnChangeSelectedCampaignFilter}
              onToggleSwitchClick={this.handleOnChangeCampaignStatus}
+             onAddAlert={this.handleOnAddAlert}
              toggledCampaign={toggledCampaign}
              selectedCampaign={selectedCampaign} />
         </div> }
@@ -111,6 +115,7 @@ export default connect(
 
 DashboardPage.propTypes = {
   KPIData: React.PropTypes.object,
+  addAlert: React.PropTypes.func.isRequired,
   getCampaignData: React.PropTypes.func.isRequired,
   changeDateRange: React.PropTypes.func.isRequired,
   changeCampaignStatus: React.PropTypes.func.isRequired,
