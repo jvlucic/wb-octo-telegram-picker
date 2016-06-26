@@ -27,64 +27,7 @@ class KPIChart extends Component {
     this.toggleKPI = this.toggleKPI.bind(this);
     this.toggleHovered = this.toggleHovered.bind(this);
     this.handleChartClick = this.handleChartClick.bind(this);
-    /*
-    const defaultDataSetConfig = {
-      tension: 0.1,
-    };
-    const xAxis = {
-      gridLines: {
-        display: true,
-        drawBorder: false,
-        zeroLineWidth: 1,
-        color: 'transparent',
-        zeroLineColor: 'green',
-      },
-      ticks: {
-        beginAtZero: false,
-        fontColor: '#888888',
-      },
-    };
-    const chartData = { ...props.chartData };
 
-    const yAxes = chartData.datasets.map(dataSet => {
-      const kpiKey = dataSet.kpi;
-      const kpi = props.KPIValues[kpiKey];
-      return {
-        id: kpiKey,
-        position: 'left',
-        display: false,
-        ticks: {
-          beginAtZero: true,
-          callback: (value, index, values) => (index === values.length - 1 ? '' : numberFormatter(value)),
-          fontColor: kpi.color,
-          labelOffset: 0,
-        },
-        gridLines: {
-          offsetGridLines: true,
-          drawBorder: false,
-          zeroLineWidth: 1,
-          lineWidth: 1,
-          color: setColorAlpha(kpi.color, GRID_LINES_ALPHA),
-          zeroLineColor: kpi.color,
-        },
-      };
-    });
-    let activatedFirstAxis = false;
-    chartData.datasets = chartData.datasets.map((it, idx) => {
-      const dataSet = { ...defaultDataSetConfig, ...it };
-      const kpiKey = dataSet.kpi;
-      const kpi = props.KPIValues[kpiKey];
-      dataSet.yAxisID = kpiKey;
-      dataSet.hidden = props.initiallyActiveKPIs.indexOf(dataSet.kpi) < 0;
-      if (!dataSet.hidden && !activatedFirstAxis) {
-        yAxes[idx].display = true;
-        xAxis.gridLines.zeroLineColor = kpi.color;
-        dataSet.fill = true;
-        activatedFirstAxis = true;
-      }
-      return dataSet;
-    });
-    */
     const { chartData, yAxes, xAxis } = this.processDataSets(props.chartData, this.props);
     this.state = {
       chartData,
@@ -129,7 +72,7 @@ class KPIChart extends Component {
         drawBorder: false,
         zeroLineWidth: 1,
         color: 'transparent',
-        zeroLineColor: 'green',
+        zeroLineColor: '#888888',
       },
       ticks: {
         beginAtZero: false,

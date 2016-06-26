@@ -24,7 +24,7 @@ const now = moment().startOf('day');
 export const initialState = fromJS({
   timeFrame: constants.TIMEFRAME.YESTERDAY,
   status: constants.STATUS.ACTIVE,
-  frequency: constants.FREQUENCY.HOURLY,
+  frequency: constants.FREQUENCY.DAILY,
   activeKPIs: [constants.KPI.IMPRESSIONS.key, constants.KPI.CLICKS.key],
   campaignPerformanceData: false,
   campaignData: false,
@@ -68,9 +68,11 @@ export default (state = initialState, action) => {
       return state
         .set('status', action.status)
         .set('selectedCampaign', null);
-    case CHANGE_SELECTED_CAMPAIGN:
+    case CHANGE_SELECTED_CAMPAIGN: {
+      const currentSelectedCampaign = state.get('selectedCampaign');
       return state
-        .set('selectedCampaign', action.id);
+        .set('selectedCampaign', currentSelectedCampaign && currentSelectedCampaign.id === action.campaign.id ? null : action.campaign);
+    }
     case LOAD_CHANGE_CAMPAIGN_STATUS: {
       const campaignData = { ...state.get('campaignData') };
       if (campaignData.hasOwnProperty(action.campaignId)) {
@@ -182,10 +184,10 @@ export function changeCampaignStatusFilter(status) {
   };
 }
 
-export function changeSelectedCampaignFilter(id) {
+export function changeSelectedCampaignFilter(campaign) {
   return {
     type: CHANGE_SELECTED_CAMPAIGN,
-    id,
+    campaign,
   };
 }
 

@@ -66,8 +66,5 @@ export function numberFormatter(num) {
     const norm = (num / 1000);
     return `${norm.toFixed(norm % 1 !== 0 ? 2 : 0).replace(/\.0$/, '')}K`;
   }
-  if (num <= 1 && num > 0) {
-    return `${(num).toFixed(2).replace(/\.0$/, '')}`;
-  }
-  return num;
+  return `${(num).toFixed(2).replace(/\.0$/, '')}`;
 }

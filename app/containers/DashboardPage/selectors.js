@@ -206,10 +206,16 @@ export const KPIDataSelector = createSelector(
   campaignPerformanceDataSelector,
   loadingSelector,
   rangeSelector,
-  (campaignDataMap, status, frequency, campaignPerformanceData, loading, range) => {
-    if (!campaignDataMap || !campaignPerformanceData || loading) {
+  selectedCampaignSelector,
+  (currentCampaignDataMap, status, frequency, campaignPerformanceData, loading, range, selectedCampaign) => {
+    if (!currentCampaignDataMap || !campaignPerformanceData || loading) {
       return null;
     }
+    let campaignDataMap = currentCampaignDataMap;
+    if (selectedCampaign && currentCampaignDataMap.hasOwnProperty(selectedCampaign.id)) {
+      campaignDataMap = { [selectedCampaign.id]: currentCampaignDataMap[selectedCampaign.id] } ;
+    }
+
     const campaignData = Object.values(campaignDataMap);
     /* TODO: PROCESS RAW DATA AND PRODUCES KPI AND CHART DATA*/
     const dummyChanges = [3, 3, 0, -3, 3, 3, 3, 3, 3, 3, 3, 3];
@@ -291,6 +297,15 @@ export const KPIDataSelector = createSelector(
 
     /* CALCULATE KPI VALUES UNDER CHART */
     Object.values(constants.KPI).forEach(({key: kpi}) => initialValue[kpi] = 0);
+    const summaryKPIValues = Object.keys(performanceAccumulator).reduce((accummulator, instant) => {
+      const {campaigns, ...instantValues} = performanceAccumulator[instant];
+      Object.keys(instantValues).forEach(kpiKey => {
+        const kpiValue = instantValues[kpiKey];
+        accummulator[kpiKey] = (accummulator[kpiKey] ? accummulator[kpiKey] : 0) + kpiValue
+      });
+      return accummulator;
+    },{});
+    /*
     const reduced = campaignData
       .filter(campaign => status === constants.STATUS.ALL ? true : status === campaign.status)
       .reduce((performanceA, {performance: performanceB}) => {
@@ -301,13 +316,14 @@ export const KPIDataSelector = createSelector(
         }
         return performanceA;
       }, initialValue);
+    */
     Object.keys(constants.KPI).forEach((kpi, idx) => {
 
       KPIValues[constants.KPI[kpi].key] = {
         label: constants.KPI[kpi].name,
         color: constants.KPI[kpi].color,
         colorHovered: constants.KPI[kpi].colorHovered,
-        value: getKPISummaryValue(performanceByKPIs, reduced, campaignData.length, kpi),
+        value: getKPISummaryValue(performanceByKPIs, summaryKPIValues, campaignData.length, kpi),
         change: dummyChanges[idx],
         enabled: performanceByKPIs.hasOwnProperty(constants.KPI[kpi].key) && constants.KPI[kpi].enabled,
         valueType: constants.KPI[kpi].valueType,

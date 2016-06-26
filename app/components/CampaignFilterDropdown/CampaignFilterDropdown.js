@@ -17,6 +17,8 @@ class CampaignFilterDropdown extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedCampaign) {
       this.setState({ value: nextProps.selectedCampaign.id, label: nextProps.selectedCampaign.name, disabled: true });
+    } else {
+      this.setState(this.options.find(it => this.props.initialValue === it.value) || this.options[0]);
     }
   }
 
