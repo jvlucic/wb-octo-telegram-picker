@@ -57,7 +57,10 @@ if (logginInData) {
 }
 
 gettingUser
-  .then(() => loadPolyfillAndData('en'))
+  .then(
+    () => loadPolyfillAndData('en'),
+    () => loadPolyfillAndData('en'),
+  )
   .then(() => {
     ReactDOM.render(
       <Provider store={store}>
