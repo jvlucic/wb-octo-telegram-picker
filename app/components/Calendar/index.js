@@ -67,7 +67,7 @@ class Calendar extends Component {
     this.setState({ to, from });
   }
 
-  updateRange(to, from = to) {
+  updateRange(from, to = from) {
     this.setState({ to, from });
   }
 
