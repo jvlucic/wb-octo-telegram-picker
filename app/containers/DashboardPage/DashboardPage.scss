@@ -1,8 +1,8 @@
-.KPIChartContainer{
+.KPIChartContainer {
   height: 420px;
 }
 
-.KPIChartContainer, .campaignTableContainer, .statusFilter{
+.KPIChartContainer, .campaignTableContainer, .statusFilter {
   animation-duration: 0.5s;
   animation-name: appear;
 
@@ -17,20 +17,48 @@
   }
 }
 
-.statusFilter{
-  margin-bottom: 42.5px;
-  margin-top: 25px;
-  height: 40px;
-  .calendarContainer{
+:global(.sticky) {
+  .dashboardPage {
+    margin-top: 160px;
+    .statusFilter {
+      opacity: 1;
+    }
+    .innerContainer {
+      margin-top: 108px;
+    }
+  }
+}
+
+.statusFilter {
+  transition: opacity 0.25s ease-in;
+  //margin-bottom: 42.5px;
+  //margin-top: 25px;
+  //height: 40px;
+
+  top: 52px;
+  height: 65px;
+  position: fixed;
+  background-color: white;
+  display: grid;
+  margin-top: 0;
+  padding: 35px 24px 82.5px 24px;
+  margin-bottom: 0;
+  min-width: 1232px;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+
+  opacity: 0;
+  .calendarContainer {
     float: right;
     width: 300px;
   }
-  .dropDownContainer{
+  .dropDownContainer {
     float: left;
     width: 200px;
     margin-left: 15px;
   }
-  .title{
+  .title {
     float: left;
     font-size: 19px;
     color: #191F2D;

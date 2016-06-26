@@ -30,6 +30,27 @@ export default class App extends React.Component { // eslint-disable-line react/
     this.addAlert = this.addAlert.bind(this);
   }
 
+  componentDidMount() {
+    window.addEventListener('scroll', ::this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', ::this.handleScroll);
+  }
+
+  handleScroll() {
+    /* TODO: do not hardcode the scroll position , this is only useful for dashboard page! */
+    if (window.scrollY >= 424) {
+      if (this.refs.app.className.indexOf('sticky') >= 0) {
+        this.refs.app.className = this.refs.app.className.replace(/\bsticky\b/, '');
+      }
+    } else {
+      if (this.refs.app.className.indexOf('sticky') === -1) {
+        this.refs.app.className += ' sticky';
+      }
+    }
+  }
+
   addAlert(type, message, title) {
     if (this.refs.container) {
       this.refs.container[type](message, title, {
@@ -42,13 +63,13 @@ export default class App extends React.Component { // eslint-disable-line react/
 
   render() {
     return (
-      <div className={styles.tmp}>
+      <div ref="app" className={`${styles.tmp} sticky`}>
         <ToastContainer
           toastMessageFactory={ToastMessageFactory}
           ref="container"
           className="toast-top-right"
         />
-        {this.props.children && React.cloneElement(this.props.children, { addAlert: this.addAlert })}}
+        {this.props.children && React.cloneElement(this.props.children, { addAlert: this.addAlert })}
       </div>
     );
   }

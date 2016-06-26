@@ -18,6 +18,7 @@ import { actions } from './reducer';
 import { KPIDataSelector, selectRange, campaignTableHeadersSelector,
          campaignTableListSelector, campaignStatusSelector, selectedCampaignSelector,
          activeKPIsSelector, loadingSelector, toggledCampaignSelector, errorSelector } from './selectors';
+import classnames from 'classnames';
 import constants from '../../constants';
 import styles from './DashboardPage.scss';
 
@@ -84,7 +85,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
   render() {
     const {KPIData, range, tableHeaders, tableList, status, selectedCampaign, activeKPIs, loading, toggledCampaign} = this.props;
     return (
-      <div>
+      <div className={styles.dashboardPage} >
         <div className={styles.statusFilter}>
           <span className={styles.title} >Showing data across</span>
           <div className={styles.dropDownContainer}>
@@ -94,20 +95,23 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
             <Calendar active from={range.from} to={range.to} onChange={this.handleOnChangeDateRangeFilter} />
           </div>
         </div>
-        {loading && <div><Loader/></div>}
-        { !loading && KPIData &&  <div className={styles.KPIChartContainer}>
-          <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { activeKPIs }  />
-        </div>}
-        { !loading && tableList && <div className={styles.campaignTableContainer}>
-           <CampaignTable 
-             list={tableList}
-             headers={tableHeaders}
-             onRowSelect={this.handleOnChangeSelectedCampaignFilter}
-             onToggleSwitchClick={this.handleOnChangeCampaignStatus}
-             onAddAlert={this.handleOnAddAlert}
-             toggledCampaign={toggledCampaign}
-             selectedCampaign={selectedCampaign} />
-        </div> }
+        <div className={styles.innerContainer}>
+          {loading && <div><Loader/></div>}
+          { !loading && KPIData &&  <div className={styles.KPIChartContainer}>
+            <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { activeKPIs }  />
+          </div>}
+          { !loading && tableList && <div className={styles.campaignTableContainer}>
+             <CampaignTable 
+               list={tableList}
+               headers={tableHeaders}
+               onRowSelect={this.handleOnChangeSelectedCampaignFilter}
+               onToggleSwitchClick={this.handleOnChangeCampaignStatus}
+               onAddAlert={this.handleOnAddAlert}
+               toggledCampaign={toggledCampaign}
+               selectedCampaign={selectedCampaign} />
+          </div> }
+        </div>
+
       </div>
     );
   }

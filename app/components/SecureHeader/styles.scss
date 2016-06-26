@@ -1,6 +1,14 @@
 @import 'main';
 :global {
+  .sticky{
+    .SecureHeader {
+      opacity: 1;
+    }
+  }
   .SecureHeader {
+    transition: opacity 0.25s ease-in;
+    position: fixed;
+    opacity: 0;
     $base-border-radius: 3px !default;
     $dark-gray: #333 !default;
     $large-screen: 53.75em !default;
