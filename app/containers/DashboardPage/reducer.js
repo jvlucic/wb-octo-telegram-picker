@@ -55,8 +55,8 @@ export default (state = initialState, action) => {
       return state
         .set('error', action.error)
         .set('loading', false)
-        .set('campaignPerformanceData', false)
-        .set('campaignData', false);
+        .set('campaignPerformanceData', [])
+        .set('campaignData', {});
     case CHANGE_DATE_RANGE: {
       const daysBetweenDates = dateDiffInDays(action.from, action.to);
       return state
@@ -130,6 +130,7 @@ export function loadingError(error) {
 
 function fetchCampaignData() {
   return new Promise(resolve => setTimeout(() => resolve(dummyCampaignData), 1000));
+  // return new Promise((resolve, reject) => setTimeout(() => reject(new Error('fetchCampaignData')), 1000));
 }
 
 function fetchCampaignPerformanceData(filters) {
@@ -159,7 +160,8 @@ function refreshCampaignData(dispatch, getState) {
     .catch((err) => {
       console.log('ERROR');
       console.log(err);
-      dispatch(loadingError(err));
+      const error = new Error(constants.ERROR_TYPE.SERVER_ERROR);
+      dispatch(loadingError(error));
     });
 }
 

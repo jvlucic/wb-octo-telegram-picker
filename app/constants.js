@@ -5,6 +5,10 @@ const valueType = {
 };
 
 const constants = {
+  ERROR_TYPE: {
+    SESSION_EXPIRED: 'session_expired',
+    SERVER_ERROR: 'server_error',
+  },
   TIMEFRAME: {
     YESTERDAY: 'yesterday',
     TODAY: 'today',

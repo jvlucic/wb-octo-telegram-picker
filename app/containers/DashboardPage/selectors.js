@@ -8,6 +8,11 @@ import dummyDatasets from '../../../unidesq-spec/fixtures/dummyWeekDatasets.json
 
 export const getModelSelector = (state) => state.get(name);
 
+export const errorSelector = createSelector(
+  getModelSelector,
+  model => ( model.get('error') )
+);
+
 export const loadingSelector = createSelector(
   getModelSelector,
   model => ( model.get('loading') )

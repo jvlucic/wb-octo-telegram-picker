@@ -17,7 +17,8 @@ import { createStructuredSelector } from 'reselect';
 import { actions } from './reducer';
 import { KPIDataSelector, selectRange, campaignTableHeadersSelector,
          campaignTableListSelector, campaignStatusSelector, selectedCampaignSelector,
-         activeKPIsSelector, loadingSelector, toggledCampaignSelector } from './selectors';
+         activeKPIsSelector, loadingSelector, toggledCampaignSelector, errorSelector } from './selectors';
+import constants from '../../constants';
 import styles from './DashboardPage.scss';
 
 class DashboardPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -40,6 +41,22 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
       this.props.getCampaignData();
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    const error = nextProps.error;
+    /* TODO: Handle error type */
+    if (error) {
+      switch (error.message) {
+        case (constants.ERROR_TYPE.SERVER_ERROR): {
+          this.handleOnAddAlert('error', 'An unexpected error has occurred', null);
+          return;
+        }
+        default:
+          return;
+      }
+    }
+  }
+
   handleOnAddAlert(type, message, title) {
     this.props.addAlert(type, message, title);
   }
@@ -107,6 +124,7 @@ export default connect(
     activeKPIs: activeKPIsSelector,
     loading: loadingSelector,
     toggledCampaign: toggledCampaignSelector,
+    error: errorSelector,
   }),
   dispatch => {
     return bindActionCreators({ ...actions }, dispatch);
