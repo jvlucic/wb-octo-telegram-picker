@@ -4,7 +4,7 @@
     height: 40px;
     padding: 0 12px;
     &.is-active {
-      border-color: #2bcff3; 
+      border-color: #2bcff3;
     }
     &-label {
       color: #ADADAD;
@@ -26,16 +26,30 @@
     }
 
     &-calendar {
-      padding-left: 12px;
+      display: inline-block;
+      float: left;
+      padding-top: 5px;
+      svg {
+        width: 25px;
+        height: 25px;
+      }
     }
 
     &-clean {
       color: #2bcff3;
       display: none;
+      width: 15px;
+      height: 15px;
+      padding-top: 5px;
       float:right;
       padding-left: 7px;
       &.is-active {
         display: block;
+      }
+
+      svg {
+        width: 15px;
+        height: 15px;
       }
     }
 
@@ -49,6 +63,10 @@
         display: block;
       }
 
+    }
+    &-clickable {
+      display: inline-block;
+      float: left;
     }
   }
 }

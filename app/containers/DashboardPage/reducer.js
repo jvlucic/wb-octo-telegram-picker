@@ -23,7 +23,16 @@ const LOAD_CHANGE_CAMPAIGN_STATUS = `${name}/LOAD_CHANGE_CAMPAIGN_STATUS`;
 const LOAD_CHANGE_CAMPAIGN_STATUS_SUCCESS = `${name}/LOAD_CHANGE_CAMPAIGN_STATUS_SUCCESS`;
 const LOAD_CHANGE_CAMPAIGN_STATUS_ERROR = `${name}/LOAD_CHANGE_CAMPAIGN_STATUS_ERROR`;
 
-const now = moment().startOf('day');
+
+function getInitialDateRange() {
+  const now = moment().startOf('day');
+  return {
+    to: new Date(now.toDate()),
+    from: new Date(now.subtract(7, 'day').toDate()),
+  };
+}
+
+const initialRange = getInitialDateRange();
 
 export const initialState = fromJS({
   timeFrame: constants.TIMEFRAME.YESTERDAY,
@@ -32,9 +41,9 @@ export const initialState = fromJS({
   activeKPIs: [constants.KPI.IMPRESSIONS.key, constants.KPI.CLICKS.key],
   campaignPerformanceData: false,
   campaignData: false,
-  to: new Date(now.toDate()),
+  to: initialRange.to,
   selectedCampaign: null,
-  from: now.subtract(7, 'day').toDate(),
+  from: initialRange.from,
   loading: false,
   toggledCampaign: false,
 });
@@ -182,6 +191,13 @@ export function changeDateRange({ to, from }) {
   };
 }
 
+export function resetDateRange() {
+  return (dispatch) => {
+    const range = getInitialDateRange();
+    dispatch(changeDateRange(range));
+  };
+}
+
 function changeCampaignStatusFilterState(status) {
   return {
     type: CHANGE_CAMPAIGN_FILTER_STATUS,
@@ -257,6 +273,7 @@ export const actions = {
   LOAD_CAMPAIGN_DATA_SUCCESS,
   LOAD_CAMPAIGN_DATA_ERROR,
   changeDateRange,
+  resetDateRange,
   getCampaignData,
   changeCampaignStatusFilter,
   changeSelectedCampaignFilter,

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import classnames from 'classnames';
+import { InputCalendarIcon, InputClearIcon } from 'theme/assets';
 import './styles.scss';
 
 const msgs = defineMessages({
@@ -14,13 +15,12 @@ const msgs = defineMessages({
 export default class InputDate extends Component { // eslint-disable-line react/prefer-stateless-function
 
   render() {
-    const { to, from, active, onClick } = this.props;
+    const { to, from, active, onClick, onClean } = this.props;
     const isActive = classnames({ 'is-active': active });
     return (
-      <div className={classnames('InputDate', isActive)} onClick={onClick}>
-        <div className="InputDate-clickable">
-          <div className="InputDate-calendar" />
-
+      <div className={classnames('InputDate', isActive)} >
+        <div className="InputDate-clickable" onClick={onClick}>
+          <InputCalendarIcon className="InputDate-calendar" />
           <div className="InputDate-label">
             <FormattedMessage {...msgs.dates} />
           </div>
@@ -45,7 +45,9 @@ export default class InputDate extends Component { // eslint-disable-line react/
           </div>
         </div>
 
-        <div className={classnames('InputDate-clean', isActive)}>x</div>
+        <div className={classnames('InputDate-clean', isActive)} onClick={onClean}>
+          <InputClearIcon />
+        </div>
       </div>
     );
   }
@@ -56,11 +58,11 @@ InputDate.propTypes = {
   from: PropTypes.instanceOf(Date),
   active: PropTypes.bool,
   onClick: PropTypes.func,
+  onClean: PropTypes.func,
 };
 
 InputDate.defaultProps = {
-  onClick() {
-
-  },
+  onClick() {},
+  onClean() {},
   active: false,
 };

@@ -35,6 +35,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     this.handleOnChangeDateRangeFilter = this.handleOnChangeDateRangeFilter.bind(this);
     this.handleOnChangeCampaignStatusFilter = this.handleOnChangeCampaignStatusFilter.bind(this);
     this.handleOnChangeSelectedCampaignFilter = this.handleOnChangeSelectedCampaignFilter.bind(this);
+    this.handleOnResetDateRange = this.handleOnResetDateRange.bind(this);
   }
 
   componentDidMount() {
@@ -104,13 +105,20 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     this.props.changeDateRange({ to, from });
   }
 
+  /**
+   * Reset the date range to default
+   */
+  handleOnResetDateRange() {
+    this.props.resetDateRange();
+  }
+
   handleOnChangeCampaignStatusFilter(status) {
     this.props.changeCampaignStatusFilter(status);
-  }  
-  
+  }
+
   handleOnChangeSelectedCampaignFilter(status) {
     this.props.changeSelectedCampaignFilter(status);
-  }  
+  }
   handleOnChangeCampaignStatus(id, status) {
     this.props.changeCampaignStatus(id, status);
   }
@@ -125,7 +133,13 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
             <CampaignFilterDropdown selectedCampaign={selectedCampaign} initialValue={status} onChange={this.handleOnChangeCampaignStatusFilter} />
           </div>
           <div className={styles.calendarContainer}>
-            <Calendar active from={range.from} to={range.to} onChange={this.handleOnChangeDateRangeFilter} />
+            <Calendar
+              active
+              from={range.from}
+              to={range.to}
+              onChange={this.handleOnChangeDateRangeFilter}
+              onClean={this.handleOnResetDateRange}
+            />
           </div>
         </div>
         <div className={styles.innerContainer}>
@@ -134,7 +148,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
             <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { activeKPIs }  />
           </div>}
           { !loading && tableList && <div className={styles.campaignTableContainer}>
-             <CampaignTable 
+             <CampaignTable
                list={tableList}
                headers={tableHeaders}
                onRowSelect={this.handleOnChangeSelectedCampaignFilter}

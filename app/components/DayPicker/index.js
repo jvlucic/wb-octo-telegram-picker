@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import DayPicker, * as Utils from 'react-day-picker';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -39,14 +39,23 @@ export const DateUtils = Utils.DateUtils;
 export const LocaleUtils = Utils.LocaleUtils;
 export const NavbarPropTypes = Utils.NavbarPropTypes;
 
-function CustomDayPicker({ locale, ...otherProps }) {
-  return (
-    <DayPicker
-      locale={locale}
-      localeUtils={localeUtils}
-      {...otherProps}
-    />
-  );
+class CustomDayPicker extends Component {
+  showMonth(...args) {
+    this.daypicker.showMonth(...args);
+  }
+
+  render() {
+    const { locale, ...otherProps } = this.props;
+    return (
+      <DayPicker
+        locale={locale}
+        localeUtils={localeUtils}
+        ref={daypicker => { this.daypicker = daypicker; }}
+        {...otherProps}
+      />
+    );
+  }
+
 }
 
 CustomDayPicker.propTypes = {
@@ -59,4 +68,4 @@ CustomDayPicker.defaultProps = {
 
 export default connect(createStructuredSelector({
   locale: selectLocale(),
-}))(CustomDayPicker);
+}), undefined, undefined, { withRef: true })(CustomDayPicker);

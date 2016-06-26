@@ -48,6 +48,15 @@ class Calendar extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.to !== this.props.to && nextProps.from !== this.props.from) {
+      this.setState({
+        to: nextProps.to,
+        from: nextProps.from,
+      });
+    }
+  }
+
   componentWillUnmount() {
     if (this.delay) {
       clearTimeout(this.delay);
@@ -68,7 +77,7 @@ class Calendar extends Component {
   }
 
   updateRange(from, to = from) {
-    this.setState({ to, from });
+    this.setState({ to, from }, () => this.daypicker.getWrappedInstance().daypicker.showMonth(to));
   }
 
   handleShowDate() {
@@ -104,7 +113,7 @@ class Calendar extends Component {
   }
 
   render() {
-    const { to, from } = this.props;
+    const { to, from, onClean } = this.props;
     const modifiers = {
       selected: day => DateUtils.isDayInRange(day, this.state),
       startDay: day => DateUtils.isSameDay(day, this.state.from),
@@ -121,6 +130,7 @@ class Calendar extends Component {
           from={from}
           refs={_input => { this.input = _input; }}
           onClick={this.handleOnInputClick}
+          onClean={onClean}
           active={this.state.show}
         />
         <Overlay
@@ -207,6 +217,7 @@ class Calendar extends Component {
               numberOfMonths={2}
               modifiers={modifiers}
               onDayClick={this.handleDayClick}
+              ref={(daypicker) => { this.daypicker = daypicker; }}
             />
             <div className="Calendar-buttonContainer">
               <button
@@ -231,12 +242,12 @@ Calendar.propTypes = {
   to: PropTypes.instanceOf(Date),
   from: PropTypes.instanceOf(Date),
   onChange: PropTypes.func,
+  onClean: PropTypes.func,
 };
 
 Calendar.defaultProps = {
-  onChange() {
-
-  },
+  onChange() {},
+  onClean() {},
 };
 
 export default Calendar;
