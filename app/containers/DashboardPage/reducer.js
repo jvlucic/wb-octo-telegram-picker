@@ -3,11 +3,15 @@ import { name } from './__init__';
 import { dateDiffInDays } from '../../utils/utils';
 import constants from '../../constants';
 import moment from 'moment';
+import { selectToken } from '../../auth/selectors';
+import { getCampaignPerfomanceData as getCampaignPerfomanceDataFromAPI, getCampaignData as getCampaignDataFromAPI } from '../../utils/unidesqApi';
 
 /* TODO: replace dummydata for API calls */
+/*
 import dummyCampaignData from '../../../unidesq-spec/fixtures/dummyCampaignData.json';
 import dummyCampaignPerfomanceData from '../../../unidesq-spec/fixtures/dummyCampaignPerfomanceData.json';
 import dummyCampaignPerfomanceHourlyData from '../../../unidesq-spec/fixtures/dummyCampaignPerfomanceHourlyData.json';
+*/
 
 const LOAD_CAMPAIGN_DATA = `${name}/LOAD_CAMPAIGN_DATA`;
 const LOAD_CAMPAIGN_DATA_SUCCESS = `${name}/LOAD_CAMPAIGN_DATA_SUCCESS`;
@@ -128,16 +132,20 @@ export function loadingError(error) {
   };
 }
 
-function fetchCampaignData() {
-  return new Promise(resolve => setTimeout(() => resolve(dummyCampaignData), 1000));
+function fetchCampaignData({ status, to, from, frequency }, token) {
+  return getCampaignDataFromAPI({ status, end: to, start: from, frequency, token });
+  // return new Promise(resolve => setTimeout(() => resolve(dummyCampaignData), 1000));
   // return new Promise((resolve, reject) => setTimeout(() => reject(new Error('fetchCampaignData')), 1000));
 }
 
-function fetchCampaignPerformanceData(filters) {
-  if (filters.get('frequency') === constants.FREQUENCY.DAILY) {
+function fetchCampaignPerformanceData({ status, to, from, frequency }, token) {
+  return getCampaignPerfomanceDataFromAPI({ status, end: to, start: from, frequency, token });
+  /*
+  if (filters.frequency === constants.FREQUENCY.DAILY) {
     return new Promise(resolve => setTimeout(() => resolve(dummyCampaignPerfomanceData), 1000));
   }
   return new Promise(resolve => setTimeout(() => resolve(dummyCampaignPerfomanceHourlyData), 1000));
+  */
 }
 
 function changeDateRangeState({ to, from }) {
@@ -148,11 +156,13 @@ function changeDateRangeState({ to, from }) {
   };
 }
 
+
 function refreshCampaignData(dispatch, getState) {
   dispatch(loadCampaignData());
-  const filters = getState().get(name);
-  const requestCampaignData = fetchCampaignData(filters);
-  const requestCampaignPerformanceData = fetchCampaignPerformanceData(filters);
+  const token = selectToken(getState());
+  const filters = getState().get(name).toJS();
+  const requestCampaignData = fetchCampaignData(filters, token);
+  const requestCampaignPerformanceData = fetchCampaignPerformanceData(filters, token);
   Promise.all([requestCampaignData, requestCampaignPerformanceData])
     .then(([campaignData, campaignPerformanceData]) => {
       dispatch(loadedCampaignData({ campaignData, campaignPerformanceData }));

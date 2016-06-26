@@ -140,6 +140,7 @@
     "reselect": "^2.5.1",
     "sanitize.css": "^3.3.0",
     "sass-loader": "^3.2.0",
+    "urijs": "^1.18.1",
     "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
