@@ -21,7 +21,7 @@ import { KPIDataSelector, selectRange, campaignTableHeadersSelector,
 import classnames from 'classnames';
 import constants from '../../constants';
 import styles from './DashboardPage.scss';
-
+let appContainer = null;
 class DashboardPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   /**
    * constructor
@@ -41,7 +41,40 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     if (!this.props.KPIData) {
       this.props.getCampaignData();
     }
+    /* TODO: DO NOT HARDCODE ID, PASS COMPONENT THROUGH PROPS ! */
+    appContainer = document.getElementById('appComponentContainer');
+    window.addEventListener('scroll', ::this.handleScroll);
+    if (appContainer && appContainer.className.indexOf('sticky') === -1) {
+      appContainer.className += ' sticky';
+    }
+    if (appContainer && appContainer.className.indexOf('dashboardPage') === -1) {
+      appContainer.className += ' dashboardPage';
+    }
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', ::this.handleScroll);
+    if (appContainer && appContainer.className.indexOf('sticky') >= 0) {
+      appContainer.className = appContainer.className.replace(/\bsticky\b/, '');
+    }
+    if (appContainer && appContainer.className.indexOf('dashboardPage') >= 0) {
+      appContainer.className = appContainer.className.replace(/\bdashboardPage\b/, '');
+    }
+  }
+
+  handleScroll() {
+    /* TODO: do not hardcode the scroll position , this is only useful for dashboard page! */
+    if (window.scrollY >= 424) {
+      if (appContainer && appContainer.className.indexOf('sticky') >= 0) {
+        appContainer.className = appContainer.className.replace(/\bsticky\b/, '');
+      }
+    } else {
+      if (appContainer && appContainer.className.indexOf('sticky') === -1) {
+        appContainer.className += ' sticky';
+      }
+    }
+  }
+
 
   componentWillReceiveProps(nextProps) {
     const error = nextProps.error;
