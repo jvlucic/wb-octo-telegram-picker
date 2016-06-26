@@ -7,6 +7,9 @@
       * {
         outline: none;
       }
+      .FlexTable__row{
+        cursor: pointer;
+      }
     }
   }
 }
@@ -44,7 +47,6 @@
 
 .cell{
   color: #888888;
-  cursor: pointer;
 }
 .statusCell{
   padding: 5px;

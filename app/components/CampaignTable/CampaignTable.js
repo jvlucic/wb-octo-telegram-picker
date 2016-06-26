@@ -59,10 +59,8 @@ class CampaignTable extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  handleRowSelect(campaign, event) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.props.onRowSelect(campaign);
+  handleRowSelect({index}) {
+    this.props.onRowSelect(this.currentList[index].campaign);
   }
 
   handleToggleSwitchClick(campaignId, status) {
@@ -92,7 +90,7 @@ class CampaignTable extends Component {
 
     if (dataKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN) {
       return (
-        <div className={classnames(styles.cell)} onClick={(event) => this.handleRowSelect(campaign, event)}>
+        <div className={classnames(styles.cell)}>
           <div className={styles.campaignName}>{cellData.name}</div>
           <div>
             <div className={styles.campaignBudget}>{cellData.budget}</div>
@@ -190,6 +188,7 @@ class CampaignTable extends Component {
               noRowsRenderer={this.noRowsRenderer}
               overscanRowCount={overscanRowCount}
               rowClassName={::this.rowClassName}
+              onRowClick={::this.handleRowSelect}
               rowHeight={rowHeight}
               rowCount={rowCount}
               scrollToIndex={scrollToIndex}

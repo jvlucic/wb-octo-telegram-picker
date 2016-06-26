@@ -10,6 +10,7 @@ class CampaignFilterDropdown extends Component {
       { value: constants.STATUS.ALL, label: 'All Campaigns' },
       { value: constants.STATUS.ACTIVE, label: 'Active Campaigns' },
       { value: constants.STATUS.INACTIVE, label: 'Inactive Campaigns' },
+      { value: null, label: '[Selected Campaign]', disabled: true },
     ];
     this.state = this.options.find(it => this.props.initialValue === it.value) || this.options[0];
   }
@@ -30,7 +31,7 @@ class CampaignFilterDropdown extends Component {
   render() {
     const options = [...this.options];
     if (this.props.selectedCampaign) {
-      options.push({ value: this.props.selectedCampaign.id, label: this.props.selectedCampaign.name, disabled: true });
+      options[options.length - 1] = ({ value: this.props.selectedCampaign.id, label: this.props.selectedCampaign.name, disabled: true });
     }
     return (
       <Dropdown
