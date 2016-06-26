@@ -201,7 +201,7 @@ function getKPISummaryValue(performanceByKPIs, reduced, numberOfValues, kpi) {
   if (!performanceByKPIs.hasOwnProperty(constants.KPI[kpi].key)) {
     return 0;
   }
-  return constants.KPI[kpi].valueType === constants.VALUE_TYPE.PERCENTAGE ? reduced[constants.KPI[kpi].key] / numberOfValues : reduced[constants.KPI[kpi].key];
+  return reduced[constants.KPI[kpi].key];
 }
 
 export const KPIDataSelector = createSelector(
@@ -301,8 +301,9 @@ export const KPIDataSelector = createSelector(
     };
 
     /* CALCULATE KPI VALUES UNDER CHART */
+    const points = Object.keys(performanceAccumulator);
     Object.values(constants.KPI).forEach(({key: kpi}) => initialValue[kpi] = 0);
-    const summaryKPIValues = Object.keys(performanceAccumulator).reduce((accummulator, instant) => {
+    const summaryKPIValues = points.reduce((accummulator, instant) => {
       const {campaigns, ...instantValues} = performanceAccumulator[instant];
       Object.keys(instantValues).forEach(kpiKey => {
         const kpiValue = instantValues[kpiKey];
@@ -310,6 +311,13 @@ export const KPIDataSelector = createSelector(
       });
       return accummulator;
     },{});
+    Object.keys(summaryKPIValues).forEach(kpi => {
+      const kpiInfo = getKPIFromKey(kpi);
+      if (kpiInfo && kpiInfo.valueType === constants.VALUE_TYPE.PERCENTAGE) {
+        summaryKPIValues[kpi] /= points.length;
+      }
+    });
+
     /*
     const reduced = campaignData
       .filter(campaign => status === constants.STATUS.ALL ? true : status === campaign.status)

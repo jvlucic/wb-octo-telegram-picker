@@ -19,6 +19,13 @@ export function parseDate(str) {
   return moment(str, 'ddd MMM DD HH:mm:ss ZZ YYYY').toDate();
 }
 
+export function formatDate(date) {
+  if (!date) {
+    return null;
+  }
+  return moment(date).format('YYYY-MM-DD');
+}
+
 export function addDaysToDate(date, days) {
   return moment(date).add(days, 'day').toDate();
 }
