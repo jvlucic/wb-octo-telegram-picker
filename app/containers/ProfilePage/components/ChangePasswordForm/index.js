@@ -1,10 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import FormGroupAccount from './FormGroupAccount';
+import FormGroupAccount from '../FormGroupAccount';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import uniqueId from 'utils/uniqueId';
+import { createStructuredSelector } from 'reselect';
+import { postChangePassword } from '../../actions';
+import { selectChangingPassword, selectChangePasswordError } from '../../selectors';
+import classnames from 'classnames';
 import './styles.scss';
 
 const msgs = defineMessages({
@@ -64,12 +68,14 @@ class ChangePasswordForm extends Component {
   }
 
   handleChangePasswordSubmit(values) {
-    console.log(values);
+    return this.props.postChangePassword(values.currentPassword, values.newPassword);
   }
 
   render() {
     const {
       intl: { formatMessage } = {},
+      changing,
+      changeError,
       fields: {
         currentPassword,
         newPassword,
@@ -78,8 +84,15 @@ class ChangePasswordForm extends Component {
       handleSubmit,
       valid,
     } = this.props;
+    const stateClass = classnames({
+      'has-error': !!changeError,
+    });
+
     return (
-      <form className="AccountPage-formChangePassword" onSubmit={handleSubmit(this.handleChangePasswordSubmit)}>
+      <form className="ChangePassword" onSubmit={handleSubmit(this.handleChangePasswordSubmit)}>
+        <div className={classnames('ChangePassword-error', stateClass)}>
+          <span>{changeError}</span>
+        </div>
         <FormGroupAccount
           htmlFor={this.ids.currentPassword}
           labelText={formatMessage(msgs.labelCurrentPassword)}
@@ -118,9 +131,10 @@ class ChangePasswordForm extends Component {
         </FormGroupAccount>
         <Button
 
-          className="AccountPage-changePasswordButton"
+          className="ChangePassword-button"
           buttonType="large"
           disabled={!valid}
+          spinner={changing}
         >
           <FormattedMessage {...msgs.button} />
         </Button>
@@ -131,6 +145,8 @@ class ChangePasswordForm extends Component {
 
 ChangePasswordForm.propTypes = {
   intl: PropTypes.object,
+  changing: PropTypes.bool,
+  changeError: PropTypes.string,
   fields: PropTypes.shape({
     currentPassword: PropTypes.object,
     newPassword: PropTypes.object,
@@ -138,11 +154,20 @@ ChangePasswordForm.propTypes = {
   }),
   valid: PropTypes.bool,
   handleSubmit: PropTypes.func,
+  postChangePassword: PropTypes.func,
 };
 
-export default reduxForm({
-  form: 'change_password',
-  fields,
-  validate,
-  getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint).toJS(),
-})(injectIntl(ChangePasswordForm));
+export default reduxForm(
+  {
+    form: 'change_password',
+    fields,
+    validate,
+    getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint).toJS(),
+  },
+  createStructuredSelector({
+    changing: selectChangingPassword,
+    changeError: selectChangePasswordError,
+  }),
+  {
+    postChangePassword,
+  })(injectIntl(ChangePasswordForm));

@@ -5,7 +5,7 @@ import './styles.scss';
 
 export default function FormGroupAccount({ className, children, ...props }) {
   return (
-    <FormGroup {...props} className={classnames('AccountPage-formGroup', className)}>
+    <FormGroup {...props} className={classnames('ProfileFormGroup', className)}>
       {children}
     </FormGroup>
   );

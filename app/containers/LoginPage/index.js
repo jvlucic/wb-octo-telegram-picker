@@ -14,7 +14,7 @@ import { reduxForm } from 'redux-form';
 import { Link, withRouter } from 'react-router';
 import uniqueId from 'utils/uniqueId';
 import { authenticate } from 'auth/actions';
-import { selectIsLogged, selectError } from 'auth/selectors';
+import { selectIsLogged, selectError, selectLoggingIn } from 'auth/selectors';
 import { createStructuredSelector } from 'reselect';
 import classnames from 'classnames';
 import './styles.scss';
@@ -78,6 +78,7 @@ class LoginPage extends React.Component { // eslint-disable-line react/prefer-st
       fields: { username, password } = {},
       handleSubmit,
       authError,
+      logginIn,
     } = this.props;
 
     const stateClass = classnames({
@@ -127,6 +128,7 @@ class LoginPage extends React.Component { // eslint-disable-line react/prefer-st
             type="submit"
             className="Login-button"
             buttonType="large"
+            spinner={logginIn}
             expanded
           >
             Log in
@@ -150,6 +152,7 @@ LoginPage.propTypes = {
   }).isRequired,
   handleSubmit: PropTypes.func.isRequired,
   isLogged: PropTypes.bool,
+  logginIn: PropTypes.bool,
   authError: PropTypes.any,
   router: PropTypes.object,
 };
@@ -162,4 +165,5 @@ export default reduxForm({
 }, createStructuredSelector({
   isLogged: selectIsLogged,
   authError: selectError,
+  logginIn: selectLoggingIn,
 }))(injectIntl(withRouter(LoginPage)));

@@ -2,7 +2,7 @@
 // They are all wrapped in the App component, which should contain the navbar etc
 // See http://blog.mxstbr.com/2016/01/react-apps-with-pages for more information
 // about the code splitting business
-// import { getHooks } from 'utils/hooks';
+import { getHooks } from 'utils/hooks';
 import { selectIsLogged } from 'auth/selectors';
 
 const errorLoading = (err) => {
@@ -23,7 +23,7 @@ function requireAuth(store) {
 
 export default function createRoutes(store) {
   // Create reusable async injectors using getHooks factory
-  // const { injectReducer, injectSagas } = getHooks(store);
+  const { injectReducer } = getHooks(store);
   const secureRoute = requireAuth(store);
   return [
     {
@@ -61,7 +61,6 @@ export default function createRoutes(store) {
           },
         },
         {
-          path: '/account',
           name: 'account',
           getComponent(nextState, cb) {
             const importModules = Promise.all([
@@ -76,6 +75,28 @@ export default function createRoutes(store) {
 
             importModules.catch(errorLoading);
           },
+          childRoutes: [
+            {
+              path: '/account',
+              name: 'profile',
+              getComponent(nextState, cb) {
+                console.log('was called');
+                const importModules = Promise.all([
+                  System.import('containers/ProfilePage/reducer'),
+                  System.import('containers/ProfilePage/ProfilePage'),
+                ]);
+
+                const renderRoute = loadModule(cb);
+
+                importModules.then(([reducer, component]) => {
+                  injectReducer('profile', reducer.default);
+                  renderRoute(component);
+                });
+
+                importModules.catch(errorLoading);
+              },
+            },
+          ],
         },
         {
           path: '/creatives',

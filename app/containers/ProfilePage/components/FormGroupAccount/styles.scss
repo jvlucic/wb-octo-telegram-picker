@@ -1,0 +1,11 @@
+:global {
+  .ProfileFormGroup {
+    width: 320px;
+    float: left;
+    margin-left: 20px;
+    padding-bottom: 50px;
+    &.has-error {
+      padding-bottom: 19px;
+    }
+  }
+}

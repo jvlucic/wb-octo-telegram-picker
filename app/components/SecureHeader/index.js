@@ -50,7 +50,9 @@ function SecureHeader({ fullName }) {
     <header className="SecureHeader" role="banner" >
       <div className="SecureHeader-wrapper">
         <aside className="SecureHeader-logo">
-          <img src={logo} alt="Unidesq Logo" />
+          <Link to="/">
+            <img src={logo} alt="Unidesq Logo" />
+          </Link>
         </aside>
         <nav role="navigation" className="SecureHeader-nav">
           <ul className="SecureHeader-menu">

@@ -1,14 +1,13 @@
 /*
- * LoginPage
+ * Account Page
  *
- * Authentication page
+ * Account Parent Page
  *
  */
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import ProfileForm from './ProfileForm';
-import ChangePasswordForm from './ChangePasswordForm';
+import { Link } from 'react-router';
 import './styles.scss';
 
 const msgs = defineMessages({
@@ -36,10 +35,26 @@ class AccountPage extends Component { // eslint-disable-line react/prefer-statel
             <header className="AccountPage-overviewHeader">
               <FormattedMessage {...msgs.overview} />
             </header>
+            <div className="AccountPage-overviewNav">
+              <div className="AccountPage-overviewNavItem">
+                <Link to="/account" activeClassName="is-active">
+                  Profile
+                </Link>
+              </div>
+              <div className="AccountPage-overviewNavItem">
+                <Link to="/account/company" activeClassName="is-active">
+                  Company
+                </Link>
+              </div>
+              <div className="AccountPage-overviewNavItem">
+                <Link to="/account/brand" activeClassName="is-active">
+                  Brand
+                </Link>
+              </div>
+            </div>
           </div>
-          <div className="AccountPage-form">
-            <ProfileForm />
-            <ChangePasswordForm />
+          <div className="AccountPage-childContent">
+            {this.props.children}
           </div>
         </div>
       </section>
@@ -48,6 +63,7 @@ class AccountPage extends Component { // eslint-disable-line react/prefer-statel
 }
 
 AccountPage.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default AccountPage;

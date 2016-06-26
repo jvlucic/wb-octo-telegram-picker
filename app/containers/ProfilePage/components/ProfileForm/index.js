@@ -2,11 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { createSelector } from 'reselect';
-import FormGroupAccount from './FormGroupAccount';
+import FormGroupAccount from '../FormGroupAccount';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import uniqueId from 'utils/uniqueId';
 import { selectUser } from 'auth/selectors';
+import { updateUserInfo } from '../../actions';
+import { selectUpdatingUser, selectUpdateUserError } from '../../selectors';
+import classnames from 'classnames';
 import './styles.scss';
 
 const msgs = defineMessages({
@@ -88,12 +91,14 @@ class ProfileForm extends Component {
   }
 
   handleProfileSubmit(values) {
-    console.log(values);
+    return this.props.updateUserInfo(values);
   }
 
   render() {
     const {
       intl: { formatMessage } = {},
+      updating,
+      updateError,
       fields: {
         username,
         firstName,
@@ -104,8 +109,16 @@ class ProfileForm extends Component {
       } = {},
       handleSubmit,
     } = this.props;
+
+    const stateClass = classnames({
+      'has-error': !!updateError,
+    });
+
     return (
-      <form className="AccountPage-formProfile" onSubmit={handleSubmit(this.handleProfileSubmit)}>
+      <form className="ProfileForm" onSubmit={handleSubmit(this.handleProfileSubmit)}>
+        <div className={classnames('ChangePassword-error', stateClass)}>
+          <span>{updateError}</span>
+        </div>
         <FormGroupAccount
           htmlFor={this.ids.username}
           labelText={formatMessage(msgs.labelUsername)}
@@ -180,8 +193,9 @@ class ProfileForm extends Component {
         </FormGroupAccount>
         <Button
           type="submit"
-          className="AccountPage-profileButton"
+          className="ProfileForm-button"
           buttonType="large"
+          spinner={updating}
         >
           <FormattedMessage {...msgs.button} />
         </Button>
@@ -192,6 +206,8 @@ class ProfileForm extends Component {
 
 ProfileForm.propTypes = {
   intl: PropTypes.object,
+  updating: PropTypes.bool,
+  updateError: PropTypes.string,
   fields: PropTypes.shape({
     username: PropTypes.object,
     firstName: PropTypes.object,
@@ -200,21 +216,32 @@ ProfileForm.propTypes = {
     companyName: PropTypes.object,
     phoneNumber: PropTypes.object,
   }),
+  updateUserInfo: PropTypes.func,
   handleSubmit: PropTypes.func,
 };
 
-export default reduxForm({
-  form: 'profile',
-  fields,
-  validate,
-  getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint).toJS(),
-}, createSelector(
-  selectUser,
-  user => ({
-    initialValues: {
-      username: user && user.get('username') || '',
-      firstName: user && user.get('firstName') || '',
-      lastName: user && user.get('lastName') || '',
-      email: user && user.get('email') || '',
-    },
-  })))(injectIntl(ProfileForm));
+export default reduxForm(
+  {
+    form: 'profile',
+    fields,
+    validate,
+    getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint).toJS(),
+  },
+  createSelector(
+    selectUser,
+    selectUpdatingUser,
+    selectUpdateUserError,
+    (user, updating, updateError) => ({
+      initialValues: {
+        username: user && user.get('username') || '',
+        firstName: user && user.get('firstName') || '',
+        lastName: user && user.get('lastName') || '',
+        email: user && user.get('email') || '',
+      },
+      updating,
+      updateError,
+    })
+  ),
+  {
+    updateUserInfo,
+  })(injectIntl(ProfileForm));

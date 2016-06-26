@@ -17,6 +17,11 @@ export const selectUsername = createSelector(
   user => user && user.get('username'),
 );
 
+export const selectUserId = createSelector(
+  selectUser,
+  user => user && user.get('id'),
+);
+
 export const selectFirstName = createSelector(
   selectUser,
   user => user && user.get('firstName'),
@@ -36,6 +41,11 @@ export const selectFullName = createSelector(
 export const selectIsLogged = createSelector(
   selectAuth,
   (auth) => auth.get('logged'),
+);
+
+export const selectLoggingIn = createSelector(
+  selectAuth,
+  (auth) => auth.get('loggingIn'),
 );
 
 export const selectError = createSelector(

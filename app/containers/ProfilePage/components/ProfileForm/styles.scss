@@ -1,0 +1,27 @@
+@import 'main';
+:global {
+  .ProfileForm {
+    @include outer-container(100%);
+    border-bottom: 1px solid #F2F2F2;
+    padding-bottom: 70px;
+  }
+
+  .ProfileForm-button {
+    float: left;
+    clear:both;
+    width: 170px;
+    margin-left: 20px
+  }
+
+  .ProfileForm-error {
+    color: $form-invalid-color;
+    clear: both;
+    display: none;
+    margin-left: 20px;
+    padding-bottom: 15px;
+    width: 100%;
+    &.has-error {
+      display: block;
+    }
+  }
+}

@@ -21,7 +21,7 @@ export function logginIn() {
 
 /**
  * Action creator for LOGGING_IN_SUCCESS
- * @param  {string} locale              - Locale that want change
+ * @param  {Object} authData            - Auth data
  * @return {Object}                     - Action of LOGGING_IN_SUCCESS
  * @property {string} type              - LOGGING_IN_SUCCESS
  * @property {string} username          - Username logged

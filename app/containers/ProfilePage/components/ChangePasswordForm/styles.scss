@@ -1,0 +1,25 @@
+@import 'main';
+:global {
+  .ChangePassword {
+    padding-top: 35px;
+  }
+
+  .ChangePassword-button {
+    float: left;
+    clear:both;
+    width: 250px;
+    margin-left: 20px
+  }
+
+  .ChangePassword-error {
+    color: $form-invalid-color;
+    clear: both;
+    display: none;
+    margin-left: 20px;
+    padding-bottom: 15px;
+    width: 100%;
+    &.has-error {
+      display: block;
+    }
+  }
+}

@@ -31,43 +31,26 @@
   .AccountPage-overviewHeader {
     font-weight: bold;
     font-size: 16px;
+    padding: 10px;
   }
-
-  .AccountPage-form {
+  .AccountPage-overviewNavItem {
+    a {
+      color: $link-color;
+      display: inline-block;
+      font-size: 16px;
+      padding: 10px;
+      width: 100%;
+      &:hover, &.is-active {
+        background-color: #F2FDFF;
+      }
+    }
+  }
+  .AccountPage-childContent {
     @include span-columns(10);
   }
 
-  .AccountPage-formProfile {
+  .ProfilePage {
     @include outer-container(100%);
-    @include divider();
-    padding-bottom: 70px;
   }
 
-  .AccountPage-formChangePassword {
-    padding-top: 35px;
-  }
-
-  .AccountPage-formGroup {
-    width: 320px;
-    float: left;
-    margin-left: 20px;
-    padding-bottom: 50px;
-    &.has-error {
-      padding-bottom: 19px;
-    }
-  }
-
-  .AccountPage-profileButton {
-    float: left;
-    clear:both;
-    width: 170px;
-    margin-left: 20px
-  }
-
-  .AccountPage-changePasswordButton {
-    float: left;
-    clear:both;
-    width: 250px;
-    margin-left: 20px
-  }
 }
