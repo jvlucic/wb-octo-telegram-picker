@@ -47,3 +47,17 @@ export function getCampaignData({ status, start, end, frequency, token }) {
       return Promise.resolve(data);
     });
 }
+
+export function toggleCampaignStatus({ campaignId, token }) {
+  const uri = generateURL(`campaigns/${campaignId}/toggleStatus`);
+  return request(uri, { headers: { ...secureHeader(token) }, method: 'PUT' })
+    .then(({ data, err }) => {
+      if (err) {
+        console.log(err);
+        return Promise.reject(constants.ERROR_TYPE.SERVER_ERROR);
+      }
+      console.log('toggledStatus');
+      console.log(data);
+      return Promise.resolve(data);
+    });
+}

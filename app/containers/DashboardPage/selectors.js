@@ -132,6 +132,7 @@ export const campaignTableListSelector = createSelector(
             startData: data.startData,
             endDate: data.endDate,
             budget: data.budget,
+            budgetRemaining: data.budgetRemaining,
             currency: data.currency,
             changed: typeof data.changed !== 'undefined' ? data.changed : false,
           } || null,

@@ -4,7 +4,7 @@ import { dateDiffInDays } from '../../utils/utils';
 import constants from '../../constants';
 import moment from 'moment';
 import { selectToken } from '../../auth/selectors';
-import { getCampaignPerfomanceData as getCampaignPerfomanceDataFromAPI, getCampaignData as getCampaignDataFromAPI } from '../../utils/unidesqApi';
+import { getCampaignPerfomanceData as getCampaignPerfomanceDataFromAPI, getCampaignData as getCampaignDataFromAPI, toggleCampaignStatus } from '../../utils/unidesqApi';
 
 /* TODO: replace dummydata for API calls */
 /*
@@ -240,16 +240,18 @@ export function loadChangeCampaignStatusError(campaignId, status) {
     status,
   };
 }
-function requestChangeCampaignStatus(campaignId, value) { // eslint-disable-line no-unused-vars
-  return new Promise(resolve => setTimeout(() => resolve(null), 1000));
+function requestChangeCampaignStatus(campaignId, token) { // eslint-disable-line no-unused-vars
+  return toggleCampaignStatus({ campaignId, token });
+  // return new Promise(resolve => setTimeout(() => resolve(null), 1000));
   // return new Promise((resolve, reject) => setTimeout(() => reject(new Error('burgy')), 1000));
 }
 
 function changeCampaignStatus(campaignId, value) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const token = selectToken(getState());
     const status = value ? constants.STATUS.ACTIVE : constants.STATUS.INACTIVE;
     dispatch(loadChangeCampaignStatus(campaignId, status));
-    requestChangeCampaignStatus(campaignId, value)
+    requestChangeCampaignStatus(campaignId, token)
       .then(() => {
         dispatch(loadedChangeCampaignStatus(campaignId, status));
       })
