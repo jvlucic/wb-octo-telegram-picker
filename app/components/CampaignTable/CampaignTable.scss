@@ -35,14 +35,15 @@
   margin-right: 10px;
 }
 
-.campaignEndDate{
-
+.campaignEndDate, .campaignBudget{
+  color: #aeaeae;
 }
 .campaignName{
   color: #191F2D;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 2px;
 }
 
 .cell{
@@ -63,3 +64,23 @@
   text-transform: capitalize;
   font-size: 14px;
 }
+.campaignTimeIcon{
+  svg{
+    height: 16px;
+    margin-top: -2px;
+    fill: #aeaeae;;
+  }
+
+  margin-right: 3px;
+  margin-left: 2px;
+}
+.campaignAmountIcon{
+  svg{
+    height: 20px;
+    margin-top: -2px;
+    font-size: 11px;
+    fill: #aeaeae;;
+  }
+  margin-right: 2px;
+}
+

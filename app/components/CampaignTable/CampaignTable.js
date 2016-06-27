@@ -11,6 +11,8 @@ import constants from '../../constants';
 import classnames from 'classnames';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import Loader from '../Loader/Loader';
+import { CampaignAmountIcon, CampaignTimeIcon } from '../../theme/assets'
+import { formatDate } from '../../utils/utils';
 
 class CampaignTable extends Component {
 
@@ -93,8 +95,18 @@ class CampaignTable extends Component {
         <div className={classnames(styles.cell)}>
           <div className={styles.campaignName}>{cellData.name}</div>
           <div>
-            <div className={styles.campaignBudget}>{cellData.budget}</div>
-            <div className={styles.campaignEndDate}>{cellData.endDate}</div>
+            <div className={styles.campaignBudget}>
+              <span className={styles.campaignAmountIcon}>
+                <CampaignAmountIcon/>
+              </span>
+              {`$${cellData.budgetRemaining && cellData.budgetRemaining.toFixed(2) || '0.00' } left`}
+            </div>
+            <div className={styles.campaignEndDate}>
+              <span className={styles.campaignTimeIcon}>
+                <CampaignTimeIcon/>
+              </span>
+              {formatDate(cellData.endDate, 'DD.MM.YY')}
+            </div>
           </div>
         </div>
       )

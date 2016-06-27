@@ -173,7 +173,7 @@ function refreshCampaignData(dispatch, getState) {
   const requestCampaignData = fetchCampaignData(filters, token);
   const requestCampaignPerformanceData = fetchCampaignPerformanceData(filters, token);
   Promise.all([requestCampaignData, requestCampaignPerformanceData])
-    .then(([campaignData, campaignPerformanceData]) => {
+    .then(([{ campaigns: campaignData }, campaignPerformanceData]) => {
       dispatch(loadedCampaignData({ campaignData, campaignPerformanceData }));
     })
     .catch((err) => {

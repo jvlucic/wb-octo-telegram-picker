@@ -35,6 +35,7 @@
     }
 
     &-chart-indicator {
+      padding-left: 10px;
       height: $chart-indicator-circle-diameter;
       .KPI-circle-inner {
         width: $chart-indicator-circle-inner-diameter;
@@ -70,7 +71,6 @@
         color: $enabled-color;
       }
       .KPI-chart-indicator{
-        padding-left: 10px;
         .KPI-circle, .KPI-circle-inner{
           display: block;
         }

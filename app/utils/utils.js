@@ -19,11 +19,11 @@ export function parseDate(str) {
   return moment(str, 'ddd MMM DD HH:mm:ss ZZ YYYY').toDate();
 }
 
-export function formatDate(date) {
+export function formatDate(date, format) {
   if (!date) {
     return null;
   }
-  return moment(date).format('YYYY-MM-DD');
+  return moment(date).format(format || 'YYYY-MM-DD');
 }
 
 export function addDaysToDate(date, days) {
