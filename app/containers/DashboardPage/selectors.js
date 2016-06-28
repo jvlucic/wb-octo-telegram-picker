@@ -48,6 +48,11 @@ export const campaignPerformanceDataSelector = createSelector(
   model => ( model.get('campaignPerformanceData') )
 );
 
+export const summarySelector = createSelector(
+  getModelSelector,
+  model => ( model.get('summary') )
+);
+
 export const rangeSelector = createSelector(
   getModelSelector,
   model => ( {from: model.get('from'), to: model.get('to')})
@@ -213,7 +218,8 @@ export const KPIDataSelector = createSelector(
   loadingSelector,
   rangeSelector,
   selectedCampaignSelector,
-  (currentCampaignDataMap, status, frequency, campaignPerformanceData, loading, range, selectedCampaign) => {
+  summarySelector,
+  (currentCampaignDataMap, status, frequency, campaignPerformanceData, loading, range, selectedCampaign, summary) => {
     if (!currentCampaignDataMap || !campaignPerformanceData || loading) {
       return null;
     }
@@ -224,7 +230,8 @@ export const KPIDataSelector = createSelector(
 
     const campaignData = Object.values(campaignDataMap);
     /* TODO: PROCESS RAW DATA AND PRODUCES KPI AND CHART DATA*/
-    const dummyChanges = [3, 3, 0, -3, 3, 3, 3, 3, 3, 3, 3, 3];
+    // const dummyChanges = [3, 3, 0, -3, 3, 3, 3, 3, 3, 3, 3, 3];
+    const changes = [summary.changeImps, summary.changeClicks, summary.changeCtr, 0, summary.changeCvr, summary.changeCpm, summary.changeCpc, summary.changeCpo, 0, summary.changeValue, summary.changeMargin, summary.changeRoi];
     const KPIValues = {};
     const initialValue = {};
     const performanceAccumulator = {};
@@ -338,7 +345,7 @@ export const KPIDataSelector = createSelector(
         color: constants.KPI[kpi].color,
         colorHovered: constants.KPI[kpi].colorHovered,
         value: getKPISummaryValue(performanceByKPIs, summaryKPIValues, campaignData.length, kpi),
-        change: dummyChanges[idx],
+        change: changes[idx],
         enabled: performanceByKPIs.hasOwnProperty(constants.KPI[kpi].key) && constants.KPI[kpi].enabled,
         valueType: constants.KPI[kpi].valueType,
       }

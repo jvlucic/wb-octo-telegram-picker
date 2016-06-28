@@ -46,6 +46,7 @@ export const initialState = fromJS({
   from: initialRange.from,
   loading: false,
   toggledCampaign: false,
+  summary: false,
 });
 
 
@@ -62,7 +63,8 @@ export default (state = initialState, action) => {
       return state
         .set('loading', false)
         .set('campaignPerformanceData', action.campaignPerformanceData)
-        .set('campaignData', campaignDataMap);
+        .set('campaignData', campaignDataMap)
+        .set('summary', action.summary);
     }
     case LOAD_CAMPAIGN_DATA_ERROR:
       return state
@@ -173,8 +175,8 @@ function refreshCampaignData(dispatch, getState) {
   const requestCampaignData = fetchCampaignData(filters, token);
   const requestCampaignPerformanceData = fetchCampaignPerformanceData(filters, token);
   Promise.all([requestCampaignData, requestCampaignPerformanceData])
-    .then(([{ campaigns: campaignData }, campaignPerformanceData]) => {
-      dispatch(loadedCampaignData({ campaignData, campaignPerformanceData }));
+    .then(([{ campaigns: campaignData, summary }, campaignPerformanceData]) => {
+      dispatch(loadedCampaignData({ campaignData, campaignPerformanceData, summary }));
     })
     .catch((err) => {
       console.log('ERROR');
