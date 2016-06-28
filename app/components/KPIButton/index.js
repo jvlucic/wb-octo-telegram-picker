@@ -94,7 +94,7 @@ export default function KPIButton({ name, value, symbol, percentage,
               (percentage > 0 ? <KPIUpIcon/> : percentage < 0 ? <KPIDownIcon/> : <KPIEqualIcon/>) // eslint-disable-line no-nested-ternary
             }
           </span>
-          <span className="KPI-percentage">{percentage}%</span>
+          <span className="KPI-percentage">{percentage.toFixed(2)}%</span>
         </footer>
       </div>
     </article>

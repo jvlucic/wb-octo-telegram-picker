@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
 import { name } from './__init__';
-import { dateDiffInDays } from '../../utils/utils';
+import { dateDiffInDays, addDaysToDate } from '../../utils/utils';
 import constants from '../../constants';
 import moment from 'moment';
 import { selectToken } from '../../auth/selectors';
@@ -46,7 +46,6 @@ export const initialState = fromJS({
   from: initialRange.from,
   loading: false,
   toggledCampaign: false,
-  summary: false,
 });
 
 
@@ -60,11 +59,12 @@ export default (state = initialState, action) => {
         .set('campaignData', false);
     case LOAD_CAMPAIGN_DATA_SUCCESS: {
       const campaignDataMap = action.campaignData.reduce((map, data) => ({ [data.id]: data, ...map }), {});
+      const previousCampaignDataMap = action.previousCampaignData.reduce((map, data) => ({ [data.id]: data, ...map }), {});
       return state
         .set('loading', false)
         .set('campaignPerformanceData', action.campaignPerformanceData)
         .set('campaignData', campaignDataMap)
-        .set('summary', action.summary);
+        .set('previousCampaignData', previousCampaignDataMap);
     }
     case LOAD_CAMPAIGN_DATA_ERROR:
       return state
@@ -142,14 +142,50 @@ export function loadingError(error) {
     error,
   };
 }
+function getAllCampaigns({ call, to, from, frequency, token }) {
+  const requestActiveCampaigns = call({ status: constants.STATUS.ACTIVE, end: to, start: from, frequency, token });
+  const requestInactiveCampaigns = call({ status: constants.STATUS.INACTIVE, end: to, start: from, frequency, token });
+  return new Promise((resolve, reject) => {
+    Promise
+      .all([requestActiveCampaigns, requestInactiveCampaigns])
+      .then(([activeCampaigns, inactiveCampaigns]) => {
+        resolve([...activeCampaigns, ...inactiveCampaigns]);
+      })
+      .catch((err) => {
+        console.log('ERROR');
+        console.log(err);
+        const error = new Error(constants.ERROR_TYPE.SERVER_ERROR);
+        reject(error);
+      });
+  });
+}
+
+function fetchPreviousCampaignData({ status, to, from, frequency }, token) {
+  const daysBetweenDates = dateDiffInDays(to, from);
+  const previousFrom = addDaysToDate(from, daysBetweenDates - 1);
+  const previousTo = addDaysToDate(from, -1);
+  if (status === constants.STATUS.ALL) {
+    return getAllCampaigns({ call: getCampaignDataFromAPI, to: previousTo, from: previousFrom, frequency, token });
+  }
+  return getCampaignDataFromAPI({ status, end: previousTo, start: previousFrom, frequency, token });
+  // return new Promise(resolve => setTimeout(() => resolve(dummyCampaignData), 1000));
+  // return new Promise((resolve, reject) => setTimeout(() => reject(new Error('fetchCampaignData')), 1000));
+}
 
 function fetchCampaignData({ status, to, from, frequency }, token) {
+  if (status === constants.STATUS.ALL) {
+    return getAllCampaigns({ call: getCampaignDataFromAPI, to, from, frequency, token });
+  }
   return getCampaignDataFromAPI({ status, end: to, start: from, frequency, token });
   // return new Promise(resolve => setTimeout(() => resolve(dummyCampaignData), 1000));
   // return new Promise((resolve, reject) => setTimeout(() => reject(new Error('fetchCampaignData')), 1000));
 }
 
 function fetchCampaignPerformanceData({ status, to, from, frequency }, token) {
+  if (status === constants.STATUS.ALL) {
+    return getAllCampaigns({ call: getCampaignPerfomanceDataFromAPI, to, from, frequency, token });
+  }
+
   return getCampaignPerfomanceDataFromAPI({ status, end: to, start: from, frequency, token });
   /*
   if (filters.frequency === constants.FREQUENCY.DAILY) {
@@ -173,10 +209,11 @@ function refreshCampaignData(dispatch, getState) {
   const token = selectToken(getState());
   const filters = getState().get(name).toJS();
   const requestCampaignData = fetchCampaignData(filters, token);
+  const requestPreviousCampaignData = fetchPreviousCampaignData(filters, token);
   const requestCampaignPerformanceData = fetchCampaignPerformanceData(filters, token);
-  Promise.all([requestCampaignData, requestCampaignPerformanceData])
-    .then(([{ campaigns: campaignData, summary }, campaignPerformanceData]) => {
-      dispatch(loadedCampaignData({ campaignData, campaignPerformanceData, summary }));
+  Promise.all([requestCampaignData, requestCampaignPerformanceData, requestPreviousCampaignData])
+    .then(([campaignData, campaignPerformanceData, previousCampaignData]) => {
+      dispatch(loadedCampaignData({ campaignData, campaignPerformanceData, previousCampaignData }));
     })
     .catch((err) => {
       console.log('ERROR');

@@ -4,8 +4,6 @@ import {createSelector} from 'reselect';
 import constants from '../../constants';
 import {getDayAndMonth, getHour, setColorAlpha, getDayAndMonthFromDate, addDaysToDate} from '../../utils/utils';
 
-import dummyDatasets from '../../../unidesq-spec/fixtures/dummyWeekDatasets.json';
-
 export const getModelSelector = (state) => state.get(name);
 
 export const errorSelector = createSelector(
@@ -48,9 +46,9 @@ export const campaignPerformanceDataSelector = createSelector(
   model => ( model.get('campaignPerformanceData') )
 );
 
-export const summarySelector = createSelector(
+export const previousCampaignDataSelector = createSelector(
   getModelSelector,
-  model => ( model.get('summary') )
+  model => ( model.get('previousCampaignData') )
 );
 
 export const rangeSelector = createSelector(
@@ -210,6 +208,43 @@ function getKPISummaryValue(performanceByKPIs, reduced, numberOfValues, kpi) {
   return reduced[constants.KPI[kpi].key];
 }
 
+function calculateKPISummaryValues(key, campaignDataSum) {
+  switch (key) {
+    case constants.KPI.IMPRESSIONS.key:
+      return campaignDataSum[constants.KPI.IMPRESSIONS.key];
+    case constants.KPI.CLICKS.key:
+      return campaignDataSum[constants.KPI.CLICKS.key];
+    case constants.ADDITIONAL_KPI.ORDERS.key:
+      return campaignDataSum[constants.ADDITIONAL_KPI.ORDERS.key];
+    case constants.ADDITIONAL_KPI.SPEND.key:
+      return campaignDataSum[constants.ADDITIONAL_KPI.SPEND.key];
+    case constants.KPI.ORDER_VALUE.key:
+      return campaignDataSum[constants.KPI.ORDER_VALUE.key];
+    case constants.KPI.MARGIN.key:
+      return campaignDataSum[constants.KPI.MARGIN.key];
+    case constants.KPI.CPM.key:
+      return campaignDataSum[constants.KPI.IMPRESSIONS.key] && campaignDataSum[constants.ADDITIONAL_KPI.SPEND.key] / campaignDataSum[constants.KPI.IMPRESSIONS.key] * 1000 || 0;
+    case constants.KPI.CPC.key:
+      return campaignDataSum[constants.KPI.CLICKS.key] && campaignDataSum[constants.ADDITIONAL_KPI.SPEND.key] / campaignDataSum[constants.KPI.CLICKS.key] || 0;
+    case constants.KPI.CPO.key:
+      return campaignDataSum[constants.ADDITIONAL_KPI.ORDERS.key] && campaignDataSum[constants.ADDITIONAL_KPI.SPEND.key] / campaignDataSum[constants.ADDITIONAL_KPI.ORDERS.key] || 0;
+    case constants.KPI.CTR.key:
+      return campaignDataSum[constants.KPI.IMPRESSIONS.key] && campaignDataSum[constants.KPI.CLICKS.key] / campaignDataSum[constants.KPI.IMPRESSIONS.key] * 100 || 0;
+    case constants.KPI.CVR.key:
+      return campaignDataSum[constants.KPI.CLICKS.key] && campaignDataSum[constants.ADDITIONAL_KPI.ORDERS.key] / campaignDataSum[constants.KPI.CLICKS.key] * 100 || 0;
+    case constants.KPI.ROI.key:
+      return campaignDataSum[constants.ADDITIONAL_KPI.SPEND.key] && campaignDataSum[constants.KPI.ORDER_VALUE.key] / campaignDataSum[constants.ADDITIONAL_KPI.SPEND.key] * 100 || 0;
+    case constants.KPI.COST.key:
+      return campaignDataSum[constants.KPI.COST.key];
+    default:
+      return null
+  }
+}
+
+function calculateKPIVariation(key, current, previous) {
+  return current[key] && ( current[key] - previous[key] ) / previous[key] || 0;
+}
+
 export const KPIDataSelector = createSelector(
   campaignDataSelector,
   campaignStatusSelector,
@@ -218,20 +253,67 @@ export const KPIDataSelector = createSelector(
   loadingSelector,
   rangeSelector,
   selectedCampaignSelector,
-  summarySelector,
-  (currentCampaignDataMap, status, frequency, campaignPerformanceData, loading, range, selectedCampaign, summary) => {
-    if (!currentCampaignDataMap || !campaignPerformanceData || loading) {
+  previousCampaignDataSelector,
+  (currentCampaignDataMap, status, frequency, campaignPerformanceData, loading, range, selectedCampaign, selectedPreviousCampaignDataMap) => {
+    if (!currentCampaignDataMap || !campaignPerformanceData || loading || !selectedPreviousCampaignDataMap) {
       return null;
     }
     let campaignDataMap = currentCampaignDataMap;
     if (selectedCampaign && currentCampaignDataMap.hasOwnProperty(selectedCampaign.id)) {
       campaignDataMap = { [selectedCampaign.id]: currentCampaignDataMap[selectedCampaign.id] } ;
     }
-
     const campaignData = Object.values(campaignDataMap);
+
+
+    let previousCampaignDataMap = selectedPreviousCampaignDataMap;
+    if (selectedCampaign && selectedPreviousCampaignDataMap.hasOwnProperty(selectedCampaign.id)) {
+      previousCampaignDataMap = { [selectedCampaign.id]: selectedPreviousCampaignDataMap[selectedCampaign.id] } ;
+    }
+    const previousCampaignData = Object.values(previousCampaignDataMap);
+    const campaignDataSUM = campaignData
+      .filter(campaign => status === constants.STATUS.ALL ? true : status === campaign.status)
+      .reduce((performanceA, {performance: performanceB}) => {
+        for (const kpi in performanceA) {
+          if (performanceB.hasOwnProperty(kpi)) {
+            performanceA[kpi] = performanceA[kpi] + performanceB[kpi];
+          }
+        }
+        return performanceA;
+      }, Object.values({ ...constants.KPI, ...constants.ADDITIONAL_KPI }).reduce((accumulator, {key: kpi}) => { accumulator[kpi] = 0; return accumulator }, {}));
+
+    const summaryKPIValues = Object.keys(campaignDataSUM).reduce((accumulator, kpi) => { accumulator[kpi] = calculateKPISummaryValues(kpi, campaignDataSUM); return accumulator }, {});
+
+    const previousCampaignDataSUM = previousCampaignData
+      .filter(campaign => status === constants.STATUS.ALL ? true : status === campaign.status)
+      .reduce((performanceA, {performance: performanceB}) => {
+        for (const kpi in performanceA) {
+          if (performanceB.hasOwnProperty(kpi)) {
+            performanceA[kpi] = performanceA[kpi] + performanceB[kpi];
+          }
+        }
+        return performanceA;
+      }, Object.values({ ...constants.KPI, ...constants.ADDITIONAL_KPI }).reduce((accumulator, {key: kpi}) => { accumulator[kpi] = 0; return accumulator }, {}) );
+
+    const previousSummaryKPIValues = Object.keys(previousCampaignDataSUM).reduce((accumulator, kpi) => { accumulator[kpi] = calculateKPISummaryValues(kpi, previousCampaignDataSUM); return accumulator }, {});
+
     /* TODO: PROCESS RAW DATA AND PRODUCES KPI AND CHART DATA*/
-    // const dummyChanges = [3, 3, 0, -3, 3, 3, 3, 3, 3, 3, 3, 3];
-    const changes = [summary.changeImps, summary.changeClicks, summary.changeCtr, 0, summary.changeCvr, summary.changeCpm, summary.changeCpc, summary.changeCpo, 0, summary.changeValue, summary.changeMargin, summary.changeRoi];
+    const dummyChanges = [3, 3, 0, -3, 3, 3, 3, 3, 3, 3, 3, 3];
+    // const changes = [summary.changeImps, summary.changeClicks, summary.changeCtr, 0, summary.changeCvr, summary.changeCpm, summary.changeCpc, summary.changeCpo, 0, summary.changeValue, summary.changeMargin, summary.changeRoi];
+    const changes = [
+      calculateKPIVariation(constants.KPI.IMPRESSIONS.key, summaryKPIValues, previousSummaryKPIValues),
+      calculateKPIVariation(constants.KPI.CLICKS.key, summaryKPIValues, previousSummaryKPIValues),
+      calculateKPIVariation(constants.KPI.CTR.key, summaryKPIValues, previousSummaryKPIValues),
+      calculateKPIVariation(constants.KPI.CONVERSION.key, summaryKPIValues, previousSummaryKPIValues),
+      calculateKPIVariation(constants.KPI.CVR.key, summaryKPIValues, previousSummaryKPIValues),
+      calculateKPIVariation(constants.KPI.CPM.key, summaryKPIValues, previousSummaryKPIValues),
+      calculateKPIVariation(constants.KPI.CPC.key, summaryKPIValues, previousSummaryKPIValues),
+      calculateKPIVariation(constants.KPI.CPO.key, summaryKPIValues, previousSummaryKPIValues),
+      calculateKPIVariation(constants.KPI.COST.key, summaryKPIValues, previousSummaryKPIValues),
+      calculateKPIVariation(constants.KPI.ORDER_VALUE.key, summaryKPIValues, previousSummaryKPIValues),
+      calculateKPIVariation(constants.KPI.MARGIN.key, summaryKPIValues, previousSummaryKPIValues),
+      calculateKPIVariation(constants.KPI.ROI.key, summaryKPIValues, previousSummaryKPIValues),
+    ];
+    //const changes = dummyChanges;
     const KPIValues = {};
     const initialValue = {};
     const performanceAccumulator = {};
@@ -309,6 +391,7 @@ export const KPIDataSelector = createSelector(
     };
 
     /* CALCULATE KPI VALUES UNDER CHART */
+    /*
     const points = Object.keys(performanceAccumulator);
     Object.values(constants.KPI).forEach(({key: kpi}) => initialValue[kpi] = 0);
     const summaryKPIValues = points.reduce((accummulator, instant) => {
@@ -325,18 +408,6 @@ export const KPIDataSelector = createSelector(
         summaryKPIValues[kpi] /= points.length;
       }
     });
-
-    /*
-    const reduced = campaignData
-      .filter(campaign => status === constants.STATUS.ALL ? true : status === campaign.status)
-      .reduce((performanceA, {performance: performanceB}) => {
-        for (const kpi in performanceA) {
-          if (performanceB.hasOwnProperty(kpi)) {
-            performanceA[kpi] = performanceA[kpi] + performanceB[kpi];
-          }
-        }
-        return performanceA;
-      }, initialValue);
     */
     Object.keys(constants.KPI).forEach((kpi, idx) => {
 

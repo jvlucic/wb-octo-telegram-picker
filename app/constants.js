@@ -32,6 +32,16 @@ const constants = {
     STATUS: 'status',
     CAMPAIGN: 'campaign',
   },
+  ADDITIONAL_KPI: {
+    ORDERS: {
+      key: 'orders',
+      name: 'Orders',
+    },
+    SPEND: {
+      key: 'spend',
+      name: 'Spend',
+    },
+  },
   KPI: {
     IMPRESSIONS: {
       key: 'impressions',
@@ -98,7 +108,7 @@ const constants = {
       valueType: valueType.CURRENCY,
     },
     COST: {
-      key: 'cost',
+      key: 'spend',
       name: 'Cost',
       color: 'rgba(122, 200, 168, 1)',
       colorHovered: 'rgba(122, 200, 168, 0.1)',

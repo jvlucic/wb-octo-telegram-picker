@@ -22,7 +22,7 @@ class CampaignTable extends Component {
     const rowCount = Object.keys(props.list).length;
     this.state = {
       headerHeight: 50,
-      height: (Math.min(rowCount, 100) + 1) * 70,
+      height: (Math.min(rowCount, 50) + 1) * 70,
       overscanRowCount: 10,
       rowHeight: 70,
       rowCount: rowCount,
