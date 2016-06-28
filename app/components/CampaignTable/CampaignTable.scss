@@ -10,9 +10,26 @@
       .FlexTable__row{
         cursor: pointer;
       }
+      .FlexTable__headerRow{
+        background-color: white;
+        box-shadow: 0 3px 2px -2px rgba(0, 0, 0, 0.06);
+      }
+      .FlexTable__Grid{
+        z-index: -1;
+      }
     }
   }
 }
+
+:global(.sticky.noHeader) {
+  :global{
+    .FlexTable__headerRow{
+      position: fixed;
+      top: 68px;
+    }
+  }
+}
+
 .toggleLoader{
   position: relative;
   > div {

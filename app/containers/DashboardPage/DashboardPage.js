@@ -45,9 +45,6 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     /* TODO: DO NOT HARDCODE ID, PASS COMPONENT THROUGH PROPS ! */
     appContainer = document.getElementById('appComponentContainer');
     window.addEventListener('scroll', ::this.handleScroll);
-    if (appContainer && appContainer.className.indexOf('sticky') === -1) {
-      appContainer.className += ' sticky';
-    }
     if (appContainer && appContainer.className.indexOf('dashboardPage') === -1) {
       appContainer.className += ' dashboardPage';
     }
@@ -65,7 +62,16 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
 
   handleScroll() {
     /* TODO: do not hardcode the scroll position , this is only useful for dashboard page! */
-    if (window.scrollY >= 424) {
+    if (window.scrollY === 0) {
+      if (appContainer && appContainer.className.indexOf('noHeader') >= 0) {
+        appContainer.className = appContainer.className.replace(/\bnoHeader\b/, '');
+      }
+    } else {
+      if (appContainer && appContainer.className.indexOf('noHeader') === -1) {
+        appContainer.className += ' noHeader';
+      }
+    }
+    if (window.scrollY < 477) {
       if (appContainer && appContainer.className.indexOf('sticky') >= 0) {
         appContainer.className = appContainer.className.replace(/\bsticky\b/, '');
       }

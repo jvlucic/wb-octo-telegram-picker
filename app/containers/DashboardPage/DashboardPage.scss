@@ -17,20 +17,41 @@
   }
 }
 
-:global(.sticky) {
+:global(.sticky.noHeader) {
   .dashboardPage {
-    margin-top: 160px;
+    margin-top: 167px;
     .statusFilter {
-      opacity: 1;
-    }
-    .innerContainer {
-      margin-top: 108px;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0);
     }
   }
 }
 
+:global(.noHeader) {
+  .dashboardPage {
+    margin-top: 108px;
+    .statusFilter {
+      top: 0;
+      padding: 15px 24px 53.5px 24px;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.08);
+    }
+    .innerContainer {
+      margin-top: 56px;
+    }
+  }
+}
+
+.dashboardPage {
+  margin-top: 160px;
+  .statusFilter {
+    opacity: 1;
+  }
+  .innerContainer {
+    margin-top: 108px;
+  }
+}
+
 .statusFilter {
-  transition: opacity 0.25s ease-in;
+  transition: all 0.25s ease-in;
   //margin-bottom: 42.5px;
   //margin-top: 25px;
   //height: 40px;
@@ -48,7 +69,7 @@
   right: 0;
   z-index: 9999;
 
-  opacity: 0;
+  opacity: 1;
   .calendarContainer {
     float: right;
     width: 300px;
