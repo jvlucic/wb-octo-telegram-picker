@@ -32,16 +32,6 @@ const constants = {
     STATUS: 'status',
     CAMPAIGN: 'campaign',
   },
-  ADDITIONAL_KPI: {
-    ORDERS: {
-      key: 'orders',
-      name: 'Orders',
-    },
-    SPEND: {
-      key: 'spend',
-      name: 'Spend',
-    },
-  },
   KPI: {
     IMPRESSIONS: {
       key: 'impressions',
@@ -68,7 +58,7 @@ const constants = {
       valueType: valueType.PERCENTAGE,
     },
     CONVERSION: {
-      key: 'conversion',
+      key: 'orders',
       name: 'Conversion',
       color: 'rgba(255, 153, 200, 1)',
       colorHovered: 'rgba(255, 153, 200, 0.1)',

@@ -43,6 +43,7 @@ export function getCampaignData({ status, start, end, frequency, token }) {
         return Promise.reject(constants.ERROR_TYPE.SERVER_ERROR);
       }
       console.log('getCampaignData');
+      console.log({ status, start, end, frequency, token });
       console.log(data);
       return Promise.resolve(data);
     });
