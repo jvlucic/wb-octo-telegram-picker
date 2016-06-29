@@ -241,7 +241,7 @@ class CampaignTable extends Component {
       case constants.KPI.COST.key:
         return absoluteWidth;
       case constants.KPI.ORDER_VALUE.key:
-        return absoluteWidth;
+        return 78;
       case constants.KPI.MARGIN.key:
         return absoluteWidth;
       case constants.KPI.ROI.key:
