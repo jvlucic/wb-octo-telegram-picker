@@ -59,6 +59,7 @@ class ToggleSwitch extends Component {
       'react-toggle--checked': this.state.checked,
       'react-toggle--focus': this.state.hasFocus,
       'react-toggle--disabled': this.props.disabled,
+      'react-toggle--loading': this.props.loading,
     });
 
     return (
@@ -82,6 +83,7 @@ ToggleSwitch.propTypes = {
   checked: React.PropTypes.bool,
   defaultChecked: React.PropTypes.bool,
   disabled: React.PropTypes.bool,
+  loading: React.PropTypes.bool,
   onChange: React.PropTypes.func,
   name: React.PropTypes.string,
   value: React.PropTypes.string,

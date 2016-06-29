@@ -77,7 +77,13 @@ class CampaignTable extends Component {
     if (dataKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS) {
       let switchCell = null;
       if (campaign.changed === 'loading') {
-        switchCell = <Loader className={styles.toggleLoader}/>
+        //switchCell = <Loader className={styles.toggleLoader}/>
+        switchCell = (
+          <ToggleSwitch
+            checked={cellData}
+            loading
+            onChange={() => this.handleToggleSwitchClick(campaign.id, !cellData)}/>
+        );
       } else {
         switchCell = (
           <ToggleSwitch

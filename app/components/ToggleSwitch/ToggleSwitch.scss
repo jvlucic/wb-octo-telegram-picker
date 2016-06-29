@@ -51,6 +51,13 @@
     background-color: #67c97a;
   }
 
+  .react-toggle--loading .react-toggle-track{
+    background-color:#FFCF74 !important;
+  }
+
+  .react-toggle.react-toggle--loading:hover .react-toggle-track {
+    background-color: #d9b061;
+  }
 
 
   .react-toggle--checked .react-toggle-track-check {
