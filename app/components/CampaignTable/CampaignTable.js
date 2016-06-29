@@ -62,7 +62,10 @@ class CampaignTable extends Component {
   }
 
   handleRowSelect({index}) {
-    this.props.onRowSelect(this.currentList[index].campaign);
+    const campaign = this.currentList[index].campaign;
+    if (campaign && campaign.changed !== 'loading') {
+      this.props.onRowSelect(this.currentList[index].campaign);
+    }
   }
 
   handleToggleSwitchClick(campaignId, status) {
