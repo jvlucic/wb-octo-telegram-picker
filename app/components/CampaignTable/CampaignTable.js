@@ -125,6 +125,41 @@ class CampaignTable extends Component {
       <div className={styles.cell}>{cellData}</div>
   }
 
+  getHeaderLabel(header){
+    switch (header) {
+      case constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS:
+        return constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS;
+      case constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN:
+        return constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN;
+      case constants.KPI.IMPRESSIONS.key:
+        return constants.KPI.IMPRESSIONS.name;
+      case constants.KPI.CLICKS.key:
+        return constants.KPI.CLICKS.name;
+      case constants.KPI.CTR.key:
+        return constants.KPI.CTR.name;
+      case constants.KPI.CONVERSION.key:
+        return constants.KPI.CONVERSION.name;
+      case constants.KPI.CVR.key:
+        return constants.KPI.CVR.name;
+      case constants.KPI.CPM.key:
+        return constants.KPI.CPM.name;
+      case constants.KPI.CPC.key:
+        return constants.KPI.CPC.name;
+      case constants.KPI.CPO.key:
+        return constants.KPI.CPO.name;
+      case constants.KPI.COST.key:
+        return constants.KPI.COST.name;
+      case constants.KPI.ORDER_VALUE.key:
+        return constants.KPI.ORDER_VALUE.name;
+      case constants.KPI.MARGIN.key:
+        return constants.KPI.MARGIN.name;
+      case constants.KPI.ROI.key:
+        return constants.KPI.ROI.name;
+      default:
+        return ''
+    }
+  }
+
   headerRenderer({
     columnData,
     dataKey,
@@ -141,7 +176,7 @@ class CampaignTable extends Component {
     return (
       <div className={className}>
         { sortBy === dataKey && isSecondHalf && <SortIndicator sortDirection={sortDirection}/> }
-        {label}
+        {this.getHeaderLabel(label)}
         { sortBy === dataKey && !isSecondHalf && <SortIndicator sortDirection={sortDirection}/> }
       </div>
     );
@@ -177,6 +212,7 @@ class CampaignTable extends Component {
     /*TODO: IMPLEMENT */
     return this.state.rowHeight;
   }
+
 
   getColumnWidth(header) {
     const relativeWidth = 45;
