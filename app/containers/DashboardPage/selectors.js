@@ -72,7 +72,7 @@ function getHeaders(campaignPerformance, force) {
   if (campaignPerformance.hasOwnProperty('ctr') || force) {
     headers.push(constants.KPI.CTR.key)
   }
-  if (campaignPerformance.hasOwnProperty('conversion') || force) {
+  if (campaignPerformance.hasOwnProperty(constants.KPI.CONVERSION.key) || force) {
     headers.push(constants.KPI.CONVERSION.key)
   }
   if (campaignPerformance.hasOwnProperty('cvr') || force) {
@@ -87,8 +87,14 @@ function getHeaders(campaignPerformance, force) {
   if (campaignPerformance.hasOwnProperty('cpo') || force) {
     headers.push(constants.KPI.CPO.key)
   }
+  if (campaignPerformance.hasOwnProperty(constants.KPI.COST.key) || force) {
+    headers.push(constants.KPI.COST.key)
+  }
   if (campaignPerformance.hasOwnProperty('orderValue') || force) {
     headers.push(constants.KPI.ORDER_VALUE.key)
+  }
+  if (campaignPerformance.hasOwnProperty(constants.KPI.MARGIN.key) || force) {
+    headers.push(constants.KPI.MARGIN.key)
   }
   if (campaignPerformance.hasOwnProperty('roi') || force) {
     headers.push(constants.KPI.ROI.key)
@@ -142,12 +148,14 @@ export const campaignTableListSelector = createSelector(
           [constants.KPI.IMPRESSIONS.key]: getValue(data, 'impressions'),
           [constants.KPI.CLICKS.key]: getValue(data, 'clicks'),
           [constants.KPI.CTR.key]: getValue(data, 'ctr'),
-          [constants.KPI.CONVERSION.key]: getValue(data, 'conversion'),
+          [constants.KPI.CONVERSION.key]: getValue(data, constants.KPI.CONVERSION.key),
           [constants.KPI.CVR.key]: getValue(data, 'cvr'),
           [constants.KPI.CPM.key]: getValue(data, 'cpm'),
           [constants.KPI.CPC.key]: getValue(data, 'cpc'),
           [constants.KPI.CPO.key]: getValue(data, 'cpo'),
+          [constants.KPI.COST.key]: getValue(data, constants.KPI.COST.key),
           [constants.KPI.ORDER_VALUE.key]: getValue(data, 'orderValue'),
+          [constants.KPI.MARGIN.key]: getValue(data, constants.KPI.MARGIN.key),
           [constants.KPI.ROI.key]: getValue(data, 'roi'),
         }
       } 

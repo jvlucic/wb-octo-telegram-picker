@@ -178,6 +178,43 @@ class CampaignTable extends Component {
     return this.state.rowHeight;
   }
 
+  getColumnWidth(header) {
+    const relativeWidth = 45;
+    const absoluteWidth = 55;
+    switch (header) {
+      case constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS:
+        return 45;
+      case constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN:
+        return 300;
+      case constants.KPI.IMPRESSIONS.key:
+        return 90;
+      case constants.KPI.CLICKS.key:
+        return absoluteWidth;
+      case constants.KPI.CTR.key:
+        return relativeWidth;
+      case constants.KPI.CONVERSION.name:
+        return relativeWidth;
+      case constants.KPI.CVR.key:
+        return relativeWidth;
+      case constants.KPI.CPM.key:
+        return absoluteWidth;
+      case constants.KPI.CPC.key:
+        return relativeWidth;
+      case constants.KPI.CPO.key:
+        return relativeWidth;
+      case constants.KPI.COST.key:
+        return absoluteWidth;
+      case constants.KPI.ORDER_VALUE.key:
+        return absoluteWidth;
+      case constants.KPI.MARGIN.key:
+        return absoluteWidth;
+      case constants.KPI.ROI.key:
+        return relativeWidth;
+      default:
+        return 60
+    }
+  }
+
   /*  TODO USE INTL TO TRANSLATE HEADERS */
   render() {
     const {
@@ -196,7 +233,7 @@ class CampaignTable extends Component {
     const rowCount = sortedList.length;
     this.currentList = sortedList;
     const rowGetter = ({index}) => this.getDatum(this.currentList, index);
-
+    const {getColumnWidth} = this;
     return (
       <div className={styles.campaignTable}>
         <AutoSizer disableHeight>
@@ -226,8 +263,8 @@ class CampaignTable extends Component {
                     label={header}
                     dataKey={header}
                     disableSort={false}
-                    width={120}
-                    flexGrow={ header === constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN ? 1 : 0}
+                    width={this.getColumnWidth(header)}
+                    flexGrow={ 1}
                     cellRenderer={this.cellRenderer}
                     headerRenderer={this.headerRenderer}
                   />
