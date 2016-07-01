@@ -86,21 +86,15 @@ class KPIChart extends Component {
       const kpiKey = dataSet.kpi;
       const kpi = props.KPIValues[kpiKey];
       /* Huge hack to avoid cutting off chart top */
-      const max = Math.max(...dataSet.data);
-      const nearest = Math.pow(10, max.toFixed(0).length - 1);
-      const roundedMax = Math.round(max / nearest) * nearest;
-      console.log('kpi');
-      console.log(kpiKey);
-      console.log('max');
-      console.log(max);
-      console.log('roundedMax');
-      console.log(roundedMax);
+      // const max = Math.max(...dataSet.data);
+      // const nearest = Math.pow(10, max.toFixed(0).length - 1);
+      // const roundedMax = Math.round(max / nearest) * nearest;
+      // max: roundedMax * 1.25,
       return {
         id: kpiKey,
         position: 'left',
         display: false,
         ticks: {
-          max: roundedMax * 1.25,
           beginAtZero: true,
           callback: (value, index, values) => (index === values.length - 1 ? '' : numberFormatter(value)),
           fontColor: kpi.color,
