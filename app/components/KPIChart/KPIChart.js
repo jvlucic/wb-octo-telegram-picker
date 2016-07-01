@@ -28,7 +28,7 @@ class KPIChart extends Component {
     this.toggleHovered = this.toggleHovered.bind(this);
     this.handleChartClick = this.handleChartClick.bind(this);
 
-    const { chartData, yAxes, xAxis } = this.processDataSets(props.chartData, this.props);
+    const { chartData, yAxes, xAxis } = this.processDataSets(props.chartData, this.props, props.initiallyActiveKPIs);
     this.state = {
       chartData,
       activeKPIs: props.initiallyActiveKPIs,
@@ -43,6 +43,7 @@ class KPIChart extends Component {
           ),
         },
         legend: {
+          position: 'bottom',
           display: false,
         },
         scales: {
@@ -57,14 +58,14 @@ class KPIChart extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.chartData && nextProps.chartData !== this.state.chartData) {
-      const { chartData, yAxes, xAxis } = this.processDataSets(nextProps.chartData, this.props);
+      const { chartData, yAxes, xAxis } = this.processDataSets(nextProps.chartData, this.props, this.state.activeKPIs);
       this.setState({ chartData, yAxes, xAxis, redraw: true });
     }
   }
 
-  processDataSets(originalChartData, props) {
+  processDataSets(originalChartData, props, activeKPIs) {
     const defaultDataSetConfig = {
-      tension: 0.1,
+      tension: 0,
     };
     const xAxis = {
       gridLines: {
@@ -84,19 +85,31 @@ class KPIChart extends Component {
     const yAxes = chartData.datasets.map(dataSet => {
       const kpiKey = dataSet.kpi;
       const kpi = props.KPIValues[kpiKey];
+      /* Huge hack to avoid cutting off chart top */
+      const max = Math.max(...dataSet.data);
+      const nearest = Math.pow(10, max.toFixed(0).length - 1);
+      const roundedMax = Math.round(max / nearest) * nearest;
+      console.log('kpi');
+      console.log(kpiKey);
+      console.log('max');
+      console.log(max);
+      console.log('roundedMax');
+      console.log(roundedMax);
       return {
         id: kpiKey,
         position: 'left',
         display: false,
         ticks: {
+          max: roundedMax * 1.25,
           beginAtZero: true,
           callback: (value, index, values) => (index === values.length - 1 ? '' : numberFormatter(value)),
           fontColor: kpi.color,
           labelOffset: 0,
         },
         gridLines: {
-          offsetGridLines: true,
+          offsetGridLines: false,
           drawBorder: false,
+          drawOnChartArea: true,
           zeroLineWidth: 1,
           lineWidth: 1,
           color: setColorAlpha(kpi.color, GRID_LINES_ALPHA),
@@ -110,7 +123,7 @@ class KPIChart extends Component {
       const kpiKey = dataSet.kpi;
       const kpi = props.KPIValues[kpiKey];
       dataSet.yAxisID = kpiKey;
-      dataSet.hidden = props.initiallyActiveKPIs.indexOf(dataSet.kpi) < 0;
+      dataSet.hidden = activeKPIs.indexOf(dataSet.kpi) < 0;
       if (!dataSet.hidden && !activatedFirstAxis) {
         yAxes[idx].display = true;
         xAxis.gridLines.zeroLineColor = kpi.color;

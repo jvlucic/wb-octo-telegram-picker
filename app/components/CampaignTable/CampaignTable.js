@@ -215,37 +215,37 @@ class CampaignTable extends Component {
 
 
   getColumnWidth(header) {
-    const relativeWidth = 45;
-    const absoluteWidth = 55;
+    const relativeWidth = 30;
+    const absoluteWidth = 50;
     switch (header) {
       case constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS:
         return 45;
       case constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN:
         return 300;
       case constants.KPI.IMPRESSIONS.key:
-        return 90;
+        return 76;
       case constants.KPI.CLICKS.key:
-        return absoluteWidth;
+        return 40;
       case constants.KPI.CTR.key:
         return relativeWidth;
-      case constants.KPI.CONVERSION.name:
-        return relativeWidth;
+      case constants.KPI.CONVERSION.key:
+        return 83;
       case constants.KPI.CVR.key:
         return relativeWidth;
       case constants.KPI.CPM.key:
-        return absoluteWidth;
+        return relativeWidth;
       case constants.KPI.CPC.key:
         return relativeWidth;
       case constants.KPI.CPO.key:
         return relativeWidth;
       case constants.KPI.COST.key:
-        return absoluteWidth;
+        return 45;
       case constants.KPI.ORDER_VALUE.key:
-        return 78;
+        return 72;
       case constants.KPI.MARGIN.key:
-        return absoluteWidth;
+        return 42;
       case constants.KPI.ROI.key:
-        return relativeWidth;
+        return 35;
       default:
         return 60
     }
@@ -300,7 +300,7 @@ class CampaignTable extends Component {
                     dataKey={header}
                     disableSort={false}
                     width={this.getColumnWidth(header)}
-                    flexGrow={ 1}
+                    flexGrow={1}
                     cellRenderer={this.cellRenderer}
                     headerRenderer={this.headerRenderer}
                   />
