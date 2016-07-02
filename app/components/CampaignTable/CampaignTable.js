@@ -25,7 +25,7 @@ class CampaignTable extends Component {
       height: (Math.min(rowCount, 50) + 1) * 70,
       overscanRowCount: 10,
       rowHeight: 70,
-      rowCount: rowCount,
+      rowCount: Math.min(rowCount, 50),
       scrollToIndex: undefined,
       sortBy: constants.KPI.IMPRESSIONS.key,
       sortDirection: SortDirection.DESC,
@@ -94,7 +94,7 @@ class CampaignTable extends Component {
 
       return (
         <div className={classnames(styles.cell, styles.statusCell)}>
-          { switchCell }
+          {switchCell}
         </div>
       )
     }
@@ -260,13 +260,13 @@ class CampaignTable extends Component {
       rowHeight,
       scrollToIndex,
       sortBy,
-      sortDirection
+      sortDirection,
+      rowCount
     } = this.state;
-
+    console.log('Rendering Campaign Table');
     const {list, headers, ...props} = this.props;
     let sortedList = Object.values(list).sort((first, second) => ( first[sortBy] < second[sortBy] ? -1 : 1 ));
     sortedList = sortDirection === SortDirection.DESC ? sortedList.reverse() : sortedList;
-    const rowCount = sortedList.length;
     this.currentList = sortedList;
     const rowGetter = ({index}) => this.getDatum(this.currentList, index);
     const {getColumnWidth} = this;
