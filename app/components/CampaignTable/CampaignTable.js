@@ -1,18 +1,16 @@
 /**
  * Created by mongoose on 8/06/16.
  */
-/* eslint-disable */
-import React, {PropTypes, Component} from 'react';
-import styles from './CampaignTable.scss';
-import {FlexTable, FlexColumn, AutoSizer, SortIndicator, SortDirection} from 'react-virtualized';
-import 'react-virtualized/styles.css'; // only needs to be imported once
-import shallowCompare from 'react-addons-shallow-compare'
+import React, { PropTypes, Component } from 'react';
+import { FlexTable, FlexColumn, AutoSizer, SortIndicator, SortDirection } from 'react-virtualized';
+import shallowCompare from 'react-addons-shallow-compare';
 import constants from '../../constants';
 import classnames from 'classnames';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
-import Loader from '../Loader/Loader';
-import { CampaignAmountIcon, CampaignTimeIcon } from '../../theme/assets'
+import { CampaignAmountIcon, CampaignTimeIcon } from '../../theme/assets';
 import { formatDate } from '../../utils/utils';
+import 'react-virtualized/styles.css'; // only needs to be imported once
+import styles from './CampaignTable.scss';
 
 class CampaignTable extends Component {
 
@@ -43,7 +41,7 @@ class CampaignTable extends Component {
 
   componentWillReceiveProps(nextProps) {
     const toggledCampaign = nextProps.toggledCampaign;
-    /*TODO: Translate Toast Message */
+    /* TODO: Translate Toast Message */
     if (toggledCampaign) {
       const previousCampaignChangedStatus = this.props.list[toggledCampaign].campaign.changed;
       const nextCampaignChangedStatus = nextProps.list[toggledCampaign] && nextProps.list[toggledCampaign].campaign.changed || 'success';
@@ -58,74 +56,10 @@ class CampaignTable extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
+    return shallowCompare(this, nextProps, nextState);
   }
 
-  handleRowSelect({index}) {
-    const campaign = this.currentList[index].campaign;
-    if (campaign && campaign.changed !== 'loading') {
-      this.props.onRowSelect(this.currentList[index].campaign);
-    }
-  }
-
-  handleToggleSwitchClick(campaignId, status) {
-    this.props.onToggleSwitchClick(campaignId, status);
-  }
-
-  cellRenderer({cellData, columnData, dataKey, rowData, rowIndex, ...props}) {
-    const campaign = rowData[constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN];
-    if (dataKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS) {
-      let switchCell = null;
-      if (campaign.changed === 'loading') {
-        //switchCell = <Loader className={styles.toggleLoader}/>
-        switchCell = (
-          <ToggleSwitch
-            checked={cellData}
-            loading
-            onChange={() => this.handleToggleSwitchClick(campaign.id, !cellData)}/>
-        );
-      } else {
-        switchCell = (
-          <ToggleSwitch
-            checked={cellData}
-            onChange={() => this.handleToggleSwitchClick(campaign.id, !cellData)}/>
-        );
-      }
-
-      return (
-        <div className={classnames(styles.cell, styles.statusCell)}>
-          {switchCell}
-        </div>
-      )
-    }
-
-    if (dataKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN) {
-      return (
-        <div className={classnames(styles.cell)}>
-          <div className={styles.campaignName}>{cellData.name}</div>
-          <div>
-            <div className={styles.campaignBudget}>
-              <span className={styles.campaignAmountIcon}>
-                <CampaignAmountIcon/>
-              </span>
-              {`$${cellData.budgetRemaining && cellData.budgetRemaining.toFixed(2) || '0.00' } left`}
-            </div>
-            <div className={styles.campaignEndDate}>
-              <span className={styles.campaignTimeIcon}>
-                <CampaignTimeIcon/>
-              </span>
-              {formatDate(cellData.endDate, 'DD.MM.YY')}
-            </div>
-          </div>
-        </div>
-      )
-    }
-    const isSecondHalf = this.props.headers.indexOf(dataKey) >= 2;
-    return isSecondHalf ? <div className={classnames(styles.cell, styles.secondHalfColummn)}>{cellData}</div> :
-      <div className={styles.cell}>{cellData}</div>
-  }
-
-  getHeaderLabel(header){
+  getHeaderLabel(header) {
     switch (header) {
       case constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS:
         return constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS;
@@ -156,67 +90,12 @@ class CampaignTable extends Component {
       case constants.KPI.ROI.key:
         return constants.KPI.ROI.name;
       default:
-        return ''
+        return '';
     }
   }
-
-  headerRenderer({
-    columnData,
-    dataKey,
-    disableSort,
-    label,
-    sortBy,
-    sortDirection
-  }) {
-    const isSecondHalf = this.props.headers.indexOf(dataKey) >= 2;
-    const className = classnames(
-      styles.header, {
-        [styles.secondHalfColummn]: isSecondHalf,
-      });
-    return (
-      <div className={className}>
-        { sortBy === dataKey && isSecondHalf && <SortIndicator sortDirection={sortDirection}/> }
-        {this.getHeaderLabel(label)}
-        { sortBy === dataKey && !isSecondHalf && <SortIndicator sortDirection={sortDirection}/> }
-      </div>
-    );
-  }
-
-  noRowsRenderer() {
-    return (
-      <div className={styles.noRows}>
-        No campaign data available
-      </div>
-    )
-  }
-
-  rowClassName({index, ...props}) {
-    if (index < 0) {
-      return styles.headerRow
-    } else {
-      const campaignID = this.currentList[index][constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN].id;
-      const selectedRow = this.props.selectedCampaign && campaignID === this.props.selectedCampaign.id ? true : null;
-      return selectedRow ? styles.selectedRow : index % 2 === 0 ? styles.evenRow : styles.oddRow
-    }
-  }
-
-  sort({sortBy, sortDirection}) {
-    this.setState({sortBy, sortDirection})
-  }
-
-  getDatum(list, index) {
-    return list[index % list.length]
-  }
-
-  getRowHeight({index}) {
-    /*TODO: IMPLEMENT */
-    return this.state.rowHeight;
-  }
-
 
   getColumnWidth(header) {
     const relativeWidth = 30;
-    const absoluteWidth = 50;
     switch (header) {
       case constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS:
         return 45;
@@ -247,8 +126,122 @@ class CampaignTable extends Component {
       case constants.KPI.ROI.key:
         return 35;
       default:
-        return 60
+        return 60;
     }
+  }
+
+  getDatum(list, index) {
+    return list[index % list.length];
+  }
+
+  getRowHeight() {
+    return this.state.rowHeight;
+  }
+
+  sort({ sortBy, sortDirection }) {
+    this.setState({ sortBy, sortDirection });
+  }
+
+  rowClassName({ index }) {
+    if (index < 0) {
+      return styles.headerRow;
+    }
+    const campaignID = this.currentList[index][constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN].id;
+    const selectedRow = this.props.selectedCampaign && campaignID === this.props.selectedCampaign.id ? true : null;
+    return selectedRow ? styles.selectedRow : index % 2 === 0 ? styles.evenRow : styles.oddRow; // eslint-disable-line no-nested-ternary
+  }
+
+  noRowsRenderer() {
+    return (
+      <div className={styles.noRows}>
+        No campaign data available
+      </div>
+    );
+  }
+
+  cellRenderer({ cellData, dataKey, rowData }) {
+    const campaign = rowData[constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN];
+    if (dataKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS) {
+      let switchCell = null;
+      if (campaign.changed === 'loading') {
+        switchCell = (
+          <ToggleSwitch
+            checked={cellData}
+            loading
+            onChange={() => this.handleToggleSwitchClick(campaign.id, !cellData)}
+          />
+        );
+      } else {
+        switchCell = (
+          <ToggleSwitch
+            checked={cellData}
+            onChange={() => this.handleToggleSwitchClick(campaign.id, !cellData)}
+          />
+        );
+      }
+
+      return (
+        <div className={classnames(styles.cell, styles.statusCell)}>
+          {switchCell}
+        </div>
+      );
+    }
+
+    if (dataKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN) {
+      return (
+        <div className={classnames(styles.cell)}>
+          <div className={styles.campaignName}>{cellData.name}</div>
+          <div>
+            <div className={styles.campaignBudget}>
+              <span className={styles.campaignAmountIcon}>
+                <CampaignAmountIcon />
+              </span>
+              {`$${cellData.budgetRemaining && cellData.budgetRemaining.toFixed(2) || '0.00'} left`}
+            </div>
+            <div className={styles.campaignEndDate}>
+              <span className={styles.campaignTimeIcon}>
+                <CampaignTimeIcon />
+              </span>
+              {formatDate(cellData.endDate, 'DD.MM.YY')}
+            </div>
+          </div>
+        </div>
+      );
+    }
+    const isSecondHalf = this.props.headers.indexOf(dataKey) >= 2;
+    return isSecondHalf ? <div className={classnames(styles.cell, styles.secondHalfColummn)}>{cellData}</div> :
+      <div className={styles.cell}>{cellData}</div>;
+  }
+
+  handleRowSelect({ index }) {
+    const campaign = this.currentList[index].campaign;
+    if (campaign && campaign.changed !== 'loading') {
+      this.props.onRowSelect(this.currentList[index].campaign);
+    }
+  }
+
+  handleToggleSwitchClick(campaignId, status) {
+    this.props.onToggleSwitchClick(campaignId, status);
+  }
+
+  headerRenderer({
+    dataKey,
+    label,
+    sortBy,
+    sortDirection,
+  }) {
+    const isSecondHalf = this.props.headers.indexOf(dataKey) >= 2;
+    const className = classnames(
+      styles.header, {
+        [styles.secondHalfColummn]: isSecondHalf,
+      });
+    return (
+      <div className={className}>
+        {sortBy === dataKey && isSecondHalf && <SortIndicator sortDirection={sortDirection} />}
+        {this.getHeaderLabel(label)}
+        {sortBy === dataKey && !isSecondHalf && <SortIndicator sortDirection={sortDirection} />}
+      </div>
+    );
   }
 
   /*  TODO USE INTL TO TRANSLATE HEADERS */
@@ -261,19 +254,18 @@ class CampaignTable extends Component {
       scrollToIndex,
       sortBy,
       sortDirection,
-      rowCount
+      rowCount,
     } = this.state;
     console.log('Rendering Campaign Table');
-    const {list, headers, ...props} = this.props;
-    let sortedList = Object.values(list).sort((first, second) => ( first[sortBy] < second[sortBy] ? -1 : 1 ));
+    const { list, headers } = this.props;
+    let sortedList = Object.values(list).sort((first, second) => (first[sortBy] < second[sortBy] ? -1 : 1));
     sortedList = sortDirection === SortDirection.DESC ? sortedList.reverse() : sortedList;
     this.currentList = sortedList;
-    const rowGetter = ({index}) => this.getDatum(this.currentList, index);
-    const {getColumnWidth} = this;
+    const rowGetter = ({ index }) => this.getDatum(this.currentList, index);
     return (
       <div className={styles.campaignTable}>
         <AutoSizer disableHeight>
-          {({width}) => (
+          {({ width }) => (
             <FlexTable
               ref="Table"
               headerClassName={styles.headerColumn}
@@ -318,6 +310,8 @@ class CampaignTable extends Component {
 
 CampaignTable.propTypes = {
   campaignData: PropTypes.object,
+  list: PropTypes.object,
+  headers: PropTypes.array,
   onRowSelect: PropTypes.func,
   onToggleSwitchClick: PropTypes.func,
   onAddAlert: PropTypes.func,
