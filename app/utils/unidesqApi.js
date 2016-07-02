@@ -6,7 +6,10 @@ import constants from '../constants';
 
 export function generateURL(path) {
   const adjustedPath = path[0] !== '/' ? `/${path}` : path;
-  return `http://api-test.unidesq.com${adjustedPath}`;
+  if (process.env.NODE_ENV === 'production') {
+    return `http://api-test.unidesq.com${adjustedPath}`;
+  }
+  return `http://localhost:3000/api/${adjustedPath}`;
 }
 
 export function secureHeader(token) {
