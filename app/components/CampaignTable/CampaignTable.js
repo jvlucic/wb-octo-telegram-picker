@@ -256,7 +256,7 @@ class CampaignTable extends Component {
       sortDirection,
       rowCount,
     } = this.state;
-    console.log('Rendering Campaign Table');
+
     const { list, headers } = this.props;
     let sortedList = Object.values(list).sort((first, second) => (first[sortBy] < second[sortBy] ? -1 : 1));
     sortedList = sortDirection === SortDirection.DESC ? sortedList.reverse() : sortedList;
