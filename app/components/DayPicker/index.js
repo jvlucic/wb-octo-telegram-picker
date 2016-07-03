@@ -3,6 +3,7 @@ import DayPicker, * as Utils from 'react-day-picker';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectLocale } from 'intl/selectors';
+import { CaretLeftIcon, CaretRightIcon } from 'theme/assets';
 
 import 'react-day-picker/lib/style.css';
 import './styles.scss';
@@ -39,6 +40,20 @@ export const DateUtils = Utils.DateUtils;
 export const LocaleUtils = Utils.LocaleUtils;
 export const NavbarPropTypes = Utils.NavbarPropTypes;
 
+function Navbar({ onPreviousClick, onNextClick, className }) {
+  return (
+    <div className={className}>
+      <span className="DatePicker-caretIcon" style={{ float: 'left', cursor: 'pointer' }} onClick={() => onPreviousClick()}>
+        <CaretLeftIcon />
+      </span>
+      <span className="DatePicker-caretIcon" style={{ float: 'right', cursor: 'pointer' }} onClick={() => onNextClick()}>
+        <CaretRightIcon />
+      </span>
+    </div>
+  );
+}
+Navbar.propTypes = NavbarPropTypes;
+
 class CustomDayPicker extends Component {
   showMonth(...args) {
     this.daypicker.showMonth(...args);
@@ -51,6 +66,7 @@ class CustomDayPicker extends Component {
         locale={locale}
         localeUtils={localeUtils}
         ref={daypicker => { this.daypicker = daypicker; }}
+        navbarElement={<Navbar />}
         {...otherProps}
       />
     );

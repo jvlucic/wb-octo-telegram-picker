@@ -13,3 +13,25 @@
   padding-left: .5rem;
   padding-right: .5rem;
 }
+
+:global(.DayPicker-Caption) {
+  height: 48px;
+  line-height: 48px;
+}
+
+:global(.DayPicker) {
+  min-height: 324px;
+}
+:global {
+  .DatePicker-caretIcon {
+    padding: 7.5px 10px;
+    span {
+      width: 5px;
+      height: 10px;
+      svg {
+        width: 5px;
+        height: 10px;
+      }
+    }
+  }
+}

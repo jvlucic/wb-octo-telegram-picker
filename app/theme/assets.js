@@ -9,6 +9,7 @@ import AlertWarningSVG from '../../icons/alert-warning.svg';
 import CampaignAmountSVG from '../../icons/campaign-amount.svg';
 import CampaignTimeSVG from '../../icons/campaign-time.svg';
 import CaretLeftSVG from '../../icons/caret-left.svg';
+import CaretRightSVG from '../../icons/caret-right.svg';
 import DownloadSVG from '../../icons/download.svg';
 import InputCalendarSVG from '../../icons/input-calendar.svg';
 import InputCheckboxSVG from '../../icons/input-checkbox.svg';
@@ -46,6 +47,7 @@ export const AlertWarningIcon = (props) => <SvgIcon {...props} src={AlertWarning
 export const CampaignAmountIcon = (props) => <SvgIcon {...props} src={CampaignAmountSVG} />;
 export const CampaignTimeIcon = (props) => <SvgIcon {...props} src={CampaignTimeSVG} />;
 export const CaretLeftIcon = (props) => <SvgIcon {...props} src={CaretLeftSVG} />;
+export const CaretRightIcon = (props) => <SvgIcon {...props} src={CaretRightSVG} />;
 export const DownloadIcon = (props) => <SvgIcon {...props} src={DownloadSVG} />;
 export const InputCalendarIcon = (props) => <SvgIcon {...props} src={InputCalendarSVG} />;
 export const InputCheckboxIcon = (props) => <SvgIcon {...props} src={InputCheckboxSVG} />;
