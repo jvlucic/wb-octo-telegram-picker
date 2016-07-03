@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react';
-import logo from './unidesq-logo.png';
 import './styles.scss';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Link } from 'react-router';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
+import { UnidesqLogoIcon } from 'theme/assets';
 import { selectFullName } from 'auth/selectors';
 
 const msgs = defineMessages({
@@ -51,7 +51,7 @@ function SecureHeader({ fullName }) {
       <div className="SecureHeader-wrapper">
         <aside className="SecureHeader-logo">
           <Link to="/">
-            <img src={logo} alt="Unidesq Logo" />
+            <UnidesqLogoIcon className="SecureHeader-logoIcon" />
           </Link>
         </aside>
         <nav role="navigation" className="SecureHeader-nav">

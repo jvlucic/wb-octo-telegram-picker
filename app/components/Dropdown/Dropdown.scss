@@ -6,7 +6,7 @@
   -moz-user-select: none;      /* Firefox */
   -ms-user-select: none;       /* IE/Edge */
   -webkit-touch-callout: none; /* iOS Safari */
-  font-weight: lighter;
+  font-weight: 300;
   font-size: .9rem;
   :global(.Dropdown--Header) {
     // background: #8F8F8F;
@@ -68,7 +68,7 @@
 }
 
 .selected {
-  font-weight: bold;
+  font-weight: 700;
   color: #191F2D;
 }
 

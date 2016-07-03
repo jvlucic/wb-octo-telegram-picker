@@ -72,8 +72,15 @@ class Calendar extends Component {
   }
 
   handleDayClick(event, day) {
-    const { to, from } = DateUtils.addDayToRange(day, this.state);
-    this.setState({ to, from });
+    if (!this.state.from || !this.state.to) {
+      const range = DateUtils.addDayToRange(day, this.state);
+      this.setState(range);
+    } else {
+      this.setState({
+        from: day,
+        to: null,
+      });
+    }
   }
 
   updateRange(from, to = from) {

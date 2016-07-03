@@ -36,7 +36,7 @@
     padding: 0px 15px;
     &::placeholder {
       color: $input-placeholder-color;
-      font-weight: lighter;
+      font-weight: 300;
     }
 
     &:hover {

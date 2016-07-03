@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import classnames from 'classnames';
 import { InputCalendarIcon, InputClearIcon } from 'theme/assets';
+import moment from 'moment';
 import './styles.scss';
 
 const msgs = defineMessages({
@@ -28,7 +29,8 @@ export default class InputDate extends Component { // eslint-disable-line react/
           <div className={classnames('InputDate-value', isActive)}>
             {
               from instanceof Date
-                && <FormattedDate value={from} />
+                &&
+                moment(from).format('DD:MM:YYYY')
             }
             {
               to instanceof Date
@@ -37,7 +39,7 @@ export default class InputDate extends Component { // eslint-disable-line react/
                   &nbsp;
                   -
                   &nbsp;
-                  <FormattedDate value={to} />
+                  {moment(to).format('DD:MM:YYYY')}
                 </span>
               )
             }

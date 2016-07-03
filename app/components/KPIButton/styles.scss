@@ -56,7 +56,7 @@
         transition: $chart-indicator-transition-config;
       }
       .KPI-line{
-        padding-top: 5.5px;
+        padding-top: 5px;
         hr{
           transition: $chart-indicator-transition-config;
           border-top: 1px solid $chart-indicator-border-color;
@@ -89,7 +89,7 @@
       margin-top: 3px;
     }
     &-content {
-      font-weight: bold;
+      font-weight: 700;
       width: 100%;
       display: block;
       margin-top: -2px;

@@ -21,7 +21,7 @@
     $second-font-color: #888;
     $centered-navigation-padding: 1em;
     $centered-navigation-logo-height: 2em;
-    $centered-navigation-background: #000;
+    $centered-navigation-background: #191F2D;
     $centered-navigation-background-active: white;
     $centered-navigation-background-hover: #3b404c;
     $centered-navigation-color: #FFF;
@@ -66,10 +66,15 @@
       display: inline;
       float: left;
       max-height: $centered-navigation-height;
-
-      img {
-        max-height: $centered-navigation-height;
+      &Icon {
         padding: 0.8em 0;
+        svg {
+          height: $centered-navigation-height;
+
+          #unidesq-logo {
+            fill: white;
+          }
+        }
       }
     }
 
@@ -129,6 +134,7 @@
     &-account {
       display: inline-block;
       float:right;
+      font-size: 13px;
       line-height: $centered-navigation-height;
       &Welcome {
         display: inline-block;

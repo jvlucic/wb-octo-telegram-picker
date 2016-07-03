@@ -18,7 +18,7 @@ export default class Input extends Component {
   }
 
   renderInput() {
-    const { className, error, valid, touched, submitted, ...props } = this.props;
+    const { className, error, valid, touched, submitted, type, onChange, onBlur, value, onFocus, placeholder } = this.props;
     const stateClass = classnames({
       'has-error': !!error && (touched || submitted),
       'is-valid': !!valid && (touched || submitted),
@@ -26,8 +26,12 @@ export default class Input extends Component {
     return (
       <div className={classnames('Input-container', className)}>
         <input
-          {...props}
-
+          type={type}
+          onChange={onChange}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          value={value}
+          onFocus={onFocus}
           className={classnames('Input', stateClass)}
           ref={(c) => { this.input = c; }}
         />
@@ -59,8 +63,14 @@ Input.propTypes = {
   touched: PropTypes.bool,
   submitted: PropTypes.bool,
   type: PropTypes.string,
+  onChange: PropTypes.func,
+  onBlur: PropTypes.func,
+  value: PropTypes.string,
+  placeholder: PropTypes.string,
+  onFocus: PropTypes.func,
 };
 
 Input.defaultProps = {
   behaviour: 'normal',
+  type: 'text',
 };

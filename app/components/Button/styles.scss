@@ -1,6 +1,6 @@
 :global {
   @mixin button() {
-    font-weight: bold;
+    font-weight: 700;
   }
   .Button {
     @include button;

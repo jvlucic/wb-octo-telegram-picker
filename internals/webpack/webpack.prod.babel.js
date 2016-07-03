@@ -3,11 +3,13 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
+const bourbon = require('bourbon').includePaths;
+const neat = require('bourbon-neat').includePaths;
 // PostCSS plugins
 const cssnext = require('postcss-cssnext');
 const postcssFocus = require('postcss-focus');
 const postcssReporter = require('postcss-reporter');
+const theme = path.resolve(__dirname, '..', '..', 'app', 'theme');
 
 module.exports = require('./webpack.base.babel')({
   // In production, we skip all hot-reloading stuff
@@ -28,6 +30,14 @@ module.exports = require('./webpack.base.babel')({
     'css-loader?modules&importLoaders=1!postcss-loader'
   ),
 
+  scssLoaders: ExtractTextPlugin.extract(
+    'style-loader',
+    'css-loader?modules&importLoaders=1!postcss-loader!sass-loader'
+  ),
+
+  sassLoaderOptions: {
+    includePaths: [...bourbon, ...neat, theme],
+  },
   // In production, we minify our CSS with cssnano
   postcssPlugins: [
     postcssFocus(),
