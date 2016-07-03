@@ -67,10 +67,10 @@
       float: left;
       max-height: $centered-navigation-height;
       &Icon {
-        padding: 0.8em 0;
+
         svg {
           height: $centered-navigation-height;
-
+          padding: 0.8em 0;
           #unidesq-logo {
             fill: white;
           }
