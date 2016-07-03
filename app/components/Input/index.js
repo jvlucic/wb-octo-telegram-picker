@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import classnames from 'classnames';
-import { InputPasswordIcon, InputErrorIcon, InputCheckboxIcon } from 'theme/assets';
+import { InputPasswordIcon, InputPasswordShowIcon, InputErrorIcon, InputCheckboxIcon } from 'theme/assets';
 import './styles.scss';
 
 /**
@@ -11,10 +11,17 @@ export default class Input extends Component {
     super(props);
 
     this.handleOnShowClick = this.handleOnShowClick.bind(this);
+    this.state = {
+      type: props.type,
+    };
   }
 
   handleOnShowClick() {
-    this.input.type = this.input.type === 'password' ? 'text' : 'password';
+    const newType = this.input.type === 'password' ? 'text' : 'password';
+    this.input.type = newType;
+    this.setState({
+      type: newType,
+    });
   }
 
   renderInput() {
@@ -23,6 +30,7 @@ export default class Input extends Component {
       'has-error': !!error && (touched || submitted),
       'is-valid': !!valid && (touched || submitted),
     });
+
     return (
       <div className={classnames('Input-container', className)}>
         <input
@@ -44,10 +52,11 @@ export default class Input extends Component {
   render() {
     const { className, type } = this.props;
     if (type === 'password') {
+      const IconInputPassword = (this.state.type === 'password' ? InputPasswordShowIcon : InputPasswordIcon);
       return (
         <div className={classnames('Input-password', className)}>
           {this.renderInput()}
-          <InputPasswordIcon className="Input-passwordIcon" onClick={this.handleOnShowClick} />
+          <IconInputPassword className="Input-passwordIcon" onClick={this.handleOnShowClick} />
         </div>
       );
     }

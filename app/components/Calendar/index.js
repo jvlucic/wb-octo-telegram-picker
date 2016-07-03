@@ -84,7 +84,7 @@ class Calendar extends Component {
   }
 
   updateRange(from, to = from) {
-    this.setState({ to, from }, () => this.daypicker.getWrappedInstance().daypicker.showMonth(to));
+    this.setState({ to, from }, this.handleApply);
   }
 
   handleShowDate() {
@@ -110,7 +110,7 @@ class Calendar extends Component {
   handleOnInputClick() {
     this.setState({
       show: true,
-    });
+    }, () => this.daypicker.getWrappedInstance().daypicker.showMonth(this.state.to || new Date()));
   }
 
   handleApply() {

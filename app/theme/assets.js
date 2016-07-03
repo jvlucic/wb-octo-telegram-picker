@@ -15,6 +15,7 @@ import InputCheckboxSVG from '../../icons/input-checkbox.svg';
 import InputClearSVG from '../../icons/input-clear.svg';
 import InputErrorSVG from '../../icons/input-error.svg';
 import InputPasswordSVG from '../../icons/input-password.svg';
+import InputPasswordShowSVG from '../../icons/input-password-show.svg';
 import KPIDownSVG from '../../icons/kpi-down.svg';
 import KPIEqualSVG from '../../icons/kpi-equal.svg';
 import KPIUpSVG from '../../icons/kpi-up.svg';
@@ -51,6 +52,7 @@ export const InputCheckboxIcon = (props) => <SvgIcon {...props} src={InputCheckb
 export const InputClearIcon = (props) => <SvgIcon {...props} src={InputClearSVG} />;
 export const InputErrorIcon = (props) => <SvgIcon {...props} src={InputErrorSVG} />;
 export const InputPasswordIcon = (props) => <SvgIcon {...props} src={InputPasswordSVG} />;
+export const InputPasswordShowIcon = (props) => <SvgIcon {...props} src={InputPasswordShowSVG} />;
 export const KPIDownIcon = (props) => <SvgIcon {...props} src={KPIDownSVG} />;
 export const KPIEqualIcon = (props) => <SvgIcon {...props} src={KPIEqualSVG} />;
 export const KPIUpIcon = (props) => <SvgIcon {...props} src={KPIUpSVG} />;
