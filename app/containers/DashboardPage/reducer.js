@@ -3,7 +3,6 @@ import { name } from './__init__';
 import { dateDiffInDays, addDaysToDate } from '../../utils/utils';
 import constants from '../../constants';
 import moment from 'moment';
-import { selectToken } from '../../auth/selectors';
 import { getCampaignPerfomanceData as getCampaignPerfomanceDataFromAPI, getCampaignData as getCampaignDataFromAPI, toggleCampaignStatus } from '../../utils/unidesqApi';
 
 /* TODO: replace dummydata for API calls */
@@ -142,9 +141,9 @@ export function loadingError(error) {
     error,
   };
 }
-function getAllCampaigns({ call, to, from, frequency, token }) {
-  const requestActiveCampaigns = call({ status: constants.STATUS.ACTIVE, end: to, start: from, frequency, token });
-  const requestInactiveCampaigns = call({ status: constants.STATUS.INACTIVE, end: to, start: from, frequency, token });
+function getAllCampaigns(store, { call, to, from, frequency }) {
+  const requestActiveCampaigns = call(store, { status: constants.STATUS.ACTIVE, end: to, start: from, frequency });
+  const requestInactiveCampaigns = call(store, { status: constants.STATUS.INACTIVE, end: to, start: from, frequency });
   return new Promise((resolve, reject) => {
     Promise
       .all([requestActiveCampaigns, requestInactiveCampaigns])
@@ -160,33 +159,33 @@ function getAllCampaigns({ call, to, from, frequency, token }) {
   });
 }
 
-function fetchPreviousCampaignData({ status, to, from, frequency }, token) {
+function fetchPreviousCampaignData(store, { status, to, from, frequency }) {
   const daysBetweenDates = dateDiffInDays(to, from);
   const previousFrom = addDaysToDate(from, daysBetweenDates - 1);
   const previousTo = addDaysToDate(from, -1);
   if (status === constants.STATUS.ALL) {
-    return getAllCampaigns({ call: getCampaignDataFromAPI, to: previousTo, from: previousFrom, frequency, token });
+    return getAllCampaigns(store, { call: getCampaignDataFromAPI, to: previousTo, from: previousFrom, frequency });
   }
-  return getCampaignDataFromAPI({ status, end: previousTo, start: previousFrom, frequency, token });
+  return getCampaignDataFromAPI(store, { status, end: previousTo, start: previousFrom, frequency });
   // return new Promise(resolve => setTimeout(() => resolve(dummyCampaignData), 1000));
   // return new Promise((resolve, reject) => setTimeout(() => reject(new Error('fetchCampaignData')), 1000));
 }
 
-function fetchCampaignData({ status, to, from, frequency }, token) {
+function fetchCampaignData(store, { status, to, from, frequency }) {
   if (status === constants.STATUS.ALL) {
-    return getAllCampaigns({ call: getCampaignDataFromAPI, to, from, frequency, token });
+    return getAllCampaigns(store, { call: getCampaignDataFromAPI, to, from, frequency });
   }
-  return getCampaignDataFromAPI({ status, end: to, start: from, frequency, token });
+  return getCampaignDataFromAPI(store, { status, end: to, start: from, frequency });
   // return new Promise(resolve => setTimeout(() => resolve(dummyCampaignData), 1000));
   // return new Promise((resolve, reject) => setTimeout(() => reject(new Error('fetchCampaignData')), 1000));
 }
 
-function fetchCampaignPerformanceData({ status, to, from, frequency }, token) {
+function fetchCampaignPerformanceData(store, { status, to, from, frequency }) {
   if (status === constants.STATUS.ALL) {
-    return getAllCampaigns({ call: getCampaignPerfomanceDataFromAPI, to, from, frequency, token });
+    return getAllCampaigns(store, { call: getCampaignPerfomanceDataFromAPI, to, from, frequency });
   }
 
-  return getCampaignPerfomanceDataFromAPI({ status, end: to, start: from, frequency, token });
+  return getCampaignPerfomanceDataFromAPI(store, { status, end: to, start: from, frequency });
   /*
   if (filters.frequency === constants.FREQUENCY.DAILY) {
     return new Promise(resolve => setTimeout(() => resolve(dummyCampaignPerfomanceData), 1000));
@@ -206,11 +205,10 @@ function changeDateRangeState({ to, from }) {
 
 function refreshCampaignData(dispatch, getState) {
   dispatch(loadCampaignData());
-  const token = selectToken(getState());
   const filters = getState().get(name).toJS();
-  const requestCampaignData = fetchCampaignData(filters, token);
-  const requestPreviousCampaignData = fetchPreviousCampaignData(filters, token);
-  const requestCampaignPerformanceData = fetchCampaignPerformanceData(filters, token);
+  const requestCampaignData = fetchCampaignData({ dispatch, getState }, filters);
+  const requestPreviousCampaignData = fetchPreviousCampaignData({ dispatch, getState }, filters);
+  const requestCampaignPerformanceData = fetchCampaignPerformanceData({ dispatch, getState }, filters);
   Promise.all([requestCampaignData, requestCampaignPerformanceData, requestPreviousCampaignData])
     .then(([campaignData, campaignPerformanceData, previousCampaignData]) => {
       dispatch(loadedCampaignData({ campaignData, campaignPerformanceData, previousCampaignData }));
@@ -279,18 +277,17 @@ export function loadChangeCampaignStatusError(campaignId, status) {
     status,
   };
 }
-function requestChangeCampaignStatus(campaignId, token) { // eslint-disable-line no-unused-vars
-  return toggleCampaignStatus({ campaignId, token });
+function requestChangeCampaignStatus(store, campaignId) { // eslint-disable-line no-unused-vars
+  return toggleCampaignStatus(store, { campaignId });
   // return new Promise(resolve => setTimeout(() => resolve(null), 1000));
   // return new Promise((resolve, reject) => setTimeout(() => reject(new Error('burgy')), 1000));
 }
 
 function changeCampaignStatus(campaignId, value) {
   return (dispatch, getState) => {
-    const token = selectToken(getState());
     const status = value ? constants.STATUS.ACTIVE : constants.STATUS.INACTIVE;
     dispatch(loadChangeCampaignStatus(campaignId, status));
-    requestChangeCampaignStatus(campaignId, token)
+    requestChangeCampaignStatus({ dispatch, getState }, campaignId)
       .then(() => {
         dispatch(loadedChangeCampaignStatus(campaignId, status));
       })

@@ -1,13 +1,14 @@
-
 import {
+  LOGOUT,
+  SET_TOKEN,
   LOGGING_IN,
   LOGGING_IN_SUCCESS,
   LOGGING_IN_ERROR,
   USER_INFO,
 } from './constants';
 import request from 'utils/request';
-import { generateURL, secureHeader } from 'utils/unidesqApi';
-import { selectToken } from 'auth/selectors';
+import { generateURL, secureRequest } from 'utils/unidesqApi';
+import { push } from 'react-router-redux';
 
 /**
  * LOGGING_IN action creation
@@ -56,6 +57,17 @@ export function logginInError(error) {
 }
 
 /**
+ * Handle logout action, aso redirect to login
+ */
+export function logout() {
+  return dispatch => {
+    dispatch({ type: LOGOUT });
+    localStorage.removeItem('logginInSuccess');
+    dispatch(push('/login'));
+  };
+}
+
+/**
  * Action creator for USER_INFO
  * @param  {Object} user  - User info to be stored
  * @return {object]}      - Action
@@ -68,22 +80,26 @@ export function userInfo(user) {
 }
 
 /**
+ * Action creator for SET_TOKEN
+ * @param  {string} token   - Token to be added in state
+ * @return {object]}        - Action
+ */
+export function setToken(token) {
+  return {
+    type: SET_TOKEN,
+    token,
+  };
+}
+
+/**
  * Method to retrieve the user information using the token from argument or state
  * @param {?string} tokenArg          - Optional token to be used instead of state one
  * @return {Promise.<object, string>} - Promise to resolve to user info or reject with string error
  */
-export function getUserInfo(tokenArg) {
+export function getUserInfo() {
   return (dispatch, getState) => {
-    const token = tokenArg || selectToken(getState());
-    if (!token) {
-      return Promise.reject('The user must be logged to get the info');
-    }
     const urlUser = generateURL('user');
-    return request(urlUser, {
-      headers: {
-        ...secureHeader(token),
-      },
-    })
+    return secureRequest({ dispatch, getState }, urlUser)
     .then(({ data: user, err: userErr }) => {
       if (userErr) {
         return Promise.reject('I can retrieve the user info');
@@ -122,7 +138,7 @@ export function authenticate(username, password) {
         if (err) {
           return Promise.reject('There is an error in login');
         }
-
+        dispatch(setToken(auth.access_token));
         return dispatch(getUserInfo(auth.access_token))
           .then(
             () => {

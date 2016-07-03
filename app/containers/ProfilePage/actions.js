@@ -7,10 +7,9 @@ import {
   CHANGE_PASSWORD,
   CHANGE_PASSWORD_ERROR,
 } from './constants';
-import request from 'utils/request';
-import { generateURL, secureHeader, applicationJsonHeader } from 'utils/unidesqApi';
+import { generateURL, secureRequest, applicationJsonHeader } from 'utils/unidesqApi';
 import { userInfo } from 'auth/actions';
-import { selectToken, selectUserId } from 'auth/selectors';
+import { selectUserId } from 'auth/selectors';
 
 /**
  * UPDATE_USER action creation
@@ -88,16 +87,11 @@ export function changePaswordError(error) {
  */
 export function postChangePassword(oldPassword, newPassword) {
   return (dispatch, getState) => {
-    const token = selectToken(getState());
-    if (!token) {
-      return Promise.reject('The user must be logged to change the password');
-    }
     dispatch(changePassword());
     const urlChangePassword = generateURL('user/changePassword');
-    return request(urlChangePassword, {
+    return secureRequest({ dispatch, getState }, urlChangePassword, {
       method: 'POST',
       headers: {
-        ...secureHeader(token),
         ...applicationJsonHeader(),
       },
       body: JSON.stringify({ oldPassword, newPassword }),
@@ -126,17 +120,12 @@ export function postChangePassword(oldPassword, newPassword) {
  */
 export function updateUserInfo({ username, firstName, lastName, email, companyName, phoneNumber } = {}) {
   return (dispatch, getState) => {
-    const token = selectToken(getState());
     const userId = selectUserId(getState());
-    if (!token || !userId) {
-      return Promise.reject('The user must be logged to update the info');
-    }
     dispatch(updateUser());
     const urlUser = generateURL('user');
-    return request(urlUser, {
+    return secureRequest({ dispatch, getState }, urlUser, {
       method: 'PUT',
       headers: {
-        ...secureHeader(token),
         ...applicationJsonHeader(),
       },
       body: JSON.stringify({ id: userId, username, firstName, lastName, email, companyName, phoneNumber }),

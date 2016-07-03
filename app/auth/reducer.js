@@ -8,6 +8,7 @@ import {
   LOGGING_IN_ERROR,
   USER_INFO,
   LOGOUT,
+  SET_TOKEN,
 } from './constants';
 import { fromJS } from 'immutable';
 
@@ -34,6 +35,9 @@ function intlReducer(state = initialState, action) {
     case LOGGING_IN:
       return state
         .set('loggingIn', true);
+    case SET_TOKEN:
+      return state
+        .set('accessToken', action.token);
     case LOGGING_IN_SUCCESS:
       return state
         .set('loggingIn', false)
