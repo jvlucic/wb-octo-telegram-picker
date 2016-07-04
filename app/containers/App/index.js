@@ -35,6 +35,8 @@ export default class App extends React.Component { // eslint-disable-line react/
       this.refs.container[type](message, title, {
         closeButton: true,
         timeOut: 2000,
+        showAnimation: 'animated slideInRight',
+        hideAnimation: 'animated fadeOut',
         preventDuplicates: false,
       });
     }

@@ -82,7 +82,7 @@ export function getCampaignData(store, { status, start, end, frequency }) {
 
 export function toggleCampaignStatus(store, { campaignId }) {
   const uri = generateURL(`campaigns/${campaignId}/toggleStatus`);
-  return secureRequest(uri, { method: 'PUT' })
+  return secureRequest(store, uri, { method: 'PUT' })
     .then(({ data, err }) => {
       if (err) {
         console.log(err);
