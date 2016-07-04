@@ -6,6 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { UnidesqLogoIcon } from 'theme/assets';
 import { selectFullName } from 'auth/selectors';
+import { logout } from 'auth/actions';
 
 const msgs = defineMessages({
   dashboard: {
@@ -33,6 +34,11 @@ const msgs = defineMessages({
     description: 'Account link',
     defaultMessage: 'Account',
   },
+  signout: {
+    id: 'app.secure.header.nav.signout',
+    description: 'Sign Out link',
+    defaultMessage: 'Sign Out',
+  },
   needHelp: {
     id: 'app.secure.header.nav.needHelp',
     description: 'Need Help? link',
@@ -45,7 +51,7 @@ const msgs = defineMessages({
   },
 });
 
-function SecureHeader({ fullName }) {
+function SecureHeader({ fullName, logout: logoutAction }) {
   return (
     <header className="SecureHeader" role="banner" >
       <div className="SecureHeader-wrapper">
@@ -89,6 +95,9 @@ function SecureHeader({ fullName }) {
             <Link to="/account" activeClassName="is-active">
               <FormattedMessage {...msgs.account} />
             </Link>
+            <a onClick={logoutAction} >
+              <FormattedMessage {...msgs.signout} />
+            </a>
           </div>
         </div>
       </div>
@@ -98,8 +107,11 @@ function SecureHeader({ fullName }) {
 
 SecureHeader.propTypes = {
   fullName: PropTypes.string,
+  logout: PropTypes.func,
 };
 
 export default connect(createStructuredSelector({
   fullName: selectFullName,
-}))(SecureHeader);
+}), {
+  logout,
+})(SecureHeader);
