@@ -1,7 +1,6 @@
 import { name } from './__init__';
 import { createSelector } from 'reselect';
 import { getDayAndMonth, getHour, setColorAlpha, getDayAndMonthFromDate, addDaysToDate } from '../../utils/utils';
-import { formatNumericValue } from '../../intl/utils';
 import constants from '../../constants';
 
 /* UTILITY FUNCTIONS */
@@ -161,15 +160,14 @@ export const campaignTableHeadersSelector = createSelector(
 export const campaignTableListSelector = createSelector(
   campaignDataSelector,
   campaignStatusSelector,
-  intlSelector,
-  (campaignDataMap, status, intl) => {
+  (campaignDataMap, status) => {
     if (!campaignDataMap) {
       return false;
     }
 
-    const getValue = (data, type, valueType) => (typeof data.performance[type] !== 'undefined' && data.performance[type] !== null ?
-      formatNumericValue(data.performance[type], valueType, data.currency, intl) :
-      null
+    const getValue = (data, type) => (typeof data.performance[type] !== 'undefined' && data.performance[type] !== null ?
+        data.performance[type] :
+        null
     );
     const campaignDataKeys = Object.keys(campaignDataMap);
     const filteredData = {};
