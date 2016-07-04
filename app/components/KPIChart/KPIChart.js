@@ -7,6 +7,9 @@ import ReactChartJS from 'react-chartjs';
 import styles from './KPIChart.scss';
 import KPIButton from 'components/KPIButton';
 import { numberFormatter } from '../../utils/utils';
+import { injectIntl } from 'react-intl';
+import { formatNumericValue } from '../../intl/utils';
+import constants from '../../constants';
 
 function setColorAlpha(color, alpha) {
   const parts = color.split(',');
@@ -27,7 +30,8 @@ class KPIChart extends Component {
     this.toggleKPI = this.toggleKPI.bind(this);
     this.toggleHovered = this.toggleHovered.bind(this);
     this.handleChartClick = this.handleChartClick.bind(this);
-
+    this.formatYValue = this.formatYValue.bind(this);
+    const formatYValue = this.formatYValue;
     const { chartData, yAxes, xAxis } = this.processDataSets(props.chartData, this.props, props.initiallyActiveKPIs);
     this.state = {
       chartData,
@@ -50,6 +54,13 @@ class KPIChart extends Component {
           yAxes,
           xAxes: [xAxis],
         },
+        tooltips: {
+          callbacks: {
+            label: (tooltipItem, data) => (
+              `${data.datasets[tooltipItem.datasetIndex].label}: ${formatYValue(data.datasets[tooltipItem.datasetIndex].kpi, tooltipItem.yLabel)}`
+            ),
+          },
+        },
         responsive: true,
         maintainAspectRatio: false,
       },
@@ -61,6 +72,42 @@ class KPIChart extends Component {
       const { chartData, yAxes, xAxis } = this.processDataSets(nextProps.chartData, this.props, this.state.activeKPIs);
       this.setState({ chartData, yAxes, xAxis, redraw: true });
     }
+  }
+
+  getKPIFromKey(key) {
+    switch (key) {
+      case constants.KPI.IMPRESSIONS.key:
+        return constants.KPI.IMPRESSIONS;
+      case constants.KPI.CLICKS.key:
+        return constants.KPI.CLICKS;
+      case constants.KPI.CTR.key:
+        return constants.KPI.CTR;
+      case constants.KPI.CONVERSION.key:
+        return constants.KPI.CONVERSION;
+      case constants.KPI.CVR.key:
+        return constants.KPI.CVR;
+      case constants.KPI.CPM.key:
+        return constants.KPI.CPM;
+      case constants.KPI.CPC.key:
+        return constants.KPI.CPC;
+      case constants.KPI.CPO.key:
+        return constants.KPI.CPO;
+      case constants.KPI.COST.key:
+        return constants.KPI.COST;
+      case constants.KPI.ORDER_VALUE.key:
+        return constants.KPI.ORDER_VALUE;
+      case constants.KPI.MARGIN.key:
+        return constants.KPI.MARGIN;
+      case constants.KPI.ROI.key:
+        return constants.KPI.ROI;
+      default:
+        return null;
+    }
+  }
+
+  formatYValue(kpiKey, value) {
+    const valueType = this.getKPIFromKey(kpiKey).valueType;
+    return formatNumericValue(value, valueType, this.props.currency, this.props.intl);
   }
 
   processDataSets(originalChartData, props, activeKPIs) {
@@ -228,7 +275,7 @@ class KPIChart extends Component {
     const activeKPIsMap = {};
     const hoveredKPI = this.state.hoveredKPI;
     this.state.activeKPIs.forEach(it => activeKPIsMap[it] = true); // eslint-disable-line no-return-assign
-
+    /* TODO: HANDLE CURRENCY SYMBOLS IN A GENERIC WAY ?*/
     return (
       <div >
         <div className={styles.KPIChartContainer}>
@@ -250,7 +297,7 @@ class KPIChart extends Component {
                   color={kpi.color}
                   colorHovered={kpi.colorHovered}
                   valueType={kpi.valueType}
-                  symbol="$"
+                  symbol={this.props.currency === 'EUR' ? '€' : '$'}
                   selected={activeKPIsMap[kpiKey]}
                   hovered={hoveredKPI === kpiKey}
                   enabled={kpi.enabled}
@@ -271,6 +318,8 @@ KPIChart.propTypes = {
   chartData: PropTypes.object,
   KPIValues: PropTypes.object,
   initiallyActiveKPIs: PropTypes.array,
+  intl: PropTypes.object,
+  currency: PropTypes.string,
 };
 
-export default KPIChart;
+export default injectIntl(KPIChart);

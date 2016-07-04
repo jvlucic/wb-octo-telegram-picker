@@ -254,7 +254,6 @@ class CampaignTable extends Component {
       scrollToIndex,
       sortBy,
       sortDirection,
-      rowCount,
     } = this.state;
 
     const { list, headers } = this.props;
@@ -276,7 +275,7 @@ class CampaignTable extends Component {
               rowClassName={::this.rowClassName}
               onRowClick={::this.handleRowSelect}
               rowHeight={rowHeight}
-              rowCount={rowCount}
+              rowCount={Math.min(this.currentList.length, 50)}
               scrollToIndex={scrollToIndex}
               sort={this.sort}
               sortBy={sortBy}
