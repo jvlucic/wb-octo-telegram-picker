@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import classnames from 'classnames';
+import { SpinnerIcon } from 'theme/assets';
 import './styles.scss';
 
 export default function Button({ children, buttonType, expanded, className, spinner, disabled, ...otherProps }) {
@@ -18,7 +19,7 @@ export default function Button({ children, buttonType, expanded, className, spin
           'is-spinning': spinner,
         })}
       >
-        Loading
+        <SpinnerIcon />
       </span>
       <span
         className={classnames('Button-text', {

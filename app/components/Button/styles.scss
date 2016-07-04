@@ -49,9 +49,20 @@
   }
   .Button-spinner {
     display: none;
+    height: 16px;
+    width: 16px;
+    span {
+      height: 16px;
+      width: 16px;
+      svg {
+        height: 16px;
+        width: 16px;
+      }
+    }
     &.is-spinning {
       display: initial;
     }
 
   }
+
 }
