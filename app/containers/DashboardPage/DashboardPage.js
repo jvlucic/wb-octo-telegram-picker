@@ -18,7 +18,7 @@ import { actions } from './reducer';
 import { KPIDataSelector, selectRange, campaignTableHeadersSelector,
          campaignTableListSelector, campaignStatusSelector, selectedCampaignSelector,
          activeKPIsSelector, loadingSelector, toggledCampaignSelector, errorSelector } from './selectors';
-import classnames from 'classnames';
+import { injectIntl } from 'react-intl';
 import constants from '../../constants';
 import styles from './DashboardPage.scss';
 let appContainer = null;
@@ -151,7 +151,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
         <div className={styles.innerContainer}>
           {loading && <div><Loader/></div>}
           { !loading && KPIData &&  <div className={styles.KPIChartContainer}>
-            <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } initiallyActiveKPIs = { activeKPIs }  />
+            <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } currency={KPIData.currency} initiallyActiveKPIs = { activeKPIs }  />
           </div>}
           { !loading && tableList && <div className={styles.campaignTableContainer}>
              <CampaignTable
@@ -170,7 +170,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
   }
 }
 
-export default connect(
+export default injectIntl(connect(
   createStructuredSelector({
     KPIData: KPIDataSelector,
     tableHeaders: campaignTableHeadersSelector,
@@ -186,7 +186,7 @@ export default connect(
   dispatch => {
     return bindActionCreators({ ...actions }, dispatch);
   }
-)(DashboardPage);
+)(DashboardPage));
 
 DashboardPage.propTypes = {
   KPIData: React.PropTypes.object,

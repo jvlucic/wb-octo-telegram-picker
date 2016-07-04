@@ -1,6 +1,7 @@
 import { name } from './__init__';
 import { createSelector } from 'reselect';
 import { getDayAndMonth, getHour, setColorAlpha, getDayAndMonthFromDate, addDaysToDate } from '../../utils/utils';
+import { formatNumericValue } from '../../intl/utils';
 import constants from '../../constants';
 
 /* UTILITY FUNCTIONS */
@@ -78,6 +79,13 @@ function calculateKPIVariation(key, current, previous) {
 
 export const getModelSelector = (state) => state.get(name);
 
+export const propsSelector = (state, props) => props;
+
+export const intlSelector = createSelector(
+  propsSelector,
+  props => (props && props.intl)
+);
+
 export const errorSelector = createSelector(
   getModelSelector,
   model => (model.get('error'))
@@ -153,11 +161,16 @@ export const campaignTableHeadersSelector = createSelector(
 export const campaignTableListSelector = createSelector(
   campaignDataSelector,
   campaignStatusSelector,
-  (campaignDataMap, status) => {
+  intlSelector,
+  (campaignDataMap, status, intl) => {
     if (!campaignDataMap) {
       return false;
     }
-    const getValue = (data, type) => (typeof data.performance[type] !== 'undefined' && data.performance[type] !== null ? data.performance[type] : null);
+
+    const getValue = (data, type, valueType) => (typeof data.performance[type] !== 'undefined' && data.performance[type] !== null ?
+      formatNumericValue(data.performance[type], valueType, data.currency, intl) :
+      null
+    );
     const campaignDataKeys = Object.keys(campaignDataMap);
     const filteredData = {};
     // We loop through all campaigns filtering and building the row list that feeds the campaign table
@@ -177,7 +190,7 @@ export const campaignTableListSelector = createSelector(
             currency: data.currency,
             changed: typeof data.changed !== 'undefined' ? data.changed : false,
           },
-          ...Object.keys(constants.KPI).reduce((accumulator, kpi) => { accumulator[constants.KPI[kpi].key] = getValue(data, constants.KPI[kpi].key); return accumulator; }, {}), // eslint-disable-line no-param-reassign
+          ...Object.keys(constants.KPI).reduce((accumulator, kpi) => { accumulator[constants.KPI[kpi].key] = getValue(data, constants.KPI[kpi].key, constants.KPI[kpi].valueType); return accumulator; }, {}), // eslint-disable-line no-param-reassign
         };
       }
     });
@@ -220,9 +233,10 @@ export const KPIDataSelector = createSelector(
       campaignDataMap = { [selectedCampaign.id]: currentCampaignDataMap[selectedCampaign.id] };
     }
     const campaignData = Object.values(campaignDataMap);
-
+    /* TODO: Currently defining general currency based on the value of the first campaign, this may be a problem if the response campaigns have mixed currencies */
+    const currency = campaignData[0] && campaignData[0].currency || 'EUR';
     /*  Previous campaign data corresponds to all data the campaigns had  in the previous period.
-    *   e.g If we request Feb rata, then Previous campaign data, will hold Jan data.
+    *   e.g If we request Feb data, then Previous campaign data, will hold Jan data.
     */
     let previousCampaignDataMap = selectedPreviousCampaignDataMap;
     if (selectedCampaign && selectedPreviousCampaignDataMap.hasOwnProperty(selectedCampaign.id)) {
@@ -340,7 +354,7 @@ export const KPIDataSelector = createSelector(
     });
     /* CALCULATE KPI SUMMARY VALUES UNDER CHART */
 
-    return { KPIValues, chartData };
+    return { KPIValues, chartData, currency };
   }
 );
 
