@@ -9,6 +9,7 @@ const constants = {
     SESSION_EXPIRED: 'session_expired',
     SERVER_ERROR: 'server_error',
   },
+  FALLBACK_LOCALE: 'de',
   TIMEFRAME: {
     YESTERDAY: 'yesterday',
     TODAY: 'today',

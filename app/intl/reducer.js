@@ -17,10 +17,11 @@ import {
 } from './constants';
 import { fromJS } from 'immutable';
 import enMessages from 'intl/messages/en';
+import appConstants from '../constants';
 
 // The initial state of the App
 const initialState = fromJS({
-  locale: 'en',
+  locale: appConstants.FALLBACK_LOCALE,
   messages: enMessages,
   loading: false,
 });

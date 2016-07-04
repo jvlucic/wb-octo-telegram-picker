@@ -22,7 +22,7 @@ import configureStore from './store';
 import { loadPolyfillAndData } from 'intl/intUtils';
 import ReduxIntl from 'intl/ReduxIntl';
 import { logginInSuccess, getUserInfo } from 'auth/actions';
-
+import constants from '../app/constants';
 // Import the CSS reset, which HtmlWebpackPlugin transfers to the build folder
 import 'sanitize.css/lib/sanitize.css';
 import 'containers/App/styles.scss';
@@ -58,8 +58,8 @@ if (logginInData) {
 
 gettingUser
   .then(
-    () => loadPolyfillAndData('en'),
-    () => loadPolyfillAndData('en'),
+    () => loadPolyfillAndData(constants.FALLBACK_LOCALE),
+    () => loadPolyfillAndData(constants.FALLBACK_LOCALE),
   )
   .then(() => {
     ReactDOM.render(

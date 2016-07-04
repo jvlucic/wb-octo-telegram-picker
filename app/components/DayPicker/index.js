@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectLocale } from 'intl/selectors';
 import { CaretLeftIcon, CaretRightIcon } from 'theme/assets';
-
+import constants from '../../constants';
 import 'react-day-picker/lib/style.css';
 import './styles.scss';
 
@@ -79,7 +79,7 @@ CustomDayPicker.propTypes = {
 };
 
 CustomDayPicker.defaultProps = {
-  locale: 'en',
+  locale: constants.FALLBACK_LOCALE,
 };
 
 export default connect(createStructuredSelector({

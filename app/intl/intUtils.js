@@ -41,6 +41,19 @@ export function loadLocaleData(locale) {
 
       return localeData;
     }
+    case 'de': {
+      const localeData = System.import('react-intl/locale-data/de').then(addLocaleData);
+
+      if (!areIntlLocalesSupported('de')) {
+        const loadModules = [
+          System.import('intl/locale-data/jsonp/de'),
+          localeData,
+        ];
+        return Promise.all(loadModules);
+      }
+
+      return localeData;
+    }
     // english
     default: {
       if (!areIntlLocalesSupported('en')) {
