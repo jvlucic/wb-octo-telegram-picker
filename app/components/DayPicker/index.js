@@ -10,21 +10,25 @@ import './styles.scss';
 
 const WEEKDAYS_LONG = {
   en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  de: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
   es: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
 };
 
 const WEEKDAYS_SHORT = {
   en: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+  de: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
   es: ['L', 'M', 'M', 'J', 'V', 'S', 'D'],
 };
 
 const MONTHS = {
   en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  de: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
   es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
 };
 
 const FIRST_DAY = {
   en: 0,
+  de: 0,
   es: 1,
 };
 
