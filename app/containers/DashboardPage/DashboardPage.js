@@ -69,12 +69,10 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     }
     if (window.scrollY <= 52 || !scrollingDown) {
       if (appContainer && appContainer.className.indexOf('noHeader') >= 0 ) {
-        console.log('adding header');
         appContainer.className = appContainer.className.replace(/\bnoHeader\b/, '');
       }
     } else {
       if (appContainer && appContainer.className.indexOf('noHeader') === -1 && scrollingDown) {
-        console.log('removing header');
         appContainer.className += ' noHeader';
       }
     }

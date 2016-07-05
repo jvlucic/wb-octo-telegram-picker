@@ -300,7 +300,7 @@ export const KPIDataSelector = createSelector(
     if (labels.length === 0) {
       if (frequency === constants.FREQUENCY.DAILY) {
         let dateIdx = range.from;
-        while (dateIdx.getTime() !== range.to.getTime()) {
+        while (dateIdx.getTime() < range.to.getTime()) {
           labels.push(getDayAndMonthFromDate(dateIdx));
           dateIdx = addDaysToDate(dateIdx, 1);
         }
@@ -351,7 +351,6 @@ export const KPIDataSelector = createSelector(
       };
     });
     /* CALCULATE KPI SUMMARY VALUES UNDER CHART */
-
     return { KPIValues, chartData, currency };
   }
 );
