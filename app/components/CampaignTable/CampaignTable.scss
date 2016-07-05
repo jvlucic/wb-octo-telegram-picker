@@ -33,6 +33,15 @@
     }
   }
 }
+:global(.sticky:not(.noHeader)) {
+  :global{
+    .FlexTable__headerRow{
+      position: fixed;
+      top: 120px;
+      z-index: 1;
+    }
+  }
+}
 
 .toggleLoader{
   position: relative;
