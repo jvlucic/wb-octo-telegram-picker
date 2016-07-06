@@ -244,6 +244,10 @@ function changeCampaignStatusFilterState(status) {
 
 export function changeCampaignStatusFilter(status) {
   return (dispatch, getState) => {
+    if (getState().get(name).get('status') === status) {
+      dispatch(changeCampaignStatusFilterState(status));
+      return;
+    }
     dispatch(changeCampaignStatusFilterState(status));
     refreshCampaignData(dispatch, getState);
   };

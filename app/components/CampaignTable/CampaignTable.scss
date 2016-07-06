@@ -33,6 +33,15 @@
     }
   }
 }
+:global(.sticky:not(.noHeader)) {
+  :global{
+    .FlexTable__headerRow{
+      position: fixed;
+      top: 120px;
+      z-index: 1;
+    }
+  }
+}
 
 .toggleLoader{
   position: relative;
@@ -41,11 +50,12 @@
     margin: 0 !important;
   }
 }
-
+.secondHalfColummn.cell{
+  padding-bottom: 23px;
+}
 .secondHalfColummn{
   text-align: right;
   width: 100%;
-  padding-bottom: 23px;
 }
 
 .evenRow{
@@ -72,7 +82,7 @@
   color: #888888;
 }
 .statusCell{
-  padding: 5px;
+  padding: 5px 5px 21px 5px;
 }
 .selectedRow{
   background-color: #DDF9FF;

@@ -11,6 +11,8 @@ import { CampaignAmountIcon, CampaignTimeIcon } from '../../theme/assets';
 import { formatDate } from '../../utils/utils';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 import styles from './CampaignTable.scss';
+import { formatNumericValue } from '../../intl/utils';
+import { injectIntl } from 'react-intl';
 
 class CampaignTable extends Component {
 
@@ -35,6 +37,7 @@ class CampaignTable extends Component {
     this.noRowsRenderer = this.noRowsRenderer.bind(this);
     this.getRowHeight = this.getRowHeight.bind(this);
     this.handleRowSelect = this.handleRowSelect.bind(this);
+    this.formatValue = this.formatValue.bind(this);
     this.handleToggleSwitchClick = this.handleToggleSwitchClick.bind(this);
     this.sort = this.sort.bind(this);
   }
@@ -118,7 +121,7 @@ class CampaignTable extends Component {
       case constants.KPI.CPO.key:
         return relativeWidth;
       case constants.KPI.COST.key:
-        return 45;
+        return 65;
       case constants.KPI.ORDER_VALUE.key:
         return 72;
       case constants.KPI.MARGIN.key:
@@ -136,6 +139,37 @@ class CampaignTable extends Component {
 
   getRowHeight() {
     return this.state.rowHeight;
+  }
+
+  getKPIFromKey(key) {
+    switch (key) {
+      case constants.KPI.IMPRESSIONS.key:
+        return constants.KPI.IMPRESSIONS;
+      case constants.KPI.CLICKS.key:
+        return constants.KPI.CLICKS;
+      case constants.KPI.CTR.key:
+        return constants.KPI.CTR;
+      case constants.KPI.CONVERSION.key:
+        return constants.KPI.CONVERSION;
+      case constants.KPI.CVR.key:
+        return constants.KPI.CVR;
+      case constants.KPI.CPM.key:
+        return constants.KPI.CPM;
+      case constants.KPI.CPC.key:
+        return constants.KPI.CPC;
+      case constants.KPI.CPO.key:
+        return constants.KPI.CPO;
+      case constants.KPI.COST.key:
+        return constants.KPI.COST;
+      case constants.KPI.ORDER_VALUE.key:
+        return constants.KPI.ORDER_VALUE;
+      case constants.KPI.MARGIN.key:
+        return constants.KPI.MARGIN;
+      case constants.KPI.ROI.key:
+        return constants.KPI.ROI;
+      default:
+        return null;
+    }
   }
 
   sort({ sortBy, sortDirection }) {
@@ -244,6 +278,21 @@ class CampaignTable extends Component {
     );
   }
 
+  formatValue(kpiKey, value, campaign) {
+    if (kpiKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN || kpiKey === constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS) {
+      return value;
+    }
+    const valueType = this.getKPIFromKey(kpiKey).valueType;
+    return formatNumericValue(value, valueType, campaign.currency, this.props.intl);
+  }
+
+  formatRow(row) {
+    return Object.keys(row).reduce((accumulator, kpi) => {
+      accumulator[kpi] = this.formatValue(kpi, row[kpi], row[constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN]); // eslint-disable-line no-param-reassign
+      return accumulator;
+    }, {});
+  }
+
   /*  TODO USE INTL TO TRANSLATE HEADERS */
   render() {
     const {
@@ -259,7 +308,7 @@ class CampaignTable extends Component {
     const { list, headers } = this.props;
     let sortedList = Object.values(list).sort((first, second) => (first[sortBy] < second[sortBy] ? -1 : 1));
     sortedList = sortDirection === SortDirection.DESC ? sortedList.reverse() : sortedList;
-    this.currentList = sortedList;
+    this.currentList = sortedList.map(it => this.formatRow(it));
     const rowGetter = ({ index }) => this.getDatum(this.currentList, index);
     return (
       <div className={styles.campaignTable}>
@@ -315,10 +364,11 @@ CampaignTable.propTypes = {
   onToggleSwitchClick: PropTypes.func,
   onAddAlert: PropTypes.func,
   selectedCampaign: PropTypes.object,
+  intl: PropTypes.object,
   toggledCampaign: PropTypes.oneOfType([
     PropTypes.bool,
     PropTypes.number,
   ]),
 };
 
-export default CampaignTable;
+export default injectIntl(CampaignTable);

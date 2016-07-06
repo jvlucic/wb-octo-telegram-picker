@@ -36,6 +36,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     this.handleOnChangeCampaignStatusFilter = this.handleOnChangeCampaignStatusFilter.bind(this);
     this.handleOnChangeSelectedCampaignFilter = this.handleOnChangeSelectedCampaignFilter.bind(this);
     this.handleOnResetDateRange = this.handleOnResetDateRange.bind(this);
+    this.previousScrollY = 0;
   }
 
   componentDidMount() {
@@ -62,12 +63,16 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
 
   handleScroll() {
     /* TODO: do not hardcode the scroll position , this is only useful for dashboard page! */
-    if (window.scrollY === 0) {
-      if (appContainer && appContainer.className.indexOf('noHeader') >= 0) {
+    let scrollingDown = false;
+    if ( this.previousScrollY < window.scrollY){
+      scrollingDown = true;
+    }
+    if (window.scrollY <= 52 || !scrollingDown) {
+      if (appContainer && appContainer.className.indexOf('noHeader') >= 0 ) {
         appContainer.className = appContainer.className.replace(/\bnoHeader\b/, '');
       }
     } else {
-      if (appContainer && appContainer.className.indexOf('noHeader') === -1) {
+      if (appContainer && appContainer.className.indexOf('noHeader') === -1 && scrollingDown) {
         appContainer.className += ' noHeader';
       }
     }
@@ -80,6 +85,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
         appContainer.className += ' sticky';
       }
     }
+    this.previousScrollY = window.scrollY;
   }
 
 

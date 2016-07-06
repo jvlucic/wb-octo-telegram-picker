@@ -24,7 +24,8 @@ export function formatNumericValue(value, valueType, currency, intl) {
       return intl.formatNumber(value, { style: 'currency', currency: currency || 'USD' });
     }
     case constants.VALUE_TYPE.PERCENTAGE: {
-      return intl.formatNumber(value, { style: 'percent' });
+      /* WARNING: we assume values received are already multiplied by 100 so, we normalize them */
+      return intl.formatNumber(value / 100, { style: 'percent' });
     }
     case constants.VALUE_TYPE.NUMBER: {
       return intl.formatNumber(value);
