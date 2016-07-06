@@ -36,8 +36,8 @@ const msgs = defineMessages({
   },
   signout: {
     id: 'app.secure.header.nav.signout',
-    description: 'Sign Out link',
-    defaultMessage: 'Sign Out',
+    description: 'Log Out link',
+    defaultMessage: 'Log out',
   },
   needHelp: {
     id: 'app.secure.header.nav.needHelp',
