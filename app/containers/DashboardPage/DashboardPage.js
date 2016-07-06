@@ -36,6 +36,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     this.handleOnChangeCampaignStatusFilter = this.handleOnChangeCampaignStatusFilter.bind(this);
     this.handleOnChangeSelectedCampaignFilter = this.handleOnChangeSelectedCampaignFilter.bind(this);
     this.handleOnResetDateRange = this.handleOnResetDateRange.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
     this.previousScrollY = 0;
   }
 
@@ -67,16 +68,19 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     if ( this.previousScrollY < window.scrollY){
       scrollingDown = true;
     }
-    if (window.scrollY <= 52 || !scrollingDown) {
+    console.log('filterBar POS');
+    console.log(this.refs.filterBar.getBoundingClientRect() );
+    if (window.scrollY <= 52) {
       if (appContainer && appContainer.className.indexOf('noHeader') >= 0 ) {
         appContainer.className = appContainer.className.replace(/\bnoHeader\b/, '');
       }
     } else {
-      if (appContainer && appContainer.className.indexOf('noHeader') === -1 && scrollingDown) {
+      if (appContainer && appContainer.className.indexOf('noHeader') === -1) {
         appContainer.className += ' noHeader';
       }
     }
-    if (window.scrollY < 477) {
+    const campaignTableHeaderPosition = window && window.innerWidth >= 1280 ? 561 : 491;
+    if (window.scrollY < campaignTableHeaderPosition) {
       if (appContainer && appContainer.className.indexOf('sticky') >= 0) {
         appContainer.className = appContainer.className.replace(/\bsticky\b/, '');
       }
@@ -139,7 +143,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     const {KPIData, range, tableHeaders, tableList, status, selectedCampaign, activeKPIs, loading, toggledCampaign} = this.props;
     return (
       <div className={styles.dashboardPage} >
-        <div className={styles.statusFilter}>
+        <div ref="filterBar" className={styles.statusFilter}>
           <span className={styles.title} >Showing data across</span>
           <div className={styles.dropDownContainer}>
             <CampaignFilterDropdown selectedCampaign={selectedCampaign} initialValue={status} onChange={this.handleOnChangeCampaignStatusFilter} />

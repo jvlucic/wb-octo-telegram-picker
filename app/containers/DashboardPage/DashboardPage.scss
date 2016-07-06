@@ -1,6 +1,6 @@
 .KPIChartContainer {
   //height: 420px;
-  margin-bottom: 70px;
+  margin-bottom: 74px;
 }
 
 .KPIChartContainer, .campaignTableContainer, .statusFilter {
@@ -22,7 +22,7 @@
   .dashboardPage {
     //margin-top: 167px;
     .statusFilter {
-      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0);
+      //box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0);
     }
   }
 }
@@ -30,24 +30,28 @@
 :global(.noHeader) {
   .dashboardPage {
     //margin-top: 108px;
+
     .statusFilter {
-      //top: 0;
+      transition: box-shadow 0.25s ease-in;
+      position: fixed;
+      top: 0;
+      padding: 25px 48px 82.5px 48px;
       //padding: 15px 24px 53.5px 24px;
-      //box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.08);
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.08);
     }
     .innerContainer {
-      //margin-top: 56px;
+      margin-top: 107.5px;
     }
   }
 }
 
-:global(.sticky:not(.noHeader)) {
+:global(.sticky) {
   .dashboardPage {
     //margin-top: 108px;
     .statusFilter {
       //top: 52px;
       //padding: 15px 24px 53.5px 24px;
-      //box-shadow: none;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0);
     }
     .innerContainer {
       //margin-top: 56px;
@@ -66,7 +70,6 @@
 }
 
 .statusFilter {
-  // transition: all 0.25s ease-in;
   //margin-bottom: 42.5px;
   //margin-top: 25px;
   //height: 40px;

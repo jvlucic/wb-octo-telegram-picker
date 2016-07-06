@@ -311,7 +311,10 @@ class CampaignTable extends Component {
     this.currentList = sortedList.map(it => this.formatRow(it));
     const rowGetter = ({ index }) => this.getDatum(this.currentList, index);
     return (
-      <div className={styles.campaignTable}>
+      <div style={{ height: (Math.min(this.currentList.length, 50) + 1) * 70 }} className={styles.campaignTable}>
+        <div className={styles.tableHeader}>
+          Header
+        </div>
         <AutoSizer disableHeight>
           {({ width }) => (
             <FlexTable

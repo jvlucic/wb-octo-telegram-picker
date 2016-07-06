@@ -7,4 +7,12 @@
       padding: $padding-horizontal-base $glutter;
     }
   }
+
+  .dashboardPage{
+    .SecureApp {
+      &-content {
+        padding: 0 $glutter $padding-horizontal-base $glutter;
+      }
+    }
+  }
 }
