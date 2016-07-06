@@ -27,18 +27,18 @@
 :global(.sticky.noHeader) {
   :global{
     .FlexTable__headerRow{
-      position: fixed;
-      top: 68px;
-      z-index: 1;
+      //position: fixed;
+      //top: 68px;
+      //z-index: 1;
     }
   }
 }
 :global(.sticky:not(.noHeader)) {
   :global{
     .FlexTable__headerRow{
-      position: fixed;
-      top: 120px;
-      z-index: 1;
+      //position: fixed;
+      //top: 120px;
+      //z-index: 1;
     }
   }
 }

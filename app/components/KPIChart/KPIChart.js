@@ -282,7 +282,7 @@ class KPIChart extends Component {
           <LineChart
             ref="lineChart"
             redraw={this.state.redraw} data={chartData} options={this.state.chartOptions}
-            onClick={handleChartClick} height="250"
+            onClick={handleChartClick} height={window && window.innerWidth >= 1280 ? 320 : 250}
           />
         </div>
         <div className={styles.KPIListContainer}>
