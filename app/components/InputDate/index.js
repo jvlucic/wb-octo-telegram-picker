@@ -30,7 +30,7 @@ export default class InputDate extends Component { // eslint-disable-line react/
             {
               from instanceof Date
                 &&
-                moment(from).format('DD:MM:YYYY')
+                moment(from).format('DD.MM.YYYY')
             }
             {
               to instanceof Date
@@ -39,7 +39,7 @@ export default class InputDate extends Component { // eslint-disable-line react/
                   &nbsp;
                   -
                   &nbsp;
-                  {moment(to).format('DD:MM:YYYY')}
+                  {moment(to).format('DD.MM.YYYY')}
                 </span>
               )
             }

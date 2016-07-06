@@ -23,7 +23,7 @@ const msgs = defineMessages({
   getAccount: {
     id: 'app.login_app.header.get_account',
     description: 'Want to get an account header message',
-    defaultMessage: 'want to get an account?',
+    defaultMessage: 'Want to get an account?',
   },
   staySigned: {
     id: 'app.login_app.container.stay_signed',

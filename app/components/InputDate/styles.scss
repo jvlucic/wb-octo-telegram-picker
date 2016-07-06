@@ -63,6 +63,8 @@
 
     &:hover {
       border-color: #2bcff3;
+      cursor: pointer;
+      outline: 1px solid rgba(3, 199, 240, 0.2);
       .InputDate-value {
         color: #2bcff3;
       }
