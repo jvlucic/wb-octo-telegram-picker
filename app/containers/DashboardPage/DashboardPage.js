@@ -79,7 +79,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
         appContainer.className += ' noHeader';
       }
     }
-    const campaignTableHeaderPosition = window && window.innerWidth >= 1280 ? 561 : 491;
+    const campaignTableHeaderPosition = window && window.innerWidth >= 1280 ? 541 : 471;
     if (window.scrollY < campaignTableHeaderPosition) {
       if (appContainer && appContainer.className.indexOf('sticky') >= 0) {
         appContainer.className = appContainer.className.replace(/\bsticky\b/, '');
