@@ -1,3 +1,5 @@
+@import 'main';
+
 .KPIChartContainer {
   //height: 420px;
   margin-bottom: 74px;
@@ -90,6 +92,25 @@
   .calendarContainer {
     float: right;
     width: 300px;
+    margin-right: 38px;
+  }
+  .downloadToolsContainer{
+    float: right;
+    padding-left: 7px;
+    padding-right: 7px;
+    margin-right: -13px;
+    padding-top: 10px;
+    font-size: 13px;
+    color: $link-color ;
+    > div {
+      cursor: pointer;
+      svg{
+        width: 20px;
+      }
+      float: left;
+      margin-left: 7px;
+      margin-right: 7px;
+    }
   }
   .dropDownContainer {
     float: left;

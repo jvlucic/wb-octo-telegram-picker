@@ -18,6 +18,7 @@ import { actions } from './reducer';
 import { KPIDataSelector, selectRange, campaignTableHeadersSelector,
          campaignTableListSelector, campaignStatusSelector, selectedCampaignSelector,
          activeKPIsSelector, loadingSelector, toggledCampaignSelector, errorSelector } from './selectors';
+import { DownloadIcon} from '../../theme/assets';
 import { injectIntl } from 'react-intl';
 import constants from '../../constants';
 import styles from './DashboardPage.scss';
@@ -31,6 +32,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
 
     // Binding methods to this
     this.handleOnAddAlert = this.handleOnAddAlert.bind(this);
+    this.handleCSVDownload = this.handleCSVDownload.bind(this);
     this.handleOnChangeCampaignStatus = this.handleOnChangeCampaignStatus.bind(this);
     this.handleOnChangeDateRangeFilter = this.handleOnChangeDateRangeFilter.bind(this);
     this.handleOnChangeCampaignStatusFilter = this.handleOnChangeCampaignStatusFilter.bind(this);
@@ -138,6 +140,33 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
   handleOnChangeCampaignStatus(id, status) {
     this.props.changeCampaignStatus(id, status);
   }
+  handleCSVDownload(){
+    const headers = this.props.tableHeaders;
+    const list =  Object.values(this.props.tableList).map( dataObj => {
+      return headers.map( header => {
+        if (header === constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN){
+          return dataObj[header].name;
+        }
+        if (header === constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS){
+          return dataObj[header] ? 'active' : 'inactive';
+        }
+        return dataObj[header];
+      })
+    });
+    const data =  [headers, ...list];
+    let dataString = '';
+    let csvContent = "data:text/csv;charset=utf-8,";
+    data.forEach(function(infoArray, index){
+      dataString = infoArray.join(',');
+      csvContent += index < data.length ? dataString+ '\n' : dataString;
+    });
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "campaign_data.csv");
+    document.body.appendChild(link); // Required for FF
+    link.click();
+  }
 
   render() {
     const {KPIData, range, tableHeaders, tableList, status, selectedCampaign, activeKPIs, loading, toggledCampaign} = this.props;
@@ -147,6 +176,11 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
           <span className={styles.title} >Showing data across</span>
           <div className={styles.dropDownContainer}>
             <CampaignFilterDropdown selectedCampaign={selectedCampaign} initialValue={status} onChange={this.handleOnChangeCampaignStatusFilter} />
+          </div>
+          <div className={styles.downloadToolsContainer}>
+            <div><DownloadIcon/></div>
+            <div>PDF</div>
+            <div onClick={this.handleCSVDownload}>Excel</div>
           </div>
           <div className={styles.calendarContainer}>
             <Calendar
