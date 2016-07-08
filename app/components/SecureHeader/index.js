@@ -87,7 +87,7 @@ function SecureHeader({ fullName, logout: logoutAction }) {
         <div className="SecureHeader-account">
           <div className="SecureHeader-accountWelcome">
             <FormattedMessage {...msgs.welcome} values={{ name: fullName }} />
-            <a className="SecureHeader-accountHelp">
+            <a href="mailto:support@unidesq.com" className="SecureHeader-accountHelp">
               <FormattedMessage {...msgs.needHelp} />
             </a>
           </div>
