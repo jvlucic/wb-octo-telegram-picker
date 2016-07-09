@@ -130,9 +130,20 @@ export const previousCampaignDataSelector = createSelector(
   model => (model.get('previousCampaignData'))
 );
 
-export const rangeSelector = createSelector(
+export const fromSelector = createSelector(
   getModelSelector,
-  model => ({ from: model.get('from'), to: model.get('to') })
+  model => (model.get('from'))
+);
+
+export const toSelector = createSelector(
+  getModelSelector,
+  model => (model.get('to'))
+);
+
+export const rangeSelector = createSelector(
+  fromSelector,
+  toSelector,
+  (from, to) => ({ from, to })
 );
 
 export const toggledCampaignSelector = createSelector(
@@ -226,6 +237,25 @@ export const KPIDataSelector = createSelector(
     if (!currentCampaignDataMap || !campaignPerformanceData || loading || !selectedPreviousCampaignDataMap) {
       return null;
     }
+    console.log('-------------------------------------------------------PRINTING VALUES-------------------------------------------------------');
+    console.log('currentCampaignDataMap');
+    console.log(currentCampaignDataMap);
+    console.log('status');
+    console.log(status);
+    console.log('frequency');
+    console.log(frequency);
+    console.log('campaignPerformanceData');
+    console.log(campaignPerformanceData);
+    console.log('loading');
+    console.log(loading);
+    console.log('range');
+    console.log(range);
+    console.log('selectedCampaign');
+    console.log(selectedCampaign);
+    console.log('selectedPreviousCampaignDataMap');
+    console.log(selectedPreviousCampaignDataMap);
+    console.log('-------------------------------------------------------END PRINTING VALUES-------------------------------------------------------');
+
     let campaignDataMap = currentCampaignDataMap;
     if (selectedCampaign && currentCampaignDataMap.hasOwnProperty(selectedCampaign.id)) {
       campaignDataMap = { [selectedCampaign.id]: currentCampaignDataMap[selectedCampaign.id] };

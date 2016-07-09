@@ -32,10 +32,9 @@ class KPIChart extends Component {
     this.handleChartClick = this.handleChartClick.bind(this);
     this.formatYValue = this.formatYValue.bind(this);
     const formatYValue = this.formatYValue;
-    const { chartData, yAxes, xAxis } = this.processDataSets(props.chartData, this.props, props.initiallyActiveKPIs);
+    const { chartData, yAxes, xAxis } = this.processDataSets(props.chartData, this.props, props.activeKPIs);
     this.state = {
       chartData,
-      activeKPIs: props.initiallyActiveKPIs,
       hoveredKPI: null,
       redraw: false,
       chartOptions: {
@@ -68,8 +67,8 @@ class KPIChart extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.chartData && nextProps.chartData !== this.state.chartData) {
-      const { chartData, yAxes, xAxis } = this.processDataSets(nextProps.chartData, this.props, this.state.activeKPIs);
+    if (nextProps.chartData && nextProps.chartData !== this.props.chartData) {
+      const { chartData, yAxes, xAxis } = this.processDataSets(nextProps.chartData, this.props, this.props.activeKPIs);
       this.setState({ chartData, yAxes, xAxis, redraw: true });
     }
   }
@@ -219,8 +218,8 @@ class KPIChart extends Component {
   }
 
   toggleKPI(kpi) {
-    const activeKPIs = this.state.activeKPIs.filter(it => it !== kpi);
-    if (activeKPIs.length !== this.state.activeKPIs.length && this.state.activeKPIs.length <= 1) { // Always keep at least one KPI active
+    const activeKPIs = this.props.activeKPIs.filter(it => it !== kpi);
+    if (activeKPIs.length !== this.props.activeKPIs.length && this.props.activeKPIs.length <= 1) { // Always keep at least one KPI active
       return;
     }
 
@@ -238,11 +237,12 @@ class KPIChart extends Component {
     const props = this.props;
     const { chartOptions, chartData } = this.redrawChart(kpi, props, toggledDatasetWillBeShown, origChartOptions, origChartData);
     this.setState({
-      activeKPIs: activeKPIs.length === this.state.activeKPIs.length ? [...activeKPIs, kpi] : activeKPIs,
+      activeKPIs: activeKPIs.length === this.props.activeKPIs.length ? [...activeKPIs, kpi] : activeKPIs,
       chartData,
       chartOptions,
       redraw: true,
     });
+    this.props.onKPIToggle(kpi);
   }
 
   toggleHovered(kpiKey) {
@@ -274,7 +274,7 @@ class KPIChart extends Component {
     const KPIValues = this.props.KPIValues;
     const activeKPIsMap = {};
     const hoveredKPI = this.state.hoveredKPI;
-    this.state.activeKPIs.forEach(it => activeKPIsMap[it] = true); // eslint-disable-line no-return-assign
+    this.props.activeKPIs.forEach(it => activeKPIsMap[it] = true); // eslint-disable-line no-return-assign
     /* TODO: HANDLE CURRENCY SYMBOLS IN A GENERIC WAY ?*/
     return (
       <div >
@@ -317,9 +317,10 @@ class KPIChart extends Component {
 KPIChart.propTypes = {
   chartData: PropTypes.object,
   KPIValues: PropTypes.object,
-  initiallyActiveKPIs: PropTypes.array,
+  activeKPIs: PropTypes.array,
   intl: PropTypes.object,
   currency: PropTypes.string,
+  onKPIToggle: PropTypes.func,
 };
 
 export default injectIntl(KPIChart);

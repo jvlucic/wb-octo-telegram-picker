@@ -5,13 +5,6 @@ import constants from '../../constants';
 import moment from 'moment';
 import { getCampaignPerfomanceData as getCampaignPerfomanceDataFromAPI, getCampaignData as getCampaignDataFromAPI, toggleCampaignStatus } from '../../utils/unidesqApi';
 
-/* TODO: replace dummydata for API calls */
-/*
-import dummyCampaignData from '../../../unidesq-spec/fixtures/dummyCampaignData.json';
-import dummyCampaignPerfomanceData from '../../../unidesq-spec/fixtures/dummyCampaignPerfomanceData.json';
-import dummyCampaignPerfomanceHourlyData from '../../../unidesq-spec/fixtures/dummyCampaignPerfomanceHourlyData.json';
-*/
-
 const LOAD_CAMPAIGN_DATA = `${name}/LOAD_CAMPAIGN_DATA`;
 const LOAD_CAMPAIGN_DATA_SUCCESS = `${name}/LOAD_CAMPAIGN_DATA_SUCCESS`;
 const LOAD_CAMPAIGN_DATA_ERROR = `${name}/LOAD_CAMPAIGN_DATA_ERROR`;
@@ -21,7 +14,7 @@ const CHANGE_SELECTED_CAMPAIGN = `${name}/CHANGE_SELECTED_CAMPAIGN`;
 const LOAD_CHANGE_CAMPAIGN_STATUS = `${name}/LOAD_CHANGE_CAMPAIGN_STATUS`;
 const LOAD_CHANGE_CAMPAIGN_STATUS_SUCCESS = `${name}/LOAD_CHANGE_CAMPAIGN_STATUS_SUCCESS`;
 const LOAD_CHANGE_CAMPAIGN_STATUS_ERROR = `${name}/LOAD_CHANGE_CAMPAIGN_STATUS_ERROR`;
-
+const TOGGLE_KPI = `${name}/TOGGLE_KPI`;
 
 function getInitialDateRange() {
   const now = moment().startOf('day');
@@ -35,9 +28,9 @@ const initialRange = getInitialDateRange();
 
 export const initialState = fromJS({
   timeFrame: constants.TIMEFRAME.YESTERDAY,
+  activeKPIs: [constants.KPI.IMPRESSIONS.key, constants.KPI.CLICKS.key],
   status: constants.STATUS.ACTIVE,
   frequency: constants.FREQUENCY.DAILY,
-  activeKPIs: [constants.KPI.IMPRESSIONS.key, constants.KPI.CLICKS.key],
   campaignPerformanceData: false,
   campaignData: false,
   to: initialRange.to,
@@ -117,10 +110,23 @@ export default (state = initialState, action) => {
         .set('toggledCampaign', action.campaignId)
         .set('campaignData', campaignData);
     }
+    case TOGGLE_KPI: {
+      let activeKPIs = state.get('activeKPIs');
+      const kpiIndex = activeKPIs.indexOf(action.kpi);
+      if (kpiIndex !== -1) {
+        activeKPIs = activeKPIs.delete(kpiIndex);
+      } else {
+        activeKPIs = activeKPIs.push(action.kpi);
+      }
+      return state
+        .set('activeKPIs', activeKPIs);
+    }
+
     default:
       return state;
   }
 };
+
 
 export function loadCampaignData() {
   return {
@@ -304,6 +310,13 @@ function changeCampaignStatus(campaignId, value) {
   };
 }
 
+export function toggleKPI(kpi) {
+  return {
+    type: TOGGLE_KPI,
+    kpi,
+  };
+}
+
 export function getCampaignData() {
   return (dispatch, getState) => {
     refreshCampaignData(dispatch, getState);
@@ -314,10 +327,12 @@ export const actions = {
   LOAD_CAMPAIGN_DATA,
   LOAD_CAMPAIGN_DATA_SUCCESS,
   LOAD_CAMPAIGN_DATA_ERROR,
+  TOGGLE_KPI,
   changeDateRange,
   resetDateRange,
   getCampaignData,
   changeCampaignStatusFilter,
   changeSelectedCampaignFilter,
   changeCampaignStatus,
+  toggleKPI,
 };

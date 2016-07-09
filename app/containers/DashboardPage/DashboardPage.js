@@ -32,6 +32,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
 
     // Binding methods to this
     this.handleOnAddAlert = this.handleOnAddAlert.bind(this);
+    this.handleKPIToggle = this.handleKPIToggle.bind(this);
     this.handleCSVDownload = this.handleCSVDownload.bind(this);
     this.handleOnChangeCampaignStatus = this.handleOnChangeCampaignStatus.bind(this);
     this.handleOnChangeDateRangeFilter = this.handleOnChangeDateRangeFilter.bind(this);
@@ -70,8 +71,6 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     if ( this.previousScrollY < window.scrollY){
       scrollingDown = true;
     }
-    console.log('filterBar POS');
-    console.log(this.refs.filterBar.getBoundingClientRect() );
     if (window.scrollY <= 52) {
       if (appContainer && appContainer.className.indexOf('noHeader') >= 0 ) {
         appContainer.className = appContainer.className.replace(/\bnoHeader\b/, '');
@@ -140,6 +139,9 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
   handleOnChangeCampaignStatus(id, status) {
     this.props.changeCampaignStatus(id, status);
   }
+  handleKPIToggle(kpi){
+    this.props.toggleKPI(kpi);
+  }
   handleCSVDownload(){
     const headers = this.props.tableHeaders;
     const list =  Object.values(this.props.tableList).map( dataObj => {
@@ -195,7 +197,11 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
         <div className={styles.innerContainer}>
           {loading && <div><Loader/></div>}
           { !loading && KPIData &&  <div className={styles.KPIChartContainer}>
-            <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } currency={KPIData.currency} initiallyActiveKPIs = { activeKPIs }  />
+            <KPIChart KPIValues={ KPIData.KPIValues }
+                      chartData={ KPIData.chartData }
+                      currency={KPIData.currency}
+                      activeKPIs = { activeKPIs }
+                      onKPIToggle={ this.handleKPIToggle } />
           </div>}
           { !loading && tableList && <div className={styles.campaignTableContainer}>
              <CampaignTable
