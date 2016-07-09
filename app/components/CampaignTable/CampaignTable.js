@@ -98,12 +98,13 @@ class CampaignTable extends Component {
   }
 
   getColumnWidth(header) {
-    const relativeWidth = 30;
+    const relativeWidth = 45;
+    const isWindowLarge = window && window.innerWidth >= 1280;
     switch (header) {
       case constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS:
         return 45;
       case constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN:
-        return 300;
+        return isWindowLarge ? 300 : 250;
       case constants.KPI.IMPRESSIONS.key:
         return 76;
       case constants.KPI.CLICKS.key:

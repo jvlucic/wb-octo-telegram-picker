@@ -16,7 +16,7 @@ function renderContent(value, valueType, currency) {
   let symbol = null;
   switch (valueType) {
     case constants.VALUE_TYPE.CURRENCY: {
-      formattedValue = numberFormatter(value);
+      formattedValue = numberFormatter(value).replace(/\.00$/, '');
       symbol = currency;
       break;
     }
@@ -26,7 +26,7 @@ function renderContent(value, valueType, currency) {
       break;
     }
     case constants.VALUE_TYPE.NUMBER: {
-      formattedValue = numberFormatter(value);
+      formattedValue = numberFormatter(value).replace(/\.00$/, '');
       break;
     }
     default:
