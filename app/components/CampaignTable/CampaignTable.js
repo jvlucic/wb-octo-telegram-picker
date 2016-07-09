@@ -50,9 +50,9 @@ class CampaignTable extends Component {
       const nextCampaignChangedStatus = nextProps.list[toggledCampaign] && nextProps.list[toggledCampaign].campaign.changed || 'success';
       if (previousCampaignChangedStatus === 'loading' && nextCampaignChangedStatus && nextCampaignChangedStatus !== 'loading') {
         if (nextCampaignChangedStatus === 'error') {
-          this.props.onAddAlert('error', `Campaign ${toggledCampaign} update failed`, null);
+          this.props.onAddAlert('error', 'Campaign update failed', null);
         } else if (nextCampaignChangedStatus === 'success') {
-          this.props.onAddAlert('success', `Campaign ${toggledCampaign} successfully updated`, null);
+          this.props.onAddAlert('success', 'Campaign was successfully updated', null);
         }
       }
     }
