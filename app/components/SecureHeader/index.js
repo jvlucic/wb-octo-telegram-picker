@@ -67,21 +67,6 @@ function SecureHeader({ fullName, logout: logoutAction }) {
                 <FormattedMessage {...msgs.dashboard} />
               </Link>
             </li>
-            <li className="SecureHeader-navLink">
-              <Link to="/reporting" activeClassName="is-active">
-                <FormattedMessage {...msgs.reporting} />
-              </Link>
-            </li>
-            <li className="SecureHeader-navLink">
-              <Link to="/creatives" activeClassName="is-active">
-                <FormattedMessage {...msgs.creatives} />
-              </Link>
-            </li>
-            <li className="SecureHeader-navLink">
-              <Link to="/tools" activeClassName="is-active">
-                <FormattedMessage {...msgs.tools} />
-              </Link>
-            </li>
           </ul>
         </nav>
         <div className="SecureHeader-account">

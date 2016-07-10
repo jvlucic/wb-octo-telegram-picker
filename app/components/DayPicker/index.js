@@ -16,7 +16,7 @@ const WEEKDAYS_LONG = {
 
 const WEEKDAYS_SHORT = {
   en: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-  de: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+  de: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
   es: ['L', 'M', 'M', 'J', 'V', 'S', 'D'],
 };
 
@@ -28,7 +28,7 @@ const MONTHS = {
 
 const FIRST_DAY = {
   en: 0,
-  de: 0,
+  de: 1,
   es: 1,
 };
 

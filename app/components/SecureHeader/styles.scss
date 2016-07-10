@@ -35,6 +35,7 @@
     $horizontal-bar-mode: $large-screen;
     @mixin link() {
       color: $centered-navigation-color;
+      cursor: pointer;
       display: inline-block;
       outline: none;
       padding: 0 $centered-navigation-item-padding;

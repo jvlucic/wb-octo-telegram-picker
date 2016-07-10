@@ -41,6 +41,7 @@ class AccountPage extends Component { // eslint-disable-line react/prefer-statel
                   Profile
                 </Link>
               </div>
+              {/*
               <div className="AccountPage-overviewNavItem">
                 <Link to="/account/company" activeClassName="is-active">
                   Company
@@ -51,6 +52,7 @@ class AccountPage extends Component { // eslint-disable-line react/prefer-statel
                   Brand
                 </Link>
               </div>
+              */}
             </div>
           </div>
           <div className="AccountPage-childContent">

@@ -23,12 +23,14 @@
       @include outer-container;
       background-color: #fafafa;
       border-bottom: 1px solid #e5e5e5;
+      cursor: pointer;
       padding: 10px 15px;
     }
 
     &-button {
       background-color: #03C7F1;
       color: white;
+      cursor: pointer;
       font-size: 15px;
       height: 34px;
       padding: 0 15px;
@@ -36,6 +38,7 @@
       &.is-disabled {
         background-color: #F2F2F2;
         color: #C6C6C6;
+        cursor: not-allowed;
       }
       &Container {
         @include span-columns(12);
@@ -49,6 +52,7 @@
     @include span-columns(3);
     width: 25%;
     color: #03C7F1;
+    cursor: pointer;
     font-size: 14px;
     line-height: 35px;
     margin-right: 0;

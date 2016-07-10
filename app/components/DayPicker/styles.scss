@@ -7,6 +7,7 @@
 
 :global(.DayPicker-Day) {
   border: none;
+  cursor: pointer !important;
   min-width: 40px;
   padding-top: 0;
   padding-bottom: 0;
