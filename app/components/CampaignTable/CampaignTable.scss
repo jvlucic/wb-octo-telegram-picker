@@ -1,8 +1,17 @@
+.tableHeader{
+  height: 50px;
+  background: red;
+  display: none;
+  z-index: 1;
+}
 .campaignTable{
+  // background-color: green;
   width: 100%;
   font-size: 14px;
+  position: relative;
   :global{
     .FlexTable{
+      // display: none;
       outline: none;
       * {
         outline: none;
@@ -12,6 +21,8 @@
       }
       .FlexTable__headerRow{
         background-color: white;
+        //display: none;
+        //background-color: red;
         box-shadow: 0 3px 2px -2px rgba(0, 0, 0, 0.06);
       }
       .FlexTable__sortableHeaderIcon{
@@ -24,21 +35,32 @@
   }
 }
 
-:global(.sticky.noHeader) {
+:global(.sticky) {
+  .campaignTable{
+    margin-top: 104px;
+  }
+  .tableHeader{
+    position: fixed;
+    width: 100%;
+    top: 107.5px;
+  }
   :global{
     .FlexTable__headerRow{
       position: fixed;
-      top: 68px;
+      width: 100%;
+      top: 87.5px;
       z-index: 1;
     }
+
   }
+
 }
 :global(.sticky:not(.noHeader)) {
   :global{
     .FlexTable__headerRow{
-      position: fixed;
-      top: 120px;
-      z-index: 1;
+      //position: fixed;
+      //top: 179px;
+      //z-index: 1;
     }
   }
 }
@@ -60,6 +82,7 @@
 
 .evenRow{
   background-color: #FAFAFA;
+  //background-color: black;
 }
 
 .campaignBudget{

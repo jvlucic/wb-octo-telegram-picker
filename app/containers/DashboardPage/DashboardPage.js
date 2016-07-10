@@ -18,6 +18,7 @@ import { actions } from './reducer';
 import { KPIDataSelector, selectRange, campaignTableHeadersSelector,
          campaignTableListSelector, campaignStatusSelector, selectedCampaignSelector,
          activeKPIsSelector, loadingSelector, toggledCampaignSelector, errorSelector } from './selectors';
+import { DownloadIcon} from '../../theme/assets';
 import { injectIntl } from 'react-intl';
 import constants from '../../constants';
 import styles from './DashboardPage.scss';
@@ -31,11 +32,14 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
 
     // Binding methods to this
     this.handleOnAddAlert = this.handleOnAddAlert.bind(this);
+    this.handleKPIToggle = this.handleKPIToggle.bind(this);
+    this.handleCSVDownload = this.handleCSVDownload.bind(this);
     this.handleOnChangeCampaignStatus = this.handleOnChangeCampaignStatus.bind(this);
     this.handleOnChangeDateRangeFilter = this.handleOnChangeDateRangeFilter.bind(this);
     this.handleOnChangeCampaignStatusFilter = this.handleOnChangeCampaignStatusFilter.bind(this);
     this.handleOnChangeSelectedCampaignFilter = this.handleOnChangeSelectedCampaignFilter.bind(this);
     this.handleOnResetDateRange = this.handleOnResetDateRange.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
     this.previousScrollY = 0;
   }
 
@@ -67,16 +71,17 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     if ( this.previousScrollY < window.scrollY){
       scrollingDown = true;
     }
-    if (window.scrollY <= 52 || !scrollingDown) {
+    if (window.scrollY <= 52) {
       if (appContainer && appContainer.className.indexOf('noHeader') >= 0 ) {
         appContainer.className = appContainer.className.replace(/\bnoHeader\b/, '');
       }
     } else {
-      if (appContainer && appContainer.className.indexOf('noHeader') === -1 && scrollingDown) {
+      if (appContainer && appContainer.className.indexOf('noHeader') === -1) {
         appContainer.className += ' noHeader';
       }
     }
-    if (window.scrollY < 477) {
+    const campaignTableHeaderPosition = window && window.innerWidth >= 1280 ? 541 : 471;
+    if (window.scrollY < campaignTableHeaderPosition) {
       if (appContainer && appContainer.className.indexOf('sticky') >= 0) {
         appContainer.className = appContainer.className.replace(/\bsticky\b/, '');
       }
@@ -134,15 +139,50 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
   handleOnChangeCampaignStatus(id, status) {
     this.props.changeCampaignStatus(id, status);
   }
+  handleKPIToggle(kpi){
+    this.props.toggleKPI(kpi);
+  }
+  handleCSVDownload(){
+    const headers = this.props.tableHeaders;
+    const list =  Object.values(this.props.tableList).map( dataObj => {
+      return headers.map( header => {
+        if (header === constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN){
+          return dataObj[header].name;
+        }
+        if (header === constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS){
+          return dataObj[header] ? 'active' : 'inactive';
+        }
+        return dataObj[header];
+      })
+    });
+    const data =  [headers, ...list];
+    let dataString = '';
+    let csvContent = "data:text/csv;charset=utf-8,";
+    data.forEach(function(infoArray, index){
+      dataString = infoArray.join(',');
+      csvContent += index < data.length ? dataString+ '\n' : dataString;
+    });
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "campaign_data.csv");
+    document.body.appendChild(link); // Required for FF
+    link.click();
+  }
 
   render() {
     const {KPIData, range, tableHeaders, tableList, status, selectedCampaign, activeKPIs, loading, toggledCampaign} = this.props;
     return (
       <div className={styles.dashboardPage} >
-        <div className={styles.statusFilter}>
+        <div ref="filterBar" className={styles.statusFilter}>
           <span className={styles.title} >Showing data across</span>
           <div className={styles.dropDownContainer}>
             <CampaignFilterDropdown selectedCampaign={selectedCampaign} initialValue={status} onChange={this.handleOnChangeCampaignStatusFilter} />
+          </div>
+          <div className={styles.downloadToolsContainer}>
+            <div><DownloadIcon/></div>
+            <div>PDF</div>
+            <div onClick={this.handleCSVDownload}>Excel</div>
           </div>
           <div className={styles.calendarContainer}>
             <Calendar
@@ -157,7 +197,11 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
         <div className={styles.innerContainer}>
           {loading && <div><Loader/></div>}
           { !loading && KPIData &&  <div className={styles.KPIChartContainer}>
-            <KPIChart KPIValues={ KPIData.KPIValues } chartData={ KPIData.chartData } currency={KPIData.currency} initiallyActiveKPIs = { activeKPIs }  />
+            <KPIChart KPIValues={ KPIData.KPIValues }
+                      chartData={ KPIData.chartData }
+                      currency={KPIData.currency}
+                      activeKPIs = { activeKPIs }
+                      onKPIToggle={ this.handleKPIToggle } />
           </div>}
           { !loading && tableList && <div className={styles.campaignTableContainer}>
              <CampaignTable

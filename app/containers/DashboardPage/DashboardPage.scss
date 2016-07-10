@@ -1,5 +1,8 @@
+@import 'main';
+
 .KPIChartContainer {
-  height: 420px;
+  //height: 420px;
+  margin-bottom: 74px;
 }
 
 .KPIChartContainer, .campaignTableContainer, .statusFilter {
@@ -19,64 +22,66 @@
 
 :global(.sticky.noHeader) {
   .dashboardPage {
-    margin-top: 167px;
+    //margin-top: 167px;
     .statusFilter {
-      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0);
+      //box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0);
     }
   }
 }
 
 :global(.noHeader) {
   .dashboardPage {
-    margin-top: 108px;
+    //margin-top: 108px;
+
     .statusFilter {
+      transition: box-shadow 0.25s ease-in;
+      position: fixed;
       top: 0;
-      padding: 15px 24px 53.5px 24px;
+      padding: 25px 48px 62.5px 48px;
+      //padding: 15px 24px 53.5px 24px;
       box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.08);
     }
     .innerContainer {
-      margin-top: 56px;
+      margin-top: 87.5px;
     }
   }
 }
 
-:global(.sticky:not(.noHeader)) {
+:global(.sticky) {
   .dashboardPage {
-    margin-top: 108px;
+    //margin-top: 108px;
     .statusFilter {
-      top: 52px;
-      padding: 15px 24px 53.5px 24px;
-      box-shadow: none;
+      //top: 52px;
+      //padding: 15px 24px 53.5px 24px;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0);
     }
     .innerContainer {
-      margin-top: 56px;
+      //margin-top: 56px;
     }
   }
 }
 
 .dashboardPage {
-  margin-top: 160px;
+  //margin-top: 160px;
   .statusFilter {
-    opacity: 1;
+    //opacity: 1;
   }
   .innerContainer {
-    margin-top: 108px;
+    //margin-top: 108px;
   }
 }
 
 .statusFilter {
-  transition: all 0.25s ease-in;
   //margin-bottom: 42.5px;
   //margin-top: 25px;
   //height: 40px;
 
-  top: 52px;
+  //top: 52px;
   height: 65px;
-  position: fixed;
+  //position: fixed;
   background-color: white;
-  display: grid;
   margin-top: 0;
-  padding: 35px 24px 82.5px 24px;
+  padding: 25px 24px 62.5px 24px;
   margin-bottom: 0;
   min-width: 1232px;
   left: 0;
@@ -87,6 +92,25 @@
   .calendarContainer {
     float: right;
     width: 300px;
+    margin-right: 38px;
+  }
+  .downloadToolsContainer{
+    float: right;
+    padding-left: 7px;
+    padding-right: 7px;
+    margin-right: -13px;
+    padding-top: 10px;
+    font-size: 13px;
+    color: $link-color ;
+    > div {
+      cursor: pointer;
+      svg{
+        width: 20px;
+      }
+      float: left;
+      margin-left: 7px;
+      margin-right: 7px;
+    }
   }
   .dropDownContainer {
     float: left;
@@ -101,3 +125,8 @@
   }
 }
 
+@media all and (min-width: 1280px)  {
+  .KPIChartContainer {
+    //height: 490px;
+  }
+}

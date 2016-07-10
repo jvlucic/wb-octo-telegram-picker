@@ -50,9 +50,9 @@ class CampaignTable extends Component {
       const nextCampaignChangedStatus = nextProps.list[toggledCampaign] && nextProps.list[toggledCampaign].campaign.changed || 'success';
       if (previousCampaignChangedStatus === 'loading' && nextCampaignChangedStatus && nextCampaignChangedStatus !== 'loading') {
         if (nextCampaignChangedStatus === 'error') {
-          this.props.onAddAlert('error', `Campaign ${toggledCampaign} update failed`, null);
+          this.props.onAddAlert('error', 'Campaign update failed', null);
         } else if (nextCampaignChangedStatus === 'success') {
-          this.props.onAddAlert('success', `Campaign ${toggledCampaign} successfully updated`, null);
+          this.props.onAddAlert('success', 'Campaign was successfully updated', null);
         }
       }
     }
@@ -98,12 +98,13 @@ class CampaignTable extends Component {
   }
 
   getColumnWidth(header) {
-    const relativeWidth = 30;
+    const relativeWidth = 45;
+    const isWindowLarge = window && window.innerWidth >= 1280;
     switch (header) {
       case constants.CAMPAIGN_DATA_FIXED_HEADERS.STATUS:
         return 45;
       case constants.CAMPAIGN_DATA_FIXED_HEADERS.CAMPAIGN:
-        return 300;
+        return isWindowLarge ? 300 : 250;
       case constants.KPI.IMPRESSIONS.key:
         return 76;
       case constants.KPI.CLICKS.key:
@@ -311,7 +312,10 @@ class CampaignTable extends Component {
     this.currentList = sortedList.map(it => this.formatRow(it));
     const rowGetter = ({ index }) => this.getDatum(this.currentList, index);
     return (
-      <div className={styles.campaignTable}>
+      <div style={{ height: (Math.min(this.currentList.length, 50) + 1) * 70 }} className={styles.campaignTable}>
+        <div className={styles.tableHeader}>
+          Header
+        </div>
         <AutoSizer disableHeight>
           {({ width }) => (
             <FlexTable
