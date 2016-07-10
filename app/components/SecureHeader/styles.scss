@@ -70,8 +70,8 @@
       &Icon {
 
         svg {
-          height: $centered-navigation-height;
-          padding: 0.8em 0;
+          height: 35px;
+          margin-top: ($centered-navigation-height - 35px) / 2;
           #unidesq-logo {
             fill: white;
           }
