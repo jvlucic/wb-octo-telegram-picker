@@ -8,11 +8,17 @@
 :global(.DayPicker-Day) {
   border: none;
   cursor: pointer !important;
+  height: 31px;
   min-width: 40px;
   padding-top: 0;
   padding-bottom: 0;
   padding-left: .5rem;
   padding-right: .5rem;
+}
+
+:global(.DayPicker-Day--today) {
+  background-color: #F2F2F2;
+  color: #191F2D;
 }
 
 :global(.DayPicker-Caption) {
@@ -21,7 +27,7 @@
 }
 
 :global(.DayPicker) {
-  min-height: 324px;
+  min-height: 300px;
 }
 :global {
   .DatePicker-caretIcon {

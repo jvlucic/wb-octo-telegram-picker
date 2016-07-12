@@ -10,6 +10,12 @@ $link-color: #03c7f1 !default;
     padding: 0px $glutter;
   }
 
+  .LoginApp-logoIcon {
+    svg {
+      height: 60px;
+    }
+  }
+
   .LoginApp-header {
     @include outer-container(100%);
     height: $header-height;
