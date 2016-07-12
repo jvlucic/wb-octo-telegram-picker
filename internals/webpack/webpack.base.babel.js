@@ -30,7 +30,7 @@ module.exports = (options) => ({
       // So, no need for ExtractTextPlugin here.
       test: /\.css$/,
       include: /node_modules/,
-      loaders: ['style-loader', 'css-loader'],
+      loaders: options.cssLoadersNodeModules || ['style-loader', 'css-loader'],
     }, {
       // Transform our own .css files with PostCSS and CSS-modules
       test: /\.scss$/,
