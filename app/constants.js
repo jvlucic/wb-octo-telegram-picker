@@ -92,7 +92,7 @@ const constants = {
     },
     CPO: {
       key: 'cpo',
-      name: 'CPO',
+      name: 'CPA',
       color: 'rgba(122, 200, 168, 1)',
       colorHovered: 'rgba(122, 200, 168, 0.1)',
       enabled: false,

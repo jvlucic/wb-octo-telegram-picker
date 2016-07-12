@@ -21,7 +21,7 @@ function renderContent(value, valueType, currency) {
       break;
     }
     case constants.VALUE_TYPE.PERCENTAGE: {
-      formattedValue = (value).toFixed(2).replace(/\.00$/, '');
+      formattedValue = (value).toFixed(0).replace(/\.00$/, '');
       symbol = '%';
       break;
     }
@@ -94,7 +94,7 @@ export default function KPIButton({ name, value, symbol, percentage,
               (percentage > 0 ? <KPIUpIcon/> : percentage < 0 ? <KPIDownIcon/> : <KPIEqualIcon/>) // eslint-disable-line no-nested-ternary
             }
           </span>
-          <span className="KPI-percentage">{percentage.toFixed(2)}%</span>
+          <span className="KPI-percentage">{percentage.toFixed(0)}%</span>
         </footer>
       </div>
     </article>

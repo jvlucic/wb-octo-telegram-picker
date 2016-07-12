@@ -182,7 +182,6 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
           </div>
           <div className={styles.downloadToolsContainer}>
             <div><DownloadIcon/></div>
-            <div>PDF</div>
             <div onClick={this.handleCSVDownload}>Excel</div>
           </div>
           <div className={styles.calendarContainer}>
