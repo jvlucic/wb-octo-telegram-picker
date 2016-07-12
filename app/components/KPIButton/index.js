@@ -21,7 +21,7 @@ function renderContent(value, valueType, currency) {
       break;
     }
     case constants.VALUE_TYPE.PERCENTAGE: {
-      formattedValue = (value).toFixed(2).replace(/\.00$/, '');
+      formattedValue = (value).toFixed(0).replace(/\.00$/, '');
       symbol = '%';
       break;
     }
