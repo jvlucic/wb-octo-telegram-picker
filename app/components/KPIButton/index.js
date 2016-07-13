@@ -16,17 +16,17 @@ function renderContent(value, valueType, currency) {
   let symbol = null;
   switch (valueType) {
     case constants.VALUE_TYPE.CURRENCY: {
-      formattedValue = numberFormatter(value).replace(/\.00$/, '');
+      formattedValue = numberFormatter(value);
       symbol = currency;
       break;
     }
     case constants.VALUE_TYPE.PERCENTAGE: {
-      formattedValue = (value).toFixed(0).replace(/\.00$/, '');
+      formattedValue = (value).toFixed(2);
       symbol = '%';
       break;
     }
     case constants.VALUE_TYPE.NUMBER: {
-      formattedValue = numberFormatter(value).replace(/\.00$/, '');
+      formattedValue = numberFormatter(value);
       break;
     }
     default:
