@@ -155,6 +155,7 @@ class ProfileForm extends Component {
             {...lastName}
           />
         </FormGroupAccount>
+        <div className="ProfileForm-separator" />
         <FormGroupAccount
           htmlFor={this.ids.email}
           labelText={formatMessage(msgs.labelEmail)}

@@ -2,9 +2,19 @@
   .InputDate {
     border: 1px solid #e0e0e0;
     height: 40px;
-    padding: 0 12px;
+
+    &-inside {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid transparent;
+      &.is-active {
+        border: 1px solid #2bcff3;
+      }
+    }
+
     &.is-active {
-      border-color: #2bcff3;
+      border-color: rgba(3, 199, 240, 0.2);
     }
     &-label {
       color: #ADADAD;
@@ -62,9 +72,13 @@
     }
 
     &:hover {
-      border-color: #2bcff3;
+      border-color: rgba(3, 199, 240, 0.2);
       cursor: pointer;
-      outline: 1px solid rgba(3, 199, 240, 0.2);
+      // outline: 1px solid rgba(3, 199, 240, 0.2);
+      .InputDate-inside {
+        border: 1px solid #2bcff3;
+      }
+
       .InputDate-value {
         color: #2bcff3;
       }

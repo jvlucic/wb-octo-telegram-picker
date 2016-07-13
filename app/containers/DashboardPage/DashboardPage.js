@@ -21,6 +21,7 @@ import { KPIDataSelector, selectRange, campaignTableHeadersSelector,
 import { DownloadIcon} from '../../theme/assets';
 import { injectIntl } from 'react-intl';
 import constants from '../../constants';
+import Footer from 'components/Footer';
 import styles from './DashboardPage.scss';
 let appContainer = null;
 class DashboardPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -213,7 +214,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
                selectedCampaign={selectedCampaign} />
           </div> }
         </div>
-
+        <Footer />
       </div>
     );
   }

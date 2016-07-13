@@ -20,35 +20,37 @@ export default class InputDate extends Component { // eslint-disable-line react/
     const isActive = classnames({ 'is-active': active });
     return (
       <div className={classnames('InputDate', isActive)} >
-        <div className="InputDate-clickable" onClick={onClick}>
-          <InputCalendarIcon className="InputDate-calendar" />
-          <div className="InputDate-label">
-            <FormattedMessage {...msgs.dates} />
+        <div className={classnames('InputDate-inside', isActive)} >
+          <div className="InputDate-clickable" onClick={onClick}>
+            <InputCalendarIcon className="InputDate-calendar" />
+            <div className="InputDate-label">
+              <FormattedMessage {...msgs.dates} />
+            </div>
+
+            <div className={classnames('InputDate-value', isActive)}>
+              {
+                from instanceof Date
+                  &&
+                  moment(from).format('DD.MM.YYYY')
+              }
+              {
+                to instanceof Date
+                  && (
+                  <span>
+                    &nbsp;
+                    -
+                    &nbsp;
+                    {moment(to).format('DD.MM.YYYY')}
+                  </span>
+                )
+              }
+
+            </div>
           </div>
 
-          <div className={classnames('InputDate-value', isActive)}>
-            {
-              from instanceof Date
-                &&
-                moment(from).format('DD.MM.YYYY')
-            }
-            {
-              to instanceof Date
-                && (
-                <span>
-                  &nbsp;
-                  -
-                  &nbsp;
-                  {moment(to).format('DD.MM.YYYY')}
-                </span>
-              )
-            }
-
+          <div className={classnames('InputDate-clean', isActive)} onClick={onClean}>
+            <InputClearIcon />
           </div>
-        </div>
-
-        <div className={classnames('InputDate-clean', isActive)} onClick={onClean}>
-          <InputClearIcon />
         </div>
       </div>
     );

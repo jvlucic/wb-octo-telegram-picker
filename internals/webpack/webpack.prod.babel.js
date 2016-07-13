@@ -35,6 +35,11 @@ module.exports = require('./webpack.base.babel')({
     'css-loader?modules&importLoaders=1!postcss-loader!sass-loader'
   ),
 
+  cssLoadersNodeModules: ExtractTextPlugin.extract(
+    'style-loader',
+    'css-loader'
+  ),
+
   sassLoaderOptions: {
     includePaths: [...bourbon, ...neat, theme],
   },

@@ -7,7 +7,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Link } from 'react-router';
+import Footer from 'components/Footer';
 import './styles.scss';
 
 const msgs = defineMessages({
@@ -36,12 +36,13 @@ class AccountPage extends Component { // eslint-disable-line react/prefer-statel
               <FormattedMessage {...msgs.overview} />
             </header>
             <div className="AccountPage-overviewNav">
+              {/*
               <div className="AccountPage-overviewNavItem">
                 <Link to="/account" activeClassName="is-active">
                   Profile
                 </Link>
               </div>
-              {/*
+
               <div className="AccountPage-overviewNavItem">
                 <Link to="/account/company" activeClassName="is-active">
                   Company
@@ -59,6 +60,7 @@ class AccountPage extends Component { // eslint-disable-line react/prefer-statel
             {this.props.children}
           </div>
         </div>
+        <Footer large />
       </section>
     );
   }

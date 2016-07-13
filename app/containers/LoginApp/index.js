@@ -6,7 +6,9 @@
  */
 import React, { PropTypes } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import logo from './unidesq-black-logo.png';
+import Footer from 'components/Footer';
+import { UnidesqLogoIcon } from 'theme/assets';
+
 import './styles.scss';
 
 const msgs = defineMessages({
@@ -49,7 +51,7 @@ export default class LoginApp extends React.Component { // eslint-disable-line r
             </a>
           </div>
           <figure className="LoginApp-headerLogo">
-            <img src={logo} alt="logo unidesq" />
+            <UnidesqLogoIcon className="LoginApp-logoIcon" />
           </figure>
           <div className="LoginApp-headerGetAccount">
             <a>
@@ -60,6 +62,9 @@ export default class LoginApp extends React.Component { // eslint-disable-line r
         <main className="LoginApp-container">
           {this.props.children}
         </main>
+        <footer>
+          <Footer large />
+        </footer>
       </section>
     );
   }
