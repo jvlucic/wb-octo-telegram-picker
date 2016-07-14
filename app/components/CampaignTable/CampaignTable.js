@@ -45,7 +45,7 @@ class CampaignTable extends Component {
   componentWillReceiveProps(nextProps) {
     const toggledCampaign = nextProps.toggledCampaign;
     /* TODO: Translate Toast Message */
-    if (toggledCampaign) {
+    if (toggledCampaign && this.props.list[toggledCampaign]) {
       const previousCampaignChangedStatus = this.props.list[toggledCampaign].campaign.changed;
       const nextCampaignChangedStatus = nextProps.list[toggledCampaign] && nextProps.list[toggledCampaign].campaign.changed || 'success';
       if (previousCampaignChangedStatus === 'loading' && nextCampaignChangedStatus && nextCampaignChangedStatus !== 'loading') {
@@ -203,7 +203,7 @@ class CampaignTable extends Component {
           <ToggleSwitch
             checked={cellData}
             loading
-            onChange={() => this.handleToggleSwitchClick(campaign.id, !cellData)}
+            onChange={undefined}
           />
         );
       } else {
