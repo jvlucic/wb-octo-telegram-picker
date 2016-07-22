@@ -4,6 +4,8 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const isDev = process.env.NODE_ENV !== 'production';
+
 
 module.exports = (options) => ({
   entry: options.entry,
@@ -82,6 +84,9 @@ module.exports = (options) => ({
   postcss: () => options.postcssPlugins,
   resolve: {
     modules: ['app', 'node_modules'],
+    alias: {
+      config: isDev ? '../../config/config.dev' : '../../config/config.prod',
+    },
     extensions: [
       '',
       '.js',

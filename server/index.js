@@ -4,10 +4,11 @@ const express = require('express');
 const logger = require('./logger');
 const ngrok = require('ngrok');
 const request = require('request');
-const API_URL = 'http://api-test.unidesq.com';
+const isDev = process.env.NODE_ENV !== 'production';
+
+const config = isDev ? require('../config/config.dev') : require('../config/config.prod');
 
 const frontend = require('./middlewares/frontendMiddleware');
-const isDev = process.env.NODE_ENV !== 'production';
 
 const app = express();
 
@@ -15,7 +16,7 @@ const app = express();
 // app.use('/api', myApi);
 
 app.use('/api', (req, res) => {
-  req.pipe(request(API_URL + req.url)).pipe(res);
+  req.pipe(request(config.apiUrl + req.url)).pipe(res);
 });
 
 // Initialize frontend middleware that will serve your JS app

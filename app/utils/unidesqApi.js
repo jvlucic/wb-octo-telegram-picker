@@ -5,11 +5,12 @@ import constants from '../constants';
 import { selectToken } from 'auth/selectors';
 import { logout } from 'auth/actions';
 import { push } from 'react-router-redux';
+import config from 'config'; // eslint-disable-line import/no-unresolved
 
 export function generateURL(path) {
   const adjustedPath = path[0] !== '/' ? `/${path}` : path;
   if (process.env.NODE_ENV === 'production') {
-    return `http://api-test.unidesq.com${adjustedPath}`;
+    return `${config.apiUrl}${adjustedPath}`;
   }
   return `http://localhost:3000/api/${adjustedPath}`;
 }
