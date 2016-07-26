@@ -230,7 +230,7 @@ function refreshCampaignData(dispatch, getState) {
 export function changeDateRange({ to, from }) {
   return (dispatch, getState) => {
     dispatch(changeDateRangeState({ to, from }));
-    refreshCampaignData(dispatch, getState);
+    //refreshCampaignData(dispatch, getState);
   };
 }
 

@@ -70,12 +70,15 @@
     //margin-top: 108px;
   }
 }
-
+.calendarContainer {
+  width: 300px;
+  margin: 20px auto  20px auto;
+}
 .statusFilter {
   //margin-bottom: 42.5px;
   //margin-top: 25px;
   //height: 40px;
-
+  display: none;
   //top: 52px;
   height: 65px;
   //position: fixed;

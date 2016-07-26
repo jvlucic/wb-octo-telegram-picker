@@ -1,0 +1,198 @@
+import React, { Component, PropTypes } from 'react';
+import DayPicker, { DateUtils } from 'components/DayPicker';
+import InputDate from 'components/InputDate';
+import moment from 'moment';
+import classnames from 'classnames';
+import { Overlay } from 'react-overlays';
+import './styles.scss';
+
+function ShortCutDay({ name, onClick }) {
+  return (
+    <div className="ShortCutDay" onClick={onClick}>
+      <div className="ShortCutDay-name">
+        {name}
+      </div>
+    </div>
+  );
+}
+
+ShortCutDay.propTypes = {
+  name: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
+
+
+class Calendar extends Component {
+  constructor(props) {
+    super(props);
+
+    // Binding methods
+    this.handleShowDate = this.handleShowDate.bind(this);
+    this.handleHideDate = this.handleHideDate.bind(this);
+    this.handleDayClick = this.handleDayClick.bind(this);
+    this.handleOnInputClick = this.handleOnInputClick.bind(this);
+    this.handleApply = this.handleApply.bind(this);
+
+    /**
+     * @type {Object}
+     * @property show               - If the day picker is shown or not
+     * @property recentlyShowing    - Was showed recentrly the day picker (fix bug)
+     * @property to                 - Date 'from' day picker
+     * @property from               - Date 'to' day picker
+     */
+    this.state = {
+      show: false,
+      recentlyShowing: false,
+      to: props.to,
+      from: props.from,
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.to !== this.props.to && nextProps.from !== this.props.from) {
+      this.setState({
+        to: nextProps.to,
+        from: nextProps.from,
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.delay) {
+      clearTimeout(this.delay);
+    }
+  }
+
+  handleResetClick(event) {
+    event.preventDefault();
+    this.setState({
+      from: null,
+      to: null,
+    });
+  }
+
+  handleDayClick(event, day) {
+    if (!this.state.from || !this.state.to) {
+      const range = DateUtils.addDayToRange(day, this.state);
+      this.setState(range);
+    } else {
+      this.setState({
+        from: day,
+        to: null,
+      });
+    }
+    console.log('from');
+    console.log(this.state.from);
+    console.log('to');
+    console.log(this.state.to);
+    console.log('day');
+    console.log(day);
+  }
+
+  updateRange(from, to = from) {
+    this.setState({ to, from }, this.handleApply);
+  }
+
+  handleShowDate() {
+    this.setState({
+      show: true,
+      recentlyShowing: true,
+    });
+    this.delay = setTimeout(() => {
+      this.setState({
+        recentlyShowing: false,
+      });
+    }, 400);
+  }
+
+  handleHideDate() {
+    if (!this.state.recentlyShowing) {
+      this.setState({
+        show: false,
+      });
+    }
+  }
+
+  handleOnInputClick() {
+    this.setState({
+      show: true,
+    }, () => this.daypicker.getWrappedInstance().daypicker.showMonth(this.state.to || new Date()));
+  }
+
+  handleApply() {
+    const { to, from } = this.state;
+    this.props.onChange({ to, from });
+    this.handleHideDate();
+  }
+
+  render() {
+    const { to, from, onClean } = this.props;
+    const modifiers = {
+      selected: day => DateUtils.isDayInRange(day, this.state),
+      startDay: day => DateUtils.isSameDay(day, this.state.from),
+      endDay: day => DateUtils.isSameDay(day, this.state.to),
+    };
+    const isDisabled = !(this.state.to instanceof Date) || !(this.state.from instanceof Date);
+    const isDisabledClassName = classnames({
+      'is-disabled': isDisabled,
+    });
+    return (
+      <div className={classnames('Calendar')}>
+        <InputDate
+          to={to}
+          from={from}
+          refs={_input => { this.input = _input; }}
+          onClick={this.handleOnInputClick}
+          onClean={onClean}
+          active={this.state.show}
+        />
+        <Overlay
+          placement="bottom"
+          onHide={this.handleHideDate}
+          show={this.state.show}
+          container={this}
+          target={this.input}
+          rootClose
+        >
+          <div
+            className={classnames('Calendar-overlay')}
+          >
+            <DayPicker
+              ref="daypicker"
+              numberOfMonths={2}
+              modifiers={modifiers}
+              onDayClick={this.handleDayClick}
+              ref={(daypicker) => { this.daypicker = daypicker; }}
+            />
+            <div className="Calendar-buttonContainer">
+              <button
+                type="button"
+                onClick={this.handleApply}
+                disabled={isDisabled}
+                className={classnames('Calendar-button', isDisabledClassName)}
+              >
+                Apply
+              </button>
+            </div>
+
+          </div>
+        </Overlay>
+
+      </div>
+    );
+  }
+}
+
+Calendar.propTypes = {
+  to: PropTypes.instanceOf(Date),
+  from: PropTypes.instanceOf(Date),
+  onChange: PropTypes.func,
+  onClean: PropTypes.func,
+};
+
+Calendar.defaultProps = {
+  onChange() {},
+  onClean() {},
+};
+
+export default Calendar;

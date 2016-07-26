@@ -10,7 +10,7 @@
  */
 /* eslint-disable */
 import React from 'react';
-import { KPIChart, CampaignTable, Calendar, CampaignFilterDropdown, Loader } from 'components';
+import { KPIChart, CampaignTable, Calendar, CampaignFilterDropdown, Loader, WBCalendar } from 'components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -46,7 +46,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
 
   componentDidMount() {
     if (!this.props.KPIData) {
-      this.props.getCampaignData();
+      // this.props.getCampaignData();
     }
     /* TODO: DO NOT HARDCODE ID, PASS COMPONENT THROUGH PROPS ! */
     appContainer = document.getElementById('appComponentContainer');
@@ -175,6 +175,15 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
     const {KPIData, range, tableHeaders, tableList, status, selectedCampaign, activeKPIs, loading, toggledCampaign} = this.props;
     return (
       <div className={styles.dashboardPage} >
+        <div className={styles.calendarContainer}>
+          <WBCalendar
+            active
+            from={range.from}
+            to={range.to}
+            onChange={this.handleOnChangeDateRangeFilter}
+            onClean={this.handleOnResetDateRange}
+          />
+        </div>
         <div ref="filterBar" className={styles.statusFilter}>
           <span className={styles.title} >Showing data across</span>
           <div className={styles.dropDownContainer}>
@@ -184,15 +193,7 @@ class DashboardPage extends React.Component { // eslint-disable-line react/prefe
             <div><DownloadIcon/></div>
             <div onClick={this.handleCSVDownload}>Excel</div>
           </div>
-          <div className={styles.calendarContainer}>
-            <Calendar
-              active
-              from={range.from}
-              to={range.to}
-              onChange={this.handleOnChangeDateRangeFilter}
-              onClean={this.handleOnResetDateRange}
-            />
-          </div>
+
         </div>
         <div className={styles.innerContainer}>
           {loading && <div><Loader/></div>}

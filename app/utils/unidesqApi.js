@@ -31,10 +31,10 @@ export function secureRequest({ getState, dispatch }, uri, options = {}) {
   const { headers = {} } = options;
   const token = selectToken(getState());
   if (!token) {
-    dispatch(push('login'));
+    //dispatch(push('login'));
     const unauthenticated = new Error('The user is not authenticated.');
     unauthenticated.response = { status: 401 };
-    return Promise.reject(unauthenticated);
+    //return Promise.reject(unauthenticated);
   }
   return request(uri, {
     ...options,
