@@ -16,40 +16,17 @@ const msgs = defineMessages({
 export default class InputDate extends Component { // eslint-disable-line react/prefer-stateless-function
 
   render() {
-    const { to, from, active, onClick, onClean } = this.props;
+    const { date, active, onClick, label, onClean } = this.props;
     const isActive = classnames({ 'is-active': active });
     return (
-      <div className={classnames('InputDate', isActive)} >
-        <div className={classnames('InputDate-inside', isActive)} >
-          <div className="InputDate-clickable" onClick={onClick}>
-            <InputCalendarIcon className="InputDate-calendar" />
-            <div className="InputDate-label">
-              <FormattedMessage {...msgs.dates} />
-            </div>
-
+      <div className={classnames('InputDate', isActive)}  >
+        <div className={classnames('InputDate-inside', isActive)} onClick={onClick} >
+          <div className="InputDate-clickable" >
             <div className={classnames('InputDate-value', isActive)}>
               {
-                from instanceof Date
-                  &&
-                  moment(from).format('DD.MM.YYYY')
+                date instanceof Date && moment(date).format('DD.MM.YYYY') || label
               }
-              {
-                to instanceof Date
-                  && (
-                  <span>
-                    &nbsp;
-                    -
-                    &nbsp;
-                    {moment(to).format('DD.MM.YYYY')}
-                  </span>
-                )
-              }
-
             </div>
-          </div>
-
-          <div className={classnames('InputDate-clean', isActive)} onClick={onClean}>
-            <InputClearIcon />
           </div>
         </div>
       </div>
@@ -58,8 +35,7 @@ export default class InputDate extends Component { // eslint-disable-line react/
 }
 
 InputDate.propTypes = {
-  to: PropTypes.instanceOf(Date),
-  from: PropTypes.instanceOf(Date),
+  date: PropTypes.instanceOf(Date),
   active: PropTypes.bool,
   onClick: PropTypes.func,
   onClean: PropTypes.func,

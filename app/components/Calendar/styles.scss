@@ -4,7 +4,7 @@
     //@include span-columns(3);
     //@include shift(8);
     position: relative;
-
+    display: flex;
     &-overlay {
       background-color: white;
       border: 1px solid #e0e0e0;
@@ -12,7 +12,7 @@
       left: initial !important;
       margin-top: 5px;
       min-width: 570px;
-      padding-bottom: 33px;
+      position: absolute;
       position: absolute;
       right: 0px;
       top: 40px !important;

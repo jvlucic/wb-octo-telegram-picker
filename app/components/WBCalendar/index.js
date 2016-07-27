@@ -1,33 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import DayPicker, { DateUtils } from 'components/DayPicker';
 import InputDate from 'components/InputDate';
-import moment from 'moment';
 import classnames from 'classnames';
 import { Overlay } from 'react-overlays';
 import './styles.scss';
 
-function ShortCutDay({ name, onClick }) {
-  return (
-    <div className="ShortCutDay" onClick={onClick}>
-      <div className="ShortCutDay-name">
-        {name}
-      </div>
-    </div>
-  );
-}
-
-ShortCutDay.propTypes = {
-  name: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+const INPUT_DATE_TYPE = {
+  START: 'from',
+  END: 'to',
 };
-
 
 class Calendar extends Component {
   constructor(props) {
     super(props);
 
     // Binding methods
-    this.handleShowDate = this.handleShowDate.bind(this);
     this.handleHideDate = this.handleHideDate.bind(this);
     this.handleDayClick = this.handleDayClick.bind(this);
     this.handleOnInputClick = this.handleOnInputClick.bind(this);
@@ -36,13 +23,11 @@ class Calendar extends Component {
     /**
      * @type {Object}
      * @property show               - If the day picker is shown or not
-     * @property recentlyShowing    - Was showed recentrly the day picker (fix bug)
      * @property to                 - Date 'from' day picker
      * @property from               - Date 'to' day picker
      */
     this.state = {
       show: false,
-      recentlyShowing: false,
       to: props.to,
       from: props.from,
     };
@@ -57,66 +42,66 @@ class Calendar extends Component {
     }
   }
 
-  componentWillUnmount() {
-    if (this.delay) {
-      clearTimeout(this.delay);
+  handleDayClick(event, day, type) {
+    const state = {};
+    if (this.state.activeInput === INPUT_DATE_TYPE.START) {
+
+      if (!this.state.from || (this.state.from > day)) {
+        state.from = day;
+        state.activeInput = INPUT_DATE_TYPE.END;
+        this.setState(state);
+      }
+
+      if (this.state.from < day) {
+        state.from = day;
+        state.activeInput = INPUT_DATE_TYPE.END;
+        if (this.state.to && this.state.to <= day) {
+          state.to = null
+        }
+        this.setState(state);
+      }
     }
-  }
 
-  handleResetClick(event) {
-    event.preventDefault();
-    this.setState({
-      from: null,
-      to: null,
-    });
-  }
+    if (this.state.activeInput === INPUT_DATE_TYPE.END) {
+      if (!this.state.to || (this.state.to < day)) {
+        state.to = day;
+        this.setState(state);
+        this.handleHideDate();
+      }
 
-  handleDayClick(event, day) {
-    if (!this.state.from || !this.state.to) {
-      const range = DateUtils.addDayToRange(day, this.state);
-      this.setState(range);
-    } else {
-      this.setState({
-        from: day,
-        to: null,
-      });
+      if (this.state.to >= day) {
+        state.to = day;
+        if (!this.state.from || (this.state.from && this.state.from >= day)) {
+          state.activeInput = INPUT_DATE_TYPE.START;
+          state.from = null;
+          this.setState(state);
+        }else{
+          this.setState(state);
+          this.handleHideDate()
+        }
+      }
     }
-    console.log('from');
-    console.log(this.state.from);
-    console.log('to');
-    console.log(this.state.to);
-    console.log('day');
-    console.log(day);
-  }
-
-  updateRange(from, to = from) {
-    this.setState({ to, from }, this.handleApply);
-  }
-
-  handleShowDate() {
-    this.setState({
-      show: true,
-      recentlyShowing: true,
-    });
-    this.delay = setTimeout(() => {
-      this.setState({
-        recentlyShowing: false,
-      });
-    }, 400);
   }
 
   handleHideDate() {
-    if (!this.state.recentlyShowing) {
+    if (!this.activeInput) {
       this.setState({
         show: false,
+        activeInput: false,
       });
     }
   }
 
-  handleOnInputClick() {
+  handleOnInputClick(event, type) {
     this.setState({
       show: true,
+      activeInput: type,
     }, () => this.daypicker.getWrappedInstance().daypicker.showMonth(this.state.to || new Date()));
+    /* HACK in order to not close the overlay when clicking the inputs */
+    this.activeInput = type;
+    setTimeout(() => {
+      this.activeInput = false
+    }, 1);
   }
 
   handleApply() {
@@ -139,13 +124,22 @@ class Calendar extends Component {
     return (
       <div className={classnames('Calendar')}>
         <InputDate
-          to={to}
-          from={from}
+          date={this.state.from}
+          label={'Check-in'}
           refs={_input => { this.input = _input; }}
-          onClick={this.handleOnInputClick}
+          onClick={(event, day) => this.handleOnInputClick(event, INPUT_DATE_TYPE.START)}
           onClean={onClean}
-          active={this.state.show}
+          active={this.state.show && this.state.activeInput === INPUT_DATE_TYPE.START}
         />
+        <InputDate
+          date={this.state.to}
+          label={'Check-out'}
+          refs={_input => { this.input = _input; }}
+          onClick={(event, day) => this.handleOnInputClick(event, INPUT_DATE_TYPE.END)}
+          onClean={onClean}
+          active={this.state.show && this.state.activeInput === INPUT_DATE_TYPE.END}
+        />
+
         <Overlay
           placement="bottom"
           onHide={this.handleHideDate}
@@ -164,17 +158,6 @@ class Calendar extends Component {
               onDayClick={this.handleDayClick}
               ref={(daypicker) => { this.daypicker = daypicker; }}
             />
-            <div className="Calendar-buttonContainer">
-              <button
-                type="button"
-                onClick={this.handleApply}
-                disabled={isDisabled}
-                className={classnames('Calendar-button', isDisabledClassName)}
-              >
-                Apply
-              </button>
-            </div>
-
           </div>
         </Overlay>
 
